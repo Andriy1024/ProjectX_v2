@@ -1,25 +1,18 @@
+using ProjectX.Tasks.API;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+Startup.Configure(app);
+
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    await app.RunAsync();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception e)
+{
+    app.Logger.LogError(e, e.Message);
+}
