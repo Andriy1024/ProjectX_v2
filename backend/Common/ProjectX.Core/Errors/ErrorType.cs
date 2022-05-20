@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.Errors;
+﻿namespace ProjectX.Core;
 
 public enum ErrorType
 {

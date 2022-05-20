@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.CQRS;
+﻿namespace ProjectX.Core;
 
 public interface ICommand : ICommand<Unit> {}
 

@@ -1,9 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using ProjectX.Core.Response;
-using ProjectX.Core.CQRS;
-using ProjectX.Core.Errors;
-using ProjectX.Core.Extensions;
+using ProjectX.Core;
 
 namespace ProjectX.Tasks.API.SeedWork;
 

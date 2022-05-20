@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.Response;
+﻿namespace ProjectX.Core;
 
 public class Response<TResult>
 {

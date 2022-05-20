@@ -1,12 +1,15 @@
-﻿namespace ProjectX.Core.Response;
+﻿namespace ProjectX.Core;
 
 public static class ResponseFactory
 {
     public static Response<T> Success<T>(T data)
-       => new(data);
+        => new(data);
+
+    public static PaginatedResponse<T> Success<T>(T data, int total) 
+        => new PaginatedResponse<T>(data, total);
 
     public static Response<T> Failed<T>(Error error)
-       => new(error);
+        => new(error);
 
     public static Response<T> Failed<T>(Exception error)
         => Failed<T>(Error.From(error));

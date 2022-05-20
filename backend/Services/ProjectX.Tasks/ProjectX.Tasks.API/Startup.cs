@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectX.Persistence.Extensions;
 using ProjectX.Tasks.Infrastructure.Handlers.Tasks;
 using ProjectX.Tasks.Persistence.Context;
 using System.Reflection;
@@ -14,7 +15,7 @@ public static class Startup
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddDbContext<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
+        services.AddDbServices<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
         services.AddMediatR(Assembly.GetAssembly(typeof(TasksQueryHandler))!);
     }
 

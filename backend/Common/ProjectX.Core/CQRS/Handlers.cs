@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.CQRS;
+﻿namespace ProjectX.Core;
 
 public abstract class CommandHandler<TCommand, TResponse> : ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>

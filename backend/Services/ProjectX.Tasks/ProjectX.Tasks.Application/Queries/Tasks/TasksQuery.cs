@@ -1,4 +1,4 @@
-﻿using ProjectX.Core.CQRS;
+﻿using ProjectX.Core;
 
 namespace ProjectX.Tasks.Application.Queries.Tasks;
 

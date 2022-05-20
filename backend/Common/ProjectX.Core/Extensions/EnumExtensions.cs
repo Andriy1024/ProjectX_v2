@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ProjectX.Core.Extensions;
+namespace ProjectX.Core;
 
 public static class EnumExtensions
 {

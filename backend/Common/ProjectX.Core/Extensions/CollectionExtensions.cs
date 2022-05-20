@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.Extensions;
+﻿namespace ProjectX.Core;
 
 public static class CollectionExtensions
 {

@@ -1,6 +1,8 @@
-﻿namespace ProjectX.Tasks.Domain.Entities;
+﻿using ProjectX.Core;
 
-public class TaskEntity
+namespace ProjectX.Tasks.Domain.Entities;
+
+public class TaskEntity : Entity<int>
 {
     public int Id { get; set; }
 
