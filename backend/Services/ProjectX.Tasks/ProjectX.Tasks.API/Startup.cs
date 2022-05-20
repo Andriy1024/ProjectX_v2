@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using ProjectX.Tasks.Infrastructure.Handlers.Tasks;
 using ProjectX.Tasks.Persistence.Context;
+using System.Reflection;
 
 namespace ProjectX.Tasks.API;
 
@@ -12,7 +15,7 @@ public static class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddDbContext<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
-        
+        services.AddMediatR(Assembly.GetAssembly(typeof(TasksQueryHandler))!);
     }
 
     public static void Configure(WebApplication app) 

@@ -15,11 +15,20 @@ public sealed class TasksQueryHandler : QueryHandler<TasksQuery, IEnumerable<Tas
 
     public override async Task<Response<IEnumerable<TasksQuery.Result>>> Handle(TasksQuery request, CancellationToken cancellationToken)
     {
-        return await _dbContext.Tasks.Select(t => new TasksQuery.Result
+        try
         {
-            Id = t.Id,
-            Name = t.Name,
-            Description = t.Description
-        }).ToArrayAsync();
+            var tasks = await _dbContext.Tasks.Select(t => new TasksQuery.Result
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Description = t.Description
+            }).ToArrayAsync();
+
+            return tasks;
+        }
+        catch (Exception e)
+        {
+            return Failed(Error.From(e));
+        }
     }
 }

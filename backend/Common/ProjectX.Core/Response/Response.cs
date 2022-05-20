@@ -8,7 +8,7 @@ public class Response<TResult>
 
     public Error? Error { get; }
 
-    public bool IsSuccess => Error != null;
+    public bool IsSuccess => Error is null;
 
     public Response(Error error) 
         => Error = error.ThrowIfNull(); 
