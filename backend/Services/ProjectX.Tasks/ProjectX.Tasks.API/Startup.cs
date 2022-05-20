@@ -1,4 +1,7 @@
-﻿namespace ProjectX.Tasks.API;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectX.Tasks.Persistence.Context;
+
+namespace ProjectX.Tasks.API;
 
 public static class Startup
 {
@@ -8,6 +11,8 @@ public static class Startup
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddDbContext<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
+        
     }
 
     public static void Configure(WebApplication app) 

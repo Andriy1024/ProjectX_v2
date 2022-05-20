@@ -2,7 +2,7 @@
 
 namespace ProjectX.Tasks.Application.Queries.Tasks;
 
-public class TasksQuery : IQuery<TasksQuery.Result>
+public class TasksQuery : IQuery<IEnumerable<TasksQuery.Result>>
 {
     public class Result 
     {
