@@ -1,4 +1,6 @@
-﻿namespace ProjectX.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ProjectX.Core;
 
 public class ResultOf<TResult>
 {
@@ -10,10 +12,10 @@ public class ResultOf<TResult>
 
     public bool IsFailed => Error is not null;
 
-    public ResultOf(Error error) 
+    public ResultOf([NotNull] Error error) 
         => Error = error.ThrowIfNull(); 
 
-    public ResultOf(TResult data) 
+    public ResultOf([NotNull] TResult data) 
         => Data = data.ThrowIfNull();
 
     public override string ToString()

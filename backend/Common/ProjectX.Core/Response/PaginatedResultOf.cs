@@ -14,4 +14,8 @@ public class PaginatedResultOf<T> : ResultOf<T>
         : base(error)
     {
     }
+
+    public static implicit operator PaginatedResultOf<T>(Error error) => new(error);
+
+    public static implicit operator PaginatedResultOf<T>((T Data, int Total) value) => new(value.Data, value.Total);
 }

@@ -6,7 +6,7 @@ using System.Data;
 namespace ProjectX.Persistence.Implementations;
 
 public class UnitOfWork<T> : IUnitOfWork
-        where T : DbContext
+    where T : DbContext
 {
     public DbContext DbContext { get; }
 
@@ -18,7 +18,7 @@ public class UnitOfWork<T> : IUnitOfWork
         Mediator = mediator;
     }
 
-    private IDbContextTransaction _currentTransaction;
+    private IDbContextTransaction? _currentTransaction;
 
     public bool HasActiveTransaction => _currentTransaction != null;
 
@@ -63,7 +63,10 @@ public class UnitOfWork<T> : IUnitOfWork
     {
         try
         {
-            await _currentTransaction?.RollbackAsync();
+            if (_currentTransaction != null) 
+            {
+                await _currentTransaction.RollbackAsync();
+            }
         }
         finally
         {
@@ -89,11 +92,6 @@ public class UnitOfWork<T> : IUnitOfWork
         return _currentTransaction;
     }
 
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        return DbContext.SaveChangesAsync(cancellationToken);
-    }
-
     public IDbConnection GetCurrentConnection()
     {
         return DbContext.Database.GetDbConnection();
@@ -102,10 +100,10 @@ public class UnitOfWork<T> : IUnitOfWork
     public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
     {
         var domainEntities = DbContext
-                            .ChangeTracker
-                            .Entries<IEntity>()
-                            .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Count > 0)
-                            .ToArray();
+            .ChangeTracker
+            .Entries<IEntity>()
+            .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Count > 0)
+            .ToArray();
 
         var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents).ToArray();
 

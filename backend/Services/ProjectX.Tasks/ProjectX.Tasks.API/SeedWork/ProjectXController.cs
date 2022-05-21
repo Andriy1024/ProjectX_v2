@@ -21,9 +21,6 @@ public abstract class ProjectXController : ControllerBase
 
     protected IActionResult MapResponse<T>(ResultOf<T> response)
         => response.ThrowIfNull().IsFailed ? MapError(response) : Ok(response);
-   
-    protected IActionResult MapResponse<T>(T response)
-        => Ok(ResultFactory.Success(response.ThrowIfNull()));
     
     private static IActionResult MapError<T>(ResultOf<T> response)
         => response.Error.ThrowIfNull().Type switch 

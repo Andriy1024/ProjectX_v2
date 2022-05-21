@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 namespace ProjectX.Persistence.Implementations;
 
 public class Repository<TEntity> : IRepository<TEntity>
-    where TEntity : class, IEntity
+    where TEntity : class//, IEntity
 {
     protected DbSet<TEntity> DbSet { get; }
 
@@ -31,12 +31,12 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public virtual async Task<ResultOf<TEntity>> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
     {
-        return GetResponseOf<TEntity>(await DbSet.FirstOrDefaultAsync(cancellationToken));
+        return GetResultOf(await DbSet.FirstOrDefaultAsync(cancellationToken));
     }
 
     public virtual async Task<ResultOf<TEntity>> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default)
     {
-        return GetResponseOf<TEntity>(await DbSet.FirstOrDefaultAsync(expression, cancellationToken));
+        return GetResultOf(await DbSet.FirstOrDefaultAsync(expression, cancellationToken));
     }
 
     public virtual Task<TEntity[]> GetAsync(IOrderingOptions ordering = null, CancellationToken cancellationToken = default)
@@ -74,7 +74,9 @@ public class Repository<TEntity> : IRepository<TEntity>
                                   .WithPagination(pagination)
                                   .ToArrayAsync(cancellationToken);
 
-        return ResultFactory.Success(entities, await CountAsync(expression, entities, pagination, cancellationToken));
+        var total = await CountAsync(expression, entities, pagination, cancellationToken);
+        
+        return (entities, total);
     }
 
     public virtual async Task<PaginatedResultOf<TEntity[]>> GetAsync(Expression<Func<TEntity, bool>> expression, IPaginationOptions pagination, IOrderingOptions ordering = null, CancellationToken cancellationToken = default)
@@ -88,7 +90,9 @@ public class Repository<TEntity> : IRepository<TEntity>
 
         var entities = await query.WithPagination(pagination).ToArrayAsync(cancellationToken);
 
-        return ResultFactory.Success(entities, await CountAsync(expression, entities, pagination, cancellationToken));
+        var total = await CountAsync(expression, entities, pagination, cancellationToken);
+
+        return (entities, total);
     }
 
     #endregion
@@ -169,7 +173,7 @@ public class Repository<TEntity> : IRepository<TEntity>
                                 .ProjectTo<TOut>(mapper.ConfigurationProvider)
                                 .FirstOrDefaultAsync(cancellationToken);
 
-        return GetResponseOf(result);
+        return GetResultOf(result);
     }
 
     public virtual Task<TOut[]> GetAsync<TOut>(IMapper mapper, IOrderingOptions ordering = null, CancellationToken cancellationToken = default)
@@ -209,7 +213,9 @@ public class Repository<TEntity> : IRepository<TEntity>
                                   .ProjectTo<TOut>(mapper.ConfigurationProvider)
                                   .ToArrayAsync(cancellationToken);
 
-        return ResultFactory.Success(entities, await CountAsync(entities, pagination, cancellationToken));
+        var total = await CountAsync(entities, pagination, cancellationToken);
+        
+        return (entities, total);
     }
 
     public async virtual Task<PaginatedResultOf<TOut[]>> GetAsync<TOut>(Expression<Func<TEntity, bool>> expression, IMapper mapper, IPaginationOptions pagination, IOrderingOptions ordering = null, CancellationToken cancellationToken = default)
@@ -225,7 +231,9 @@ public class Repository<TEntity> : IRepository<TEntity>
                                   .ProjectTo<TOut>(mapper.ConfigurationProvider)
                                   .ToArrayAsync(cancellationToken);
 
-        return ResultFactory.Success(entities, await CountAsync(expression, entities, pagination, cancellationToken));
+        var total = await CountAsync(expression, entities, pagination, cancellationToken);
+
+        return (entities, total);
     }
 
     #endregion
@@ -237,11 +245,11 @@ public class Repository<TEntity> : IRepository<TEntity>
         NotFound = code;
     }
 
-    protected ResultOf<TOut> GetResponseOf<TOut>(TOut? entity) where TOut : class
+    protected ResultOf<TOut> GetResultOf<TOut>(TOut? entity) where TOut : class
     {
         return entity == null
-            ? new ResultOf<TOut>(Error.NotFound(NotFound, $"{typeof(TOut).Name} not found."))
-            : new ResultOf<TOut>(entity);
+            ? Error.NotFound(NotFound, $"{typeof(TOut).Name} not found.")
+            : entity;
     }
 
     protected ValueTask<int> CountAsync<T>(Expression<Func<TEntity, bool>> expression, T[] entities, IPaginationOptions pagination, CancellationToken cancellationToken)

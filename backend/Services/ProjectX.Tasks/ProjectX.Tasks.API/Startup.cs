@@ -5,6 +5,7 @@ using ProjectX.Tasks.Infrastructure.Handlers.Tasks;
 using ProjectX.Tasks.Persistence.Context;
 using System.Reflection;
 using ProjectX.Tasks.Application.Mapper;
+using ProjectX.Tasks.API.SeedWork;
 
 namespace ProjectX.Tasks.API;
 
@@ -28,6 +29,8 @@ public static class Startup
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseMiddleware<ErrorHandlerMiddleware>();
 
         app.UseHttpsRedirection();
 
