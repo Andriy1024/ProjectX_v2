@@ -13,8 +13,10 @@ public class TaskEntity : Entity<int>
     /// <summary>
     /// For EF
     /// </summary>
+#pragma warning disable CS8618
     private TaskEntity() {}
-    
+#pragma warning restore CS8618
+
     public TaskEntity(string name, string? description)
     {
         Name = name;

@@ -23,7 +23,6 @@ public static class Startup
 
     public static void Configure(WebApplication app) 
     {
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

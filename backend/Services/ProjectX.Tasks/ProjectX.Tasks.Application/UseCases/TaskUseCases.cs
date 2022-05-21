@@ -3,6 +3,8 @@ using ProjectX.Tasks.Application.Contracts;
 
 namespace ProjectX.Tasks.Application;
 
+public class TasksQuery : IQuery<IEnumerable<TaskContarct>> {}
+
 public class CreateTaskCommand : ICommand<TaskContarct>
 {
     public string Name { get; init; }
