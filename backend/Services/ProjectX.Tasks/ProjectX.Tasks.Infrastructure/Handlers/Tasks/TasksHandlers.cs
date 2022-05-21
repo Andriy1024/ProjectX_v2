@@ -33,15 +33,11 @@ public sealed class TasksHandlers :
 
     public async Task<ResultOf<TaskContarct>> Handle(CreateTaskCommand command, CancellationToken cancellationToken)
     {
-        var task = new TaskEntity 
-        {
-            Name = command.Name,
-            Description = command.Description
-        };
+        var task = TaskEntity.Create(command.Name, command.Description);
 
-        await _repository.InsertAsync(task);
-        
-        await _repository.UnitOfWork.SaveEntitiesAsync();
+        await _repository.InsertAsync(task, cancellationToken);
+
+        await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
         return _mapper.Map<TaskContarct>(task);
     }
@@ -55,17 +51,16 @@ public sealed class TasksHandlers :
             return taskResult.Error!;
         }
 
-        taskResult.Data!.Name = command.Name;
-        taskResult.Data!.Description = command.Description;
+        taskResult.Data!.Update(command.Name, command.Description);
 
-        await _repository.UnitOfWork.SaveEntitiesAsync();
+        await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
         return _mapper.Map<TaskContarct>(taskResult.Data);
     }
 
     public async Task<ResultOf<Unit>> Handle(DeleteTaskCommand command, CancellationToken cancellationToken)
     {
-        var taskResult = await _repository.FirstOrDefaultAsync(t => t.Id == command.Id);
+        var taskResult = await _repository.FirstOrDefaultAsync(t => t.Id == command.Id, cancellationToken);
 
         if (taskResult.IsFailed)
         {
@@ -73,9 +68,9 @@ public sealed class TasksHandlers :
         }
 
         _repository.Remove(taskResult.Data!);
-        
-        await _repository.UnitOfWork.SaveEntitiesAsync();
+
+        await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
         return ResultOf<Unit>.Unit;
-    }   
+    }
 }
