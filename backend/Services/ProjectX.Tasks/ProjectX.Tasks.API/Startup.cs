@@ -4,6 +4,7 @@ using ProjectX.Persistence.Extensions;
 using ProjectX.Tasks.Infrastructure.Handlers.Tasks;
 using ProjectX.Tasks.Persistence.Context;
 using System.Reflection;
+using ProjectX.Tasks.Application.Mapper;
 
 namespace ProjectX.Tasks.API;
 
@@ -16,7 +17,8 @@ public static class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddDbServices<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
-        services.AddMediatR(Assembly.GetAssembly(typeof(TasksQueryHandler))!);
+        services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
     }
 
     public static void Configure(WebApplication app) 

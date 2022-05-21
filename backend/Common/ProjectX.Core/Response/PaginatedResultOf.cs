@@ -1,16 +1,16 @@
 ﻿namespace ProjectX.Core;
 
-public class PaginatedResponse<T> : Response<T>
+public class PaginatedResultOf<T> : ResultOf<T>
 {
     public int Total { get; }
 
-    public PaginatedResponse(T data, int total)
+    public PaginatedResultOf(T data, int total)
         : base(data)
     {
         Total = total;
     }
 
-    public PaginatedResponse(Error error) 
+    public PaginatedResultOf(Error error) 
         : base(error)
     {
     }

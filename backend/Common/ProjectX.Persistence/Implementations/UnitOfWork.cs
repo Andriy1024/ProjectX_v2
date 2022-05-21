@@ -55,7 +55,7 @@ public class UnitOfWork<T> : IUnitOfWork
                 }
             }
 
-            //await Mediator.Publish(new TransactionCommitedEvent());
+            await Mediator.Publish(new TransactionCommitedEvent());
         }
     }
 
@@ -122,7 +122,7 @@ public class UnitOfWork<T> : IUnitOfWork
 
             //await _tracer.Trace(domainEvent.GetType().Name, async () =>
             //{
-
+                  //TODO: Implement Tracer
             //});
         }
 

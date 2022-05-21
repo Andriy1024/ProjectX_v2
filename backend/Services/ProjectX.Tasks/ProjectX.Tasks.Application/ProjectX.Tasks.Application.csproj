@@ -10,8 +10,4 @@
     <ProjectReference Include="..\ProjectX.Tasks.Domain\ProjectX.Tasks.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\Tasks\" />
-  </ItemGroup>
-
 </Project>

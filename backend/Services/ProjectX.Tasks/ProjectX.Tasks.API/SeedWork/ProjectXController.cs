@@ -13,22 +13,19 @@ public abstract class ProjectXController : ControllerBase
 {
     protected IMediator Mediator => HttpContext.RequestServices.GetRequiredService<IMediator>();
 
-    //protected async Task<IActionResult> Send(ICommand command)
-    //    => MapResponse(await Mediator.Send(command));
-
     protected async Task<IActionResult> Send<TResult>(ICommand<TResult> command)
         => MapResponse(await Mediator.Send(command));
 
     protected async Task<IActionResult> Send<TResult>(IQuery<TResult> command, CancellationToken ct)
         => MapResponse(await Mediator.Send(command, ct));
 
-    protected IActionResult MapResponse<T>(Response<T> response)
-        => response.ThrowIfNull().IsSuccess ? Ok(response) : MapError(response);
+    protected IActionResult MapResponse<T>(ResultOf<T> response)
+        => response.ThrowIfNull().IsFailed ? MapError(response) : Ok(response);
    
     protected IActionResult MapResponse<T>(T response)
-        => Ok(ResponseFactory.Success(response.ThrowIfNull()));
+        => Ok(ResultFactory.Success(response.ThrowIfNull()));
     
-    private static IActionResult MapError<T>(Response<T> response)
+    private static IActionResult MapError<T>(ResultOf<T> response)
         => response.Error.ThrowIfNull().Type switch 
         {
             ErrorType.ServerError => new InternalServerErrorObjectResult(response),

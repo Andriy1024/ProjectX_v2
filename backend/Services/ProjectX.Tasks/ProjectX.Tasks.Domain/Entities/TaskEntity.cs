@@ -4,8 +4,6 @@ namespace ProjectX.Tasks.Domain.Entities;
 
 public class TaskEntity : Entity<int>
 {
-    public int Id { get; set; }
-
     public string Name { get; set; }
 
     public string Description { get; set; }

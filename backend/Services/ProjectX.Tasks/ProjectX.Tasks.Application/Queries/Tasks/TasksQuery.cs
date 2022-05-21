@@ -1,15 +1,8 @@
 ﻿using ProjectX.Core;
+using ProjectX.Tasks.Application.Contracts;
 
-namespace ProjectX.Tasks.Application.Queries.Tasks;
+namespace ProjectX.Tasks.Application;
 
-public class TasksQuery : IQuery<IEnumerable<TasksQuery.Result>>
+public class TasksQuery : IQuery<IEnumerable<TaskContarct>>
 {
-    public class Result 
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-        
-        public string Description { get; set; }
-    }
 }
