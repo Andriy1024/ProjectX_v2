@@ -30,7 +30,7 @@ jobs:
           docker images
           
       - name: docker build image
-        run: docker build -f "backend/Services/ProjectX.Tasks/ProjectX.Tasks.API/Dockerfile" --force-rm -t projectx_v2/tasks_api:dev "backend"
+        run: docker build -f ./backend/Services/ProjectX.Tasks/ProjectX.Tasks.API/Dockerfile --force-rm -t projectx_v2/tasks_api:dev ./backend
         
       - name: Print images after build
         run: docker images
