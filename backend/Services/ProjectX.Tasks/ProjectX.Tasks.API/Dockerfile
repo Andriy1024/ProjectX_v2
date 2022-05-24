@@ -5,12 +5,14 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+#Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+#Build context must be backend folder
 COPY ./Common ./Common
 COPY ./Services/ProjectX.Tasks ./Services/ProjectX.Tasks
-RUN dotnet restore "./Services/ProjectX.Tasks/ProjectX.Tasks.API/ProjectX.Tasks.API.csproj"
 WORKDIR "/src/Services/ProjectX.Tasks/ProjectX.Tasks.API"
+RUN dotnet restore "ProjectX.Tasks.API.csproj"
 RUN dotnet build "ProjectX.Tasks.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
