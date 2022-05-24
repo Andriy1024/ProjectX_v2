@@ -24,8 +24,10 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
         
-      - name: Print docker version
-        run: docker -v
+      - name: docker commands
+        run: | 
+          docker -v
+          docker images
         
       - name: Print folders
         run: ls -la
