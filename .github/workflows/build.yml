@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v3
           
       - name: Build the Docker image
-        run: docker build -f .\backend\Services\ProjectX.Tasks\ProjectX.Tasks.API\Dockerfile --force-rm -t andriy1024/projectx-tasks:latest .\backend
+        run: docker build -f ./backend/Services/ProjectX.Tasks/ProjectX.Tasks.API/Dockerfile --force-rm -t andriy1024/projectx-tasks:latest ./backend
         
       - name: Push the Docker image
         run: docker login -u andriy1024 -p ${{ secrets.DOCKER_TOKEN }} && docker push andriy1024/projectx-tasks:latest
