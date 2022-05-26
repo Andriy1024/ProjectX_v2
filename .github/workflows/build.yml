@@ -25,9 +25,4 @@ jobs:
         
       - name: Push the Docker image
         run: docker login -u andriy1024 -p ${{ secrets.DOCKER_TOKEN }} && docker push andriy1024/projectx-tasks:latest
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+        
