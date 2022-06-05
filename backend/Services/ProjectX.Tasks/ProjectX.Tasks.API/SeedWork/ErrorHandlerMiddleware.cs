@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using ProjectX.Core;
 
 namespace ProjectX.Tasks.API.SeedWork;
@@ -12,15 +10,12 @@ public sealed class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger _logger;
-    private readonly IActionResultExecutor<ObjectResult> _actionResultExecutor;
 
     public ErrorHandlerMiddleware(RequestDelegate next,
-        ILogger<ErrorHandlerMiddleware> logger,
-        IActionResultExecutor<ObjectResult> actionResultExecutor)
+        ILogger<ErrorHandlerMiddleware> logger)
     {
         _next = next;
         _logger = logger;
-        _actionResultExecutor = actionResultExecutor;
     }
 
     public async Task Invoke(HttpContext context)
@@ -35,15 +30,9 @@ public sealed class ErrorHandlerMiddleware
 
             ResultOf<Unit> error = Error.From(ex);
 
-            await SendResponseAsync(context, new InternalServerErrorObjectResult(error));
+            context.Response.StatusCode = 500;
+            
+            await context.Response.WriteAsJsonAsync(error);
         }
     }
-
-    /// <summary>
-    /// Executes passed action result.
-    /// </summary>
-    /// <param name="context">HttpContext of current request.</param>
-    /// <param name="objectResult">Instance of ObjectResult implementation, contains error data.</param>
-    private Task SendResponseAsync(HttpContext context, ObjectResult objectResult) =>
-            _actionResultExecutor.ExecuteAsync(new ActionContext() { HttpContext = context }, objectResult);
 }

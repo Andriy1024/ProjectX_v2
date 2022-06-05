@@ -9,8 +9,8 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /src
 #Build context must be backend folder
-COPY ./Common ./Common
-COPY ./Services/ProjectX.Tasks ./Services/ProjectX.Tasks
+COPY ./Common ./Common/
+COPY ./Services/ProjectX.Tasks ./Services/ProjectX.Tasks/
 WORKDIR "/src/Services/ProjectX.Tasks/ProjectX.Tasks.API"
 RUN dotnet restore "ProjectX.Tasks.API.csproj"
 RUN dotnet build "ProjectX.Tasks.API.csproj" -c Release -o /app/build
