@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Identity.Authentication.DTO.Outcoming;
+﻿namespace ProjectX.Identity.API.Results;
 
 public class AuthResult
 {

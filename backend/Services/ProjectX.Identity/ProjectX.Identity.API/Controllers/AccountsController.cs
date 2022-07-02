@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectX.Identity.API.Authentication;
 using ProjectX.Identity.API.Database;
-using ProjectX.Identity.Authentication.DTO.Incoming;
-using ProjectX.Identity.Authentication.DTO.Outcoming;
+using ProjectX.Identity.API.Database.Models;
+using ProjectX.Identity.API.Requests;
+using ProjectX.Identity.API.Results;
 
 namespace ProjectX.Identity.API.Controllers;
 
@@ -52,41 +53,36 @@ public class AccountsController : ControllerBase
 
         if(userExist == null) 
         {
-            return BadRequest(new 
-            {
-                Errors = new[] { "User not found" }
-            });
+            return BadRequest(AuthResult.Failed("User not found")); 
         }
 
         var isPasswordCorrect = await _userManager.CheckPasswordAsync(userExist, request.Password);
 
         if (isPasswordCorrect == false) 
         {
-            return BadRequest(new 
-            {
-                Errors = new[] { "Invalid password" }
-            });
+            return BadRequest(AuthResult.Failed("Invalid password"));
         }
 
-        var token = _jwtService.GenerateJwtToken(userExist);
+        var authResult = await _jwtService.GenerateJwtToken(userExist);
 
-        return Ok(new AuthResult 
-        {
-            Token = token
-        });
+        return authResult.IsSuccess
+            ? Ok(authResult)
+            : BadRequest(authResult);
     }
 
     [HttpPost]
     [Route("registration")]
     public async Task<IActionResult> Register([FromBody] RegistrationRequest request) 
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(AuthResult.Failed("Invalid payload"));
+        }
+
         var userExist = await _userManager.FindByEmailAsync(request.Email);
         if(userExist != null) 
         {
-            return BadRequest(new 
-            {
-                Errors = new[] { "Email already in use." }
-            });
+            return BadRequest(AuthResult.Failed("Email already in use."));
         }
 
         var newUser = new UserEntity() 
@@ -107,11 +103,26 @@ public class AccountsController : ControllerBase
             });
         }
 
-        var token = _jwtService.GenerateJwtToken(newUser);
+        var authResult = await _jwtService.GenerateJwtToken(newUser);
 
-        return Ok(new ReqistrationResult 
+        return authResult.IsSuccess
+            ? Ok(authResult)
+            : BadRequest(authResult);
+    }
+
+    [HttpPost]
+    [Route("refreshtoken")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+    {
+        if (!ModelState.IsValid) 
         {
-            Token = token
-        });
+            return BadRequest(AuthResult.Failed("Invalid payload"));
+        }
+
+        var authResult = await _jwtService.VerifyAndGenerateToken(request);
+
+        return authResult.IsSuccess
+            ? Ok(authResult)
+            : BadRequest(authResult);
     }
 }

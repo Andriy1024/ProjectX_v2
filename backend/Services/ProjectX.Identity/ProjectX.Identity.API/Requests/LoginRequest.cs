@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Identity.Authentication.DTO.Incoming;
+﻿namespace ProjectX.Identity.API.Requests;
 
 public class LoginRequest
 {
