@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "b7af1d13-7c7c-4716-abc1-912b345b0745",
+		"name": "ProjectX",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7711633"
+	},
+	"item": [
+		{
+			"name": "Registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Andrii\",\r\n    \"lastName\": \"Zubyk\",\r\n    \"email\": \"fake@mail.com\",\r\n    \"password\": \"Pa$w0rd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ProjectX_Identity_URL}}/api/accounts/registration",
+					"host": [
+						"{{ProjectX_Identity_URL}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"ProjectX_Token\", jsonData.token);\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"ProjectX_RefreshToken\", jsonData.refreshToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"fake@mail.com\",\r\n    \"password\": \"Pa$w0rd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ProjectX_Identity_URL}}/api/accounts/login",
+					"host": [
+						"{{ProjectX_Identity_URL}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAccounts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ProjectX_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ProjectX_Identity_URL}}/api/accounts",
+					"host": [
+						"{{ProjectX_Identity_URL}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"ProjectX_Token\", jsonData.token);\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"ProjectX_RefreshToken\", jsonData.refreshToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"{{ProjectX_Token}}\",\r\n    \"refreshToken\": \"{{ProjectX_RefreshToken}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ProjectX_Identity_URL}}/api/accounts/refreshtoken",
+					"host": [
+						"{{ProjectX_Identity_URL}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						"refreshtoken"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
