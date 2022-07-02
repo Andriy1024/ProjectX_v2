@@ -44,6 +44,7 @@ public class JwtService
                 new("Id", user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Sub, user.Email),
                 new(JwtRegisteredClaimNames.Email, user.Email),
+                new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // used by the refresh token
             }),
             Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame),
