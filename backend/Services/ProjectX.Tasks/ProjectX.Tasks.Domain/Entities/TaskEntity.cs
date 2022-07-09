@@ -21,12 +21,21 @@ public class TaskEntity : Entity<int>
     {
         Name = name;
         Description = description;
+
+        AddDomainEvent(new EntityCreated<TaskEntity>(this));
     }
 
     public void Update(string name, string? description) 
     {
         Name = name;
         Description = description;
+
+        AddDomainEvent(new EntityDeleted<TaskEntity>(this));
+    }
+
+    public void Remove() 
+    {
+        AddDomainEvent(new EntityDeleted<TaskEntity>(this));
     }
 
     public static TaskEntity Create(string name, string? description)

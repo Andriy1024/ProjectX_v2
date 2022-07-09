@@ -67,7 +67,9 @@ public sealed class TasksHandlers :
             return taskResult.Error!;
         }
 
-        _repository.Remove(taskResult.Data!);
+        taskResult.Data!.Remove();
+
+        _repository.Remove(taskResult.Data);
 
         await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
