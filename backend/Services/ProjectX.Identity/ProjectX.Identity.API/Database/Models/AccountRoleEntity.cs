@@ -2,16 +2,16 @@
 
 namespace ProjectX.Identity.API.Database.Models;
 
-public class UserRoleEntity : IdentityUserRole<int>
+public class AccountRoleEntity : IdentityUserRole<int>
 {
-    public UserEntity User { get; private set; }
+    public AccountEntity User { get; private set; }
     public RoleEntity Role { get; private set; }
 
-    public UserRoleEntity()
+    public AccountRoleEntity()
     {
     }
 
-    public UserRoleEntity(UserEntity user, RoleEntity role)
+    public AccountRoleEntity(AccountEntity user, RoleEntity role)
     {
         User = user;
         Role = role;

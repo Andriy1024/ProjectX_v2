@@ -2,9 +2,9 @@
 
 namespace ProjectX.Identity.API.Database.Models;
 
-public class UserEntity : IdentityUser<int>
+public class AccountEntity : IdentityUser<int>
 {
-    public ICollection<UserRoleEntity> UserRoles { get; private set; } = new List<UserRoleEntity>();
+    public ICollection<AccountRoleEntity> UserRoles { get; private set; } = new List<AccountRoleEntity>();
 
     public string FirstName { get; set; }
 

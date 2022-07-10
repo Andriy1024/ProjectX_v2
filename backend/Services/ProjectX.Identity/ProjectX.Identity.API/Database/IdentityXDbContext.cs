@@ -6,19 +6,19 @@ using ProjectX.Identity.API.Database.Models;
 
 namespace ProjectX.Identity.API.Database;
 
-public class ProjectXIdentityDbContext : IdentityDbContext
-    <UserEntity, RoleEntity, int, IdentityUserClaim<int>, 
-     UserRoleEntity, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
+public class IdentityXDbContext : IdentityDbContext
+    <AccountEntity, RoleEntity, int, IdentityUserClaim<int>, 
+     AccountRoleEntity, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public const string SchemaName = "ProjectX.Identity";
 
-    public override DbSet<UserEntity> Users { get; set; }
+    public override DbSet<AccountEntity> Users { get; set; }
     public override DbSet<RoleEntity> Roles { get; set; }
-    public override DbSet<UserRoleEntity> UserRoles { get; set; }
+    public override DbSet<AccountRoleEntity> UserRoles { get; set; }
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
-    public ProjectXIdentityDbContext(DbContextOptions<ProjectXIdentityDbContext> options) 
+    public IdentityXDbContext(DbContextOptions<IdentityXDbContext> options) 
         : base(options)
     {
     }
@@ -32,6 +32,3 @@ public class ProjectXIdentityDbContext : IdentityDbContext
         builder.ApplyConfigurationsFromAssembly(typeof(RefreshTokenConfiguration).Assembly);
     }
 }
-
-
-

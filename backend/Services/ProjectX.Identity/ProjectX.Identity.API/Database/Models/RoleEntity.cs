@@ -4,5 +4,5 @@ namespace ProjectX.Identity.API.Database.Models;
 
 public class RoleEntity : IdentityRole<int>
 {
-    public ICollection<UserRoleEntity> UserRoles { get; private set; } = new List<UserRoleEntity>();
+    public ICollection<AccountRoleEntity> UserRoles { get; private set; } = new List<AccountRoleEntity>();
 }

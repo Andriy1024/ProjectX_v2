@@ -8,7 +8,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
-        builder.ToTable("RefreshToken", ProjectXIdentityDbContext.SchemaName);
+        builder.ToTable("RefreshToken", IdentityXDbContext.SchemaName);
 
         builder.HasKey(e => e.Id);
 

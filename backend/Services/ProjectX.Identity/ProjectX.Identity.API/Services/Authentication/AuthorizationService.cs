@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ProjectX.Core;
 using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
 using ProjectX.Identity.API.Requests;
@@ -12,18 +13,18 @@ using System.Text;
 
 namespace ProjectX.Identity.API.Authentication;
 
-public class JwtService
+public class AuthorizationService
 {
     private readonly JwtConfig _jwtConfig;
     private readonly TokenValidationParameters _tokenValidationParams;
-    private readonly ProjectXIdentityDbContext _dbContext;
-    private readonly UserManager<UserEntity> _userManager;
+    private readonly IdentityXDbContext _dbContext;
+    private readonly UserManager<AccountEntity> _userManager;
 
-    public JwtService(
+    public AuthorizationService(
         IOptions<JwtConfig> jwtConfig,
         TokenValidationParameters tokenValidationParams,
-        ProjectXIdentityDbContext dbContext,
-        UserManager<UserEntity> userManager)
+        IdentityXDbContext dbContext,
+        UserManager<AccountEntity> userManager)
     {
         _jwtConfig = jwtConfig.Value;
         _tokenValidationParams = tokenValidationParams;
@@ -31,24 +32,25 @@ public class JwtService
         _userManager = userManager;
     }
 
-    public async Task<AuthResult> GenerateJwtToken(UserEntity user)
+    public async Task<ResultOf<AuthResult>> GenerateTokenAsync(AccountEntity user)
     {
         var jwtHandler = new JwtSecurityTokenHandler();
 
-        var secret = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
+        var credentials = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtConfig.Secret)),
+            SecurityAlgorithms.HmacSha256Signature);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new("Id", user.Id.ToString()),
-                new(JwtRegisteredClaimNames.Sub, user.Email),
+                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, user.Email),
                 new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // used by the refresh token
             }),
             Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = credentials
         };
 
         var token = jwtHandler.CreateToken(tokenDescriptor);
@@ -72,7 +74,7 @@ public class JwtService
         return AuthResult.Success(jwtToken, refreshToken.Token);
     }
 
-    public async Task<AuthResult> VerifyAndGenerateToken(RefreshTokenRequest tokenRequest)
+    public async Task<ResultOf<AuthResult>> RefreshTokenAsync(RefreshTokenRequest tokenRequest)
     {
         var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -92,7 +94,7 @@ public class JwtService
 
                 if (result == false)
                 {
-                    return AuthResult.Failed("Invalid signature algoritm");
+                    return Error.InvalidData(message: "Invalid signature algoritm");
                 }
             }
 
@@ -103,7 +105,7 @@ public class JwtService
 
             if (expiryDate > DateTime.UtcNow)
             {
-                return AuthResult.Failed("Token has not yet expired");
+                return Error.InvalidData(message: "Token has not yet expired");
             }
 
             // validation 4 - validate existence of the token
@@ -111,19 +113,19 @@ public class JwtService
 
             if (storedToken == null)
             {
-                return AuthResult.Failed("Token does not exist");
+                return Error.InvalidData(message: "Token does not exist");
             }
 
             // Validation 5 - validate if used
             if (storedToken.IsUsed)
             {
-                return AuthResult.Failed("Token has been used");
+                return Error.InvalidData(message: "Token has been used");
             }
 
             // Validation 6 - validate if revoked
             if (storedToken.IsRevorked)
             {
-                return AuthResult.Failed("Token has been revoked");
+                return Error.InvalidData(message: "Token has been revoked");
             }
 
             // Validation 7 - validate the id
@@ -131,13 +133,13 @@ public class JwtService
 
             if (storedToken.JwtId != jti)
             {
-                return AuthResult.Failed("Token doesn't match");
+                return Error.InvalidData(message: "Token doesn't match");
             }
 
             // Validation 8 - validate stored token expiry date
             if (storedToken.ExpiryDate < DateTime.UtcNow)
             {
-                return AuthResult.Failed("Refresh token has expired");
+                return Error.InvalidData(message: "Refresh token has expired");
             }
 
             // update current token 
@@ -151,17 +153,17 @@ public class JwtService
             // Generate a new token
             var dbUser = await _userManager.FindByIdAsync(storedToken.UserId.ToString());
             
-            return await GenerateJwtToken(dbUser);
+            return await GenerateTokenAsync(dbUser);
         }
         catch (Exception ex)
         {
             if (ex.Message.Contains("Lifetime validation failed. The token is expired."))
             {
-                return AuthResult.Failed("Token has expired please re-login");
+                return Error.ServerError(message: "Token has expired please re-login");
             }
             else
             {
-                return AuthResult.Failed("Something went wrong.");
+                return Error.ServerError(message: "Something went wrong.");
             }
         }
     }

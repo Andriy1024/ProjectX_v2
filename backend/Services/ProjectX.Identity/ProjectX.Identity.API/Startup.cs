@@ -20,20 +20,20 @@ public static class Startup
 
         services.AddProjectXAuthentication(configuration);
 
-        services.AddDbContext<ProjectXIdentityDbContext>(o =>
+        services.AddDbContext<IdentityXDbContext>(o =>
         {
             o.UseInMemoryDatabase(databaseName: "ProjectX.Identity");
         });
 
-        services.AddIdentity<UserEntity, RoleEntity>(options =>
+        services.AddIdentity<AccountEntity, RoleEntity>(options =>
         {
             options.User.RequireUniqueEmail = true;
         })
         .AddRoles<RoleEntity>()
-        .AddEntityFrameworkStores<ProjectXIdentityDbContext>()
-        .AddUserManager<UserManager<UserEntity>>();
+        .AddEntityFrameworkStores<IdentityXDbContext>()
+        .AddUserManager<UserManager<AccountEntity>>();
 
-        services.AddTransient<JwtService>();
+        services.AddTransient<AuthorizationService>();
 
         services.AddCors(options =>
         {

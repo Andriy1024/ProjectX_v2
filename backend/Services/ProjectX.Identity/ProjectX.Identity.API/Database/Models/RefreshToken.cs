@@ -18,5 +18,5 @@ public class RefreshToken
     
     public DateTime ExpiryDate { get; set; }
 
-    public UserEntity User { get; set; }
+    public AccountEntity User { get; set; }
 }
