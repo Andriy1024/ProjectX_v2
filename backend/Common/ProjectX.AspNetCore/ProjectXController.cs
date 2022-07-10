@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using ProjectX.Core;
 
-namespace ProjectX.Tasks.API.SeedWork;
+namespace ProjectX.AspNetCore;
 
 /// <summary>
 /// Represents base api controller with integrated IMediator service, and response mapping.
@@ -21,9 +22,9 @@ public abstract class ProjectXController : ControllerBase
 
     protected IActionResult MapResponse<T>(ResultOf<T> response)
         => response.ThrowIfNull().IsFailed ? MapError(response) : Ok(response);
-    
+
     private static IActionResult MapError<T>(ResultOf<T> response)
-        => response.Error.ThrowIfNull().Type switch 
+        => response.Error.ThrowIfNull().Type switch
         {
             ErrorType.ServerError => new InternalServerErrorObjectResult(response),
             ErrorType.NotFound => new NotFoundObjectResult(response),

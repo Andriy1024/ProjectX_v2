@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ProjectX.Tasks.API.SeedWork;
+namespace ProjectX.AspNetCore;
 
 /// <summary>
 /// Internal server result, contains 500 status code.

@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using ProjectX.Core;
 
-namespace ProjectX.Tasks.API.SeedWork;
+namespace ProjectX.AspNetCore;
 
 /// <summary>
 /// Represents Error handling middleware. Used to process error's user messages.
@@ -11,7 +13,8 @@ public sealed class ErrorHandlerMiddleware
     private readonly RequestDelegate _next;
     private readonly ILogger _logger;
 
-    public ErrorHandlerMiddleware(RequestDelegate next,
+    public ErrorHandlerMiddleware(
+        RequestDelegate next,
         ILogger<ErrorHandlerMiddleware> logger)
     {
         _next = next;
@@ -31,7 +34,7 @@ public sealed class ErrorHandlerMiddleware
             ResultOf<Unit> error = Error.From(ex);
 
             context.Response.StatusCode = 500;
-            
+
             await context.Response.WriteAsJsonAsync(error);
         }
     }
