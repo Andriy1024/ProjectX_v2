@@ -7,161 +7,221 @@
 	},
 	"item": [
 		{
-			"name": "Registration",
-			"event": [
+			"name": "Tasks",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"firstName\": \"Andrii\",\r\n    \"lastName\": \"Zubyk\",\r\n    \"email\": \"fake@mail.com\",\r\n    \"password\": \"Pa$w0rd\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Get Tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ProjectX_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ProjectX_Tasks_URL}}/api/tasks",
+							"host": [
+								"{{ProjectX_Tasks_URL}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "{{ProjectX_Identity_URL}}/api/accounts/registration",
-					"host": [
-						"{{ProjectX_Identity_URL}}"
-					],
-					"path": [
-						"api",
-						"accounts",
-						"registration"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Login",
-			"event": [
+			"name": "Identity",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);\r",
-							"\r",
-							"console.log(jsonData);\r",
-							"\r",
-							"postman.setEnvironmentVariable(\"ProjectX_Token\", jsonData.token);\r",
-							"\r",
-							"postman.setEnvironmentVariable(\"ProjectX_RefreshToken\", jsonData.refreshToken);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"fake@mail.com\",\r\n    \"password\": \"Pa$w0rd\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{ProjectX_Identity_URL}}/api/accounts/login",
-					"host": [
-						"{{ProjectX_Identity_URL}}"
-					],
-					"path": [
-						"api",
-						"accounts",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetAccounts",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"name": "Refresh Token",
+					"event": [
 						{
-							"key": "token",
-							"value": "{{ProjectX_Token}}",
-							"type": "string"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"console.log(jsonData);\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"ProjectX_Token\", jsonData.data.token);\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"ProjectX_RefreshToken\", jsonData.data.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{ProjectX_Identity_URL}}/api/accounts",
-					"host": [
-						"{{ProjectX_Identity_URL}}"
 					],
-					"path": [
-						"api",
-						"accounts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Refresh Token",
-			"event": [
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"{{ProjectX_Token}}\",\r\n    \"refreshToken\": \"{{ProjectX_RefreshToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ProjectX_Identity_URL}}/api/auth/refresh-token",
+							"host": [
+								"{{ProjectX_Identity_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);\r",
-							"\r",
-							"console.log(jsonData);\r",
-							"\r",
-							"postman.setEnvironmentVariable(\"ProjectX_Token\", jsonData.token);\r",
-							"\r",
-							"postman.setEnvironmentVariable(\"ProjectX_RefreshToken\", jsonData.refreshToken);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"token\": \"{{ProjectX_Token}}\",\r\n    \"refreshToken\": \"{{ProjectX_RefreshToken}}\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{ProjectX_Identity_URL}}/api/accounts/refreshtoken",
-					"host": [
-						"{{ProjectX_Identity_URL}}"
 					],
-					"path": [
-						"api",
-						"accounts",
-						"refreshtoken"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "FirstName",
+									"value": "Andrii",
+									"type": "text"
+								},
+								{
+									"key": "LastName",
+									"value": "Zubyk",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "fake@mail.com",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "Pa$w0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{ProjectX_Identity_URL}}/api/auth/sign-up",
+							"host": [
+								"{{ProjectX_Identity_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"console.log(jsonData);\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"ProjectX_Token\", jsonData.data.token);\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"ProjectX_RefreshToken\", jsonData.data.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "Email",
+									"value": "fake@mail.com",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "Pa$w0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{ProjectX_Identity_URL}}/api/auth/sign-in",
+							"host": [
+								"{{ProjectX_Identity_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAccounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ProjectX_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ProjectX_Identity_URL}}/api/accounts",
+							"host": [
+								"{{ProjectX_Identity_URL}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
