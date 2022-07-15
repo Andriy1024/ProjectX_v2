@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ProjectX.AspNetCore\ProjectX.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Common\ProjectX.Authentication\ProjectX.Authentication.csproj" />
     <ProjectReference Include="..\ProjectX.Tasks.Infrastructure\ProjectX.Tasks.Infrastructure.csproj" />
   </ItemGroup>
 

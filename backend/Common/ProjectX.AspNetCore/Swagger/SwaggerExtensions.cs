@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace ProjectX.Identity.API.Swagger;
+namespace ProjectX.AspNetCore.Swagger;
 
 public static class SwaggerExtensions
 {
-    public static IServiceCollection AddProjectXSwagger(this IServiceCollection services) 
+    public static IServiceCollection AddProjectXSwagger(this IServiceCollection services)
     {
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -17,7 +19,7 @@ public static class SwaggerExtensions
             c.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.Http,
-                Scheme = JwtBearerDefaults.AuthenticationScheme.ToLowerInvariant(),
+                Scheme = "Bearer".ToLowerInvariant(), //JwtBearerDefaults.AuthenticationScheme,
                 In = ParameterLocation.Header,
                 Name = "Authorization",
                 BearerFormat = "JWT",
@@ -30,7 +32,7 @@ public static class SwaggerExtensions
         return services;
     }
 
-    public static void UseProjectXSwagger(this WebApplication app) 
+    public static void UseProjectXSwagger(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {

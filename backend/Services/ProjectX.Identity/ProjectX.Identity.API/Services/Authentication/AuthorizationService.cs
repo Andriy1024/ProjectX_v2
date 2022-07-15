@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ProjectX.Authentication;
 using ProjectX.Core;
 using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
@@ -13,15 +14,15 @@ using System.Text;
 
 namespace ProjectX.Identity.API.Authentication;
 
-public class AuthorizationService
+public sealed class AuthorizationService
 {
-    private readonly JwtConfig _jwtConfig;
+    private readonly AuthenticationConfig _jwtConfig;
     private readonly TokenValidationParameters _tokenValidationParams;
     private readonly IdentityXDbContext _dbContext;
     private readonly UserManager<AccountEntity> _userManager;
 
     public AuthorizationService(
-        IOptions<JwtConfig> jwtConfig,
+        IOptions<AuthenticationConfig> jwtConfig,
         TokenValidationParameters tokenValidationParams,
         IdentityXDbContext dbContext,
         UserManager<AccountEntity> userManager)
@@ -37,20 +38,23 @@ public class AuthorizationService
         var jwtHandler = new JwtSecurityTokenHandler();
 
         var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtConfig.Secret)),
-            SecurityAlgorithms.HmacSha256Signature);
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Secret)),
+            SecurityAlgorithms.HmacSha256);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
+            Issuer = _jwtConfig.Issuer,
+            Audience = _jwtConfig.Audience,
+            Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame),
+            SigningCredentials = credentials,
             Subject = new ClaimsIdentity(new Claim[]
             {
+                new(JwtRegisteredClaimNames.Aud, "ProjectX.Tasks"),
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, user.Email),
                 new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // used by the refresh token
-            }),
-            Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame),
-            SigningCredentials = credentials
+            })
         };
 
         var token = jwtHandler.CreateToken(tokenDescriptor);

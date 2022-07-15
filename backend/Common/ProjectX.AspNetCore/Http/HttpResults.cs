@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ProjectX.AspNetCore;
+namespace ProjectX.AspNetCore.Http;
 
 /// <summary>
 /// Internal server result, contains 500 status code.

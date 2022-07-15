@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.5" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ProjectX.AspNetCore\ProjectX.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Common\ProjectX.Authentication\ProjectX.Authentication.csproj" />
     <ProjectReference Include="..\..\..\Common\ProjectX.Core\ProjectX.Core.csproj" />
   </ItemGroup>
 

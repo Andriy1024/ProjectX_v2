@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using ProjectX.Core;
 
-namespace ProjectX.AspNetCore;
+namespace ProjectX.AspNetCore.Http;
 
 /// <summary>
 /// Represents Error handling middleware. Used to process error's user messages.

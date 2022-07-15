@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjectX.AspNetCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectX.AspNetCore.Http;
 using ProjectX.Tasks.Application;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,6 +9,7 @@ using ProjectX.Tasks.Application;
 namespace ProjectX.Tasks.API.Controllers;
 
 [Route("api/tasks")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class TasksController : ProjectXController
 {
     [HttpGet]

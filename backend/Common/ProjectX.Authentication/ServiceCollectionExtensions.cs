@@ -1,23 +1,28 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace ProjectX.Identity.API.Authentication;
+namespace ProjectX.Authentication;
 
-public static class AuthServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddProjectXAuthentication(this IServiceCollection services, IConfiguration configuration) 
+    public static IServiceCollection AddProjectXAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<JwtConfig>(configuration.GetSection(nameof(JwtConfig)));
+        services.Configure<AuthenticationConfig>(configuration.GetSection(nameof(AuthenticationConfig)));
 
-        var secret = Encoding.ASCII.GetBytes(configuration["JwtConfig:Secret"]);
+        var secret = Encoding.UTF8.GetBytes(configuration["AuthenticationConfig:Secret"]);
 
         var tokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(secret),
-            ValidateIssuer = false,   //TODO later true
-            ValidateAudience = false, //TODO later true
+            ValidateIssuer = true,
+            ValidIssuer = configuration["AuthenticationConfig:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = configuration["AuthenticationConfig:Audience"],
             RequireExpirationTime = false, //TODO later true
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
@@ -40,7 +45,7 @@ public static class AuthServiceCollectionExtensions
         return services;
     }
 
-    public static void UseProjectXAuthentication(this WebApplication app) 
+    public static void UseProjectXAuthentication(this WebApplication app)
     {
         app.UseAuthentication();
 

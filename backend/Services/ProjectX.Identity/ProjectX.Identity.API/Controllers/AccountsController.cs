@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectX.AspNetCore.Http;
 using ProjectX.Identity.API.Database.Models;
 
 namespace ProjectX.Identity.API.Controllers;
 
 [Route("api/accounts")]
-[ApiController]
-public class AccountsController : ControllerBase
+public class AccountsController : ProjectXController
 {
     private readonly UserManager<AccountEntity> _userManager;
 

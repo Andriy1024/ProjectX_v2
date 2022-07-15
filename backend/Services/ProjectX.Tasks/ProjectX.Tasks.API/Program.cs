@@ -2,7 +2,7 @@ using ProjectX.Tasks.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Startup.ConfigureServices(builder.Services);
+Startup.ConfigureServices(builder);
 
 var app = builder.Build();
 

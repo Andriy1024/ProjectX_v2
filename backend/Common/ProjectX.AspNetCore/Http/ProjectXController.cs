@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectX.Core;
 
-namespace ProjectX.AspNetCore;
+namespace ProjectX.AspNetCore.Http;
 
 /// <summary>
 /// Represents base api controller with integrated IMediator service, and response mapping.
