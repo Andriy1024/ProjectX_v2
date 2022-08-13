@@ -2,7 +2,7 @@
 
 namespace ProjectX.Core;
 
-public class ResultOf<TResult>
+public class ResultOf<TResult> : IMaybeFailed
 {
     public static readonly ResultOf<Unit> Unit = new(MediatR.Unit.Value);
 

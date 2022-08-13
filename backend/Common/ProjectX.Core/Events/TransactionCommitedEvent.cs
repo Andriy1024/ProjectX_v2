@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.Core;
 
-public sealed class TransactionCommitedEvent : INotification
+public class TransactionCommitedEvent : IDomainEvent
 {
 }
 

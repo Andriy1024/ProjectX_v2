@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
@@ -10,12 +9,12 @@ public class UnitOfWork<T> : IUnitOfWork
 {
     public DbContext DbContext { get; }
 
-    protected readonly IMediator Mediator;
+    protected readonly IEventDispatcher _eventDispatcher;
 
-    public UnitOfWork(T dbContext, IMediator mediator)
+    public UnitOfWork(T dbContext, IEventDispatcher eventDispatcher)
     {
         DbContext = dbContext;
-        Mediator = mediator;
+        _eventDispatcher = eventDispatcher;
     }
 
     private IDbContextTransaction? _currentTransaction;
@@ -55,7 +54,7 @@ public class UnitOfWork<T> : IUnitOfWork
                 }
             }
 
-            await Mediator.Publish(new TransactionCommitedEvent());
+            await _eventDispatcher.DispatchAsync(new TransactionCommitedEvent());
         }
     }
 
@@ -112,17 +111,7 @@ public class UnitOfWork<T> : IUnitOfWork
 
         await DbContext.SaveChangesAsync(cancellationToken);
 
-        for (int i = 0; i < domainEvents.Length; i++)
-        {
-            var domainEvent = domainEvents[i];
-
-            await Mediator.Publish(domainEvent, cancellationToken);
-
-            //await _tracer.Trace(domainEvent.GetType().Name, async () =>
-            //{
-                  //TODO: Implement Tracer
-            //});
-        }
+        await _eventDispatcher.DispatchAsync(domainEvents);
 
         return true;
     }

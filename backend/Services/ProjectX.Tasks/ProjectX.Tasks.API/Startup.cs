@@ -7,6 +7,9 @@ using System.Reflection;
 using ProjectX.Tasks.Application.Mapper;
 using ProjectX.AspNetCore.Http;
 using ProjectX.Authentication;
+using Serilog;
+using ProjectX.Core;
+using ProjectX.Core.Observability;
 
 namespace ProjectX.Tasks.API;
 
@@ -24,10 +27,12 @@ public static class Startup
         services.AddSwaggerGen();
 
         services.AddProjectXAuthentication(configuration);
-
+        services.AddTransient<IEventDispatcher, EventDispatcher>();
         services.AddDbServices<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
         services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
         services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
+
+        app.AddObservabilityServices();
     }
 
     public static void Configure(WebApplication app) 
@@ -37,6 +42,8 @@ public static class Startup
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseSerilogRequestLogging();
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
