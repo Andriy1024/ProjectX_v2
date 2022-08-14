@@ -1,15 +1,31 @@
 using ProjectX.Identity.API;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Host.UseSerilog();
 
 Startup.ConfigureServices(builder);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
 Startup.Configure(app);
 
-await app.RunAsync();
+try
+{
+    Log.Information("Starting web host");
+
+    await app.RunAsync();
+
+    return 0;
+}
+catch (Exception e)
+{
+    Log.Fatal(e, "Program terminated unexpectedly!");
+
+    return 1;
+}
+finally
+{
+    Log.CloseAndFlush();
+}

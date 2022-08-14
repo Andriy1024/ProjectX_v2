@@ -21,7 +21,7 @@ try
 }
 catch (Exception e)
 {
-    Log.Fatal(e, "Program terminated unexpectedly (Task)!");
+    Log.Fatal(e, "Program terminated unexpectedly!");
     
     return 1;
 }

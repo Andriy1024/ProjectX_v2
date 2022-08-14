@@ -10,6 +10,7 @@ using ProjectX.Authentication;
 using Serilog;
 using ProjectX.Core;
 using ProjectX.Core.Observability;
+using ProjectX.AspNetCore.Swagger;
 
 namespace ProjectX.Tasks.API;
 
@@ -18,14 +19,14 @@ public static class Startup
     public static void ConfigureServices(WebApplicationBuilder app) 
     {
         var services = app.Services;
+        
         var configuration = app.Configuration;
 
+        app.AddProjectXSwagger();
+
+        app.AddObservabilityServices();
+
         services.AddControllers();
-        
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        services.AddEndpointsApiExplorer();
-        
-        services.AddSwaggerGen();
 
         services.AddProjectXAuthentication(configuration);
         
@@ -37,19 +38,19 @@ public static class Startup
         
         services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
 
-        app.AddObservabilityServices();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        });
     }
 
     public static void Configure(WebApplication app) 
     {
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            
-            app.UseSwaggerUI();
-        }
+        app.UseProjectXSwagger();
 
         app.UseSerilogRequestLogging();
+
+        app.UseCors("Open");
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
 

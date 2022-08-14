@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using ProjectX.AspNetCore.Http;
 using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
+using ProjectX.Core.Observability;
 using ProjectX.Identity.API.Authentication;
 using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
+using Serilog;
 
 namespace ProjectX.Identity.API;
 
@@ -14,11 +16,14 @@ public static class Startup
     public static void ConfigureServices(WebApplicationBuilder app) 
     {
         var services = app.Services;
+        
         var configuration = app.Configuration;
 
+        app.AddProjectXSwagger();
+
+        app.AddObservabilityServices();
+
         services.AddControllers();
-        
-        services.AddProjectXSwagger();
 
         services.AddProjectXAuthentication(configuration);
 
@@ -27,13 +32,11 @@ public static class Startup
             o.UseInMemoryDatabase(databaseName: "ProjectX.Identity");
         });
 
-        services.AddIdentity<AccountEntity, RoleEntity>(options =>
-        {
-            options.User.RequireUniqueEmail = true;
-        })
-        .AddRoles<RoleEntity>()
-        .AddEntityFrameworkStores<IdentityXDbContext>()
-        .AddUserManager<UserManager<AccountEntity>>();
+        services
+            .AddIdentity<AccountEntity, RoleEntity>(o => { o.User.RequireUniqueEmail = true; })
+            .AddRoles<RoleEntity>()
+            .AddEntityFrameworkStores<IdentityXDbContext>()
+            .AddUserManager<UserManager<AccountEntity>>();
 
         services.AddTransient<AuthorizationService>();
 
@@ -47,13 +50,15 @@ public static class Startup
     {
         app.UseProjectXSwagger();
 
+        app.UseSerilogRequestLogging();
+
+        app.UseCors("Open");
+
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
         app.UseHttpsRedirection();
 
         app.UseProjectXAuthentication();
-
-        app.UseCors("Open");
 
         app.MapControllers();
     }

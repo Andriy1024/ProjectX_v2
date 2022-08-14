@@ -7,15 +7,16 @@ namespace ProjectX.AspNetCore.Swagger;
 
 public static class SwaggerExtensions
 {
-    public static IServiceCollection AddProjectXSwagger(this IServiceCollection services)
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    public static WebApplicationBuilder AddProjectXSwagger(this WebApplicationBuilder app)
     {
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        var serviceName = $"{app.Environment.ApplicationName}.{app.Environment.EnvironmentName}";
 
-        services.AddEndpointsApiExplorer();
+        app.Services.AddEndpointsApiExplorer();
 
-        services.AddSwaggerGen(c =>
+        app.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoApp", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = serviceName, Version = "v1" });
             c.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.Http,
@@ -29,7 +30,7 @@ public static class SwaggerExtensions
             c.OperationFilter<AuthResponsesOperationFilter>();
         });
 
-        return services;
+        return app;
     }
 
     public static void UseProjectXSwagger(this WebApplication app)
