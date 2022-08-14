@@ -24,12 +24,17 @@ public static class Startup
         
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
+        
         services.AddSwaggerGen();
 
         services.AddProjectXAuthentication(configuration);
+        
         services.AddTransient<IEventDispatcher, EventDispatcher>();
+        
         services.AddDbServices<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
+        
         services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
+        
         services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
 
         app.AddObservabilityServices();
@@ -40,6 +45,7 @@ public static class Startup
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
+            
             app.UseSwaggerUI();
         }
 
@@ -48,8 +54,6 @@ public static class Startup
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
         app.UseProjectXAuthentication();
-
-        app.UseAuthorization();
 
         app.MapControllers();
     }

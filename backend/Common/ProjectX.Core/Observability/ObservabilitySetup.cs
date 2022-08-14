@@ -41,11 +41,13 @@ public static class ObservabilitySetup
                  .Enrich.FromLogContext()
                  .Enrich.WithSpan()
                  .WriteTo.Console()
-                 .WriteTo.Seq("http://localhost:5341")
+                 .WriteTo.Seq(EnvironmentVariables.SEQ_URI)
                  .WriteTo.File(
-                    path: "./bin/log.txt", 
+                    path: "logs/log.txt", 
                     rollingInterval: RollingInterval.Day,
-                    restrictedToMinimumLevel: LogEventLevel.Information)
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    //retainedFileCountLimit: max number of log files
+                    retainedFileCountLimit: 30)
                  .ReadFrom.Configuration(app.Configuration);
 
             Log.Logger = loggerConfig.CreateLogger();
@@ -71,7 +73,7 @@ public static class ObservabilitySetup
             .AddJaegerExporter(o => 
             {
                 //ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
-                o.Endpoint = new Uri("http://localhost:6831");
+                o.Endpoint = new Uri(EnvironmentVariables.JAEGER_URI);
             })
             .AddConsoleExporter(options => 
             {

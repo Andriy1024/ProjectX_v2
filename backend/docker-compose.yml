@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  projectx-tasks:
+    image: projectx-tasks:latest
+    build:
+      context: .
+      dockerfile: .\Services\ProjectX.Tasks\ProjectX.Tasks.API\Dockerfile
+    restart: on-failure
+    networks:
+      - projectx 
+    ports:
+      - 5001:5001 # This is for debugging, we can reach our services through NGINX
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+      - ConnectionStrings__DbConnection=Host=projectx-postgres;Database=ProjectX.Tasks;Username=postgres;Password=root
+
+networks:
+  projectx:
+    name: projectx-network
+    external: true

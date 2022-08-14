@@ -14,12 +14,15 @@ Startup.Configure(app);
 try
 {
     Log.Information("Starting web host");
+
     await app.RunAsync();
+    
     return 0;
 }
 catch (Exception e)
 {
     Log.Fatal(e, "Program terminated unexpectedly (Task)!");
+    
     return 1;
 }
 finally
