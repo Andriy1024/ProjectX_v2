@@ -1,8 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
-//reset default css: https://jgthms.com/minireset.css/
 @import url("https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css");
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lato:wght@100&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
+
 
 html, body {
   height: 100%;
+}
+
+html {
+  font-family: 'Inter', sans-serif;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 40px;
 }
