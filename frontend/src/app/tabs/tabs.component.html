@@ -1,23 +1,23 @@
 <div class="tabs">
-  <div class="tab bookmarks-tab">
+  <a [routerLink]="'bookmarks'" routerLinkActive="selected" class="tab bookmarks-tab">
     <div class="tab-tile">
       <i class="material-symbols-outlined">
         bookmarks
       </i>
     </div>
-  </div>
-  <div class="tab todo-tab">
+  </a>
+  <a [routerLink]="'todos'" routerLinkActive="selected" class="tab todos-tab">
     <div class="tab-tile">
       <i class="material-symbols-outlined">
         check
       </i>
     </div>
-  </div>
-  <div class="tab notes-tab">
+  </a>
+  <a [routerLink]="'notes'" routerLinkActive="selected" class="tab notes-tab">
     <div class="tab-tile">
       <i class="material-symbols-outlined">
         notes
       </i>
     </div>
-  </div>
+  </a>
 </div>
