@@ -7,7 +7,7 @@
   border-radius: 12px;
   padding: 10px;
   margin: 12px;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .tab {
@@ -18,12 +18,13 @@
 
 .tab-tile {
   display: flex;
-  padding: 18px;
+  padding: 15px;
   cursor: pointer;
   transition: all 0.3s;
 
   i {
     color: #222;
+    font-size: 20px;
   }
 }
 
@@ -75,7 +76,7 @@
   height: 3px;
   width: 50%;
   border-radius: 2px;
-  background-color: rgba(white, 0.8);
+  background-color: rgba(white, 0.9);
   transition: all 0.3s;
   opacity: 0;
   transform: scaleX(0);

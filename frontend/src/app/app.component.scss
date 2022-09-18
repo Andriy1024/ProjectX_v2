@@ -13,27 +13,26 @@
 }
 
 .top-section {
-  //background-color: aquamarine;
   text-align: center;
-  padding: 100px 0;
+  padding: 30px 0;
 
   h1 {
-      font-size: 120px;
+      font-size: 70px;
       font-weight: bold;
       color: #f5f5f5;
       text-shadow: 0px 1px 4px rgba(black, 0.1);
   }
 
   h2 {
-    font-size: 28px;
+    font-size: 20px;
     text-shadow: 0px 1px 4px rgba(black, 0.1);
     color: white;
   }
 }
 
 .content-section {
-  //background-color: cadetblue;
   flex-grow: 1;
+  min-height: 0;
 }
 
 .bottom-section {
