@@ -38,3 +38,7 @@ https://fonts.google.com/specimen/Inter?query=Inter
 https://fonts.google.com/icons
 
 ## Background image
+...
+
+## Packages
+npm install uuid
