@@ -5,11 +5,11 @@ import { Note } from '../models/note.model';
 import { NoteService } from '../services/notes/note.service';
 
 @Component({
-  selector: 'app-add-note',
-  templateUrl: './add-note.component.html',
-  styleUrls: ['./add-note.component.scss']
+  selector: 'app-note-add',
+  templateUrl: './note-add.component.html',
+  styleUrls: ['./note-add.component.scss']
 })
-export class AddNoteComponent implements OnInit {
+export class NoteAddComponent implements OnInit {
 
   constructor(
     private _noteService: NoteService,
@@ -19,6 +19,9 @@ export class AddNoteComponent implements OnInit {
   }
 
   public onFormSubmit(form: NgForm) {
+    if(form.invalid)
+      return alert("Form is invalid");
+
     const note = new Note(form.value.title, form.value.content);
     
     this._noteService.addNote(note);
