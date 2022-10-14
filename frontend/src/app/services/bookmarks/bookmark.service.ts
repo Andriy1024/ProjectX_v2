@@ -6,7 +6,11 @@ import { Bookmark } from 'src/app/models/bookmark.model';
 })
 export class BookmarkService {
 
-  private todos: Bookmark[] = [];
+  private todos: Bookmark[] = [
+    new Bookmark('Google', 'https://www.google.com/'),
+    new Bookmark('YouTube', 'https://www.youtube.com/'),
+    new Bookmark('Twitter', 'https://www.twitter.com/')
+  ];
 
   constructor() { }
 
