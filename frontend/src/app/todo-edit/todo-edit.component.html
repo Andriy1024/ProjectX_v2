@@ -1,1 +1,16 @@
-<p>todo-edit works!</p>
+<div class="edit-todo-wrapper container has-blur-hite-bg">
+    <h3 class="is-bold">Edit Todo</h3>
+    <p *ngIf="!todo">To do not found!</p>
+    <form #form="ngForm" (ngSubmit)="onFormSubmit(form)" *ngIf="todo">
+        <div class="form-field">
+            <input name="text" [ngModel]="todo!.text" required minlength="3" #textField="ngModel" class="textbox" type="text" placeholder="Enter todo title...">
+            <ng-container *ngIf="textField.invalid">
+                <p>Please enter a todo title</p>
+            </ng-container>
+        </div>
+        <div class="buttons-container">
+            <a routerLink="../" class="btn">Cancel</a>
+            <button class="btn align-end" [disabled]="textField.invalid">Save</button>
+        </div>
+    </form>
+</div>

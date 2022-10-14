@@ -1,8 +1,10 @@
 <div class="todos-wrapper">
     <div class="container">
 
-        <app-todo-item 
-            *ngFor="let todo of todos" [todo]="todo" 
+        <app-todo-item
+            @todoItemAnimation
+            *ngFor="let todo of todos" 
+            [todo]="todo" 
             (click)="toggleCompleted(todo)"
             (editClick)="onEditClick(todo)"
             (deleteClick)="onDeleteClick(todo)">
