@@ -8,7 +8,7 @@ export class NoteService {
 
   public notes: Note[] = [
     new Note("note 1", "content 1"),
-    new Note("note 2", "content 2")
+    new Note("note 2", "content 2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsssssssssssssssssssssssssssssssss")
   ];
 
   constructor() { }

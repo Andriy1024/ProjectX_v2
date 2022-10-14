@@ -1,0 +1,114 @@
+.todo-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: rgba(black, 0.5);
+    border-radius: 25px;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.todo-text {
+    color: rgba(white, 0.9);
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+.check-box {
+    display: flex;
+    margin-right: 15px;
+    padding: 4px;
+    
+    border: 2px solid rgba(white, 0.6);
+    border-radius: 50%;
+
+    i {
+        font-size: 17px;
+        color: rgba(white, 0.6);
+    }
+}
+
+.todo-item:hover {
+    background-color: rgba(black, 0.7);
+
+    .todo-text {
+        color: white;
+    }
+
+    .check-box {
+        border-color: transparent;
+        background-color: rgba(white, 0.35);
+
+        i {
+            color: white;
+        }
+    }
+}
+
+.todo-item.completed {
+    background-color: rgba(black, 0.7);
+
+    .todo-text {
+        color: rgba(white, 0.8)
+    }
+
+    .check-box {
+        background: rgb(9, 218,89);
+        border-color: transparent;
+
+        i {
+            color: black;
+        }
+    }
+}
+
+.todo-item,
+.check-box {
+    transition: 0.1s;
+}
+
+
+.todo-item-actions {
+    position: absolute;
+    right: 5px;
+    background: rgba(72, 72, 85, 0.85);
+    backdrop-filter: blur(2px);
+    border-radius: 20px;
+    transition: 0.3s;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.todo-item:hover .todo-item-actions {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.todo-action-btn {
+    font-size: 17px;
+    padding: 10px;
+    background: transparent;
+
+    &:first-child {
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        padding-left: 14px;
+    }
+
+    &:last-child {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding-right: 14px;
+    }
+    
+    &:hover {
+        background: rgb(50,50,53);
+    }
+}
+
+.todo-action-btn i {
+    font-size: 18px;
+}
