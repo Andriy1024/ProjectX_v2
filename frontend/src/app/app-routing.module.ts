@@ -7,10 +7,12 @@ import { TodosComponent } from './todos/todos.component';
 import { NoteEditComponent } from './note-edit/note-edit.component';
 import { TodoAddComponent } from './todo-add/todo-add.component';
 import { TodoEditComponent } from './todo-edit/todo-edit.component';
+import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/bookmarks', pathMatch: 'full' },
   { path: 'bookmarks', component: BookmarksComponent, data: { tab: 1 } },
+  { path: 'bookmarks/add', component: BookmarkAddComponent },
   { path: 'todos', component: TodosComponent, data: { tab: 2 } },
   { path: 'todos/add', component: TodoAddComponent },
   { path: 'todos/:id', component: TodoEditComponent },

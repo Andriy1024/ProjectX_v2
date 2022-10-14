@@ -17,6 +17,7 @@ import { NoteEditComponent } from './note-edit/note-edit.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoAddComponent } from './todo-add/todo-add.component';
 import { TodoEditComponent } from './todo-edit/todo-edit.component';
+import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { TodoEditComponent } from './todo-edit/todo-edit.component';
     NoteEditComponent,
     TodoItemComponent,
     TodoAddComponent,
-    TodoEditComponent
+    TodoEditComponent,
+    BookmarkAddComponent
   ],
   imports: [
     BrowserModule,

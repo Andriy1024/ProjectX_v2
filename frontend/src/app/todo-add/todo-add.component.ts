@@ -22,9 +22,9 @@ export class TodoAddComponent implements OnInit {
     if(form.invalid)
       return alert("Form is invalid");
 
-    const note = new Todo(form.value.text, false);
+    const todo = new Todo(form.value.text, false);
     
-    this._todoService.addTodo(note);
+    this._todoService.addTodo(todo);
 
     this._router.navigate(['/todos']);
   }
