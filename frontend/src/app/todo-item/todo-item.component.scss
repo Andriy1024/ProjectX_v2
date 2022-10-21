@@ -33,6 +33,10 @@
 
     .todo-text {
         color: white;
+        hyphens: auto;
+        word-wrap: break-word;
+        text-align: justify;
+        overflow-wrap: break-word;
     }
 
     .check-box {
