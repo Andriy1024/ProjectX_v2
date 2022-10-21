@@ -1,0 +1,14 @@
+.notes-wrapper {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+a {
+    text-decoration: none;
+}

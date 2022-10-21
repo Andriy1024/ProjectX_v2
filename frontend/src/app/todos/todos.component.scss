@@ -1,0 +1,10 @@
+.todos-wrapper {
+    height: 100%;
+    overflow-y: auto;
+}
+
+//to make animation work
+app-todo-item {
+    display: block;
+    margin-bottom: 15px;
+}
