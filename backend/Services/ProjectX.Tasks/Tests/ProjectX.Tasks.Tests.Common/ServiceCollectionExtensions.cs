@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 
-namespace ProjectX.Tasks.IntegrationTests;
+namespace ProjectX.Tasks.Tests.Common;
 
 public static class ServiceCollectionExtensions
 {

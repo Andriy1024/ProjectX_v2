@@ -2,9 +2,8 @@
 using FluentAssertions.Primitives;
 using Snapshooter;
 using Snapshooter.Xunit;
-using System;
 
-namespace ProjectX.Tasks.IntegrationTests;
+namespace ProjectX.Tasks.Tests.Common;
 
 public static class SnapshotExtensions
 {
@@ -19,7 +18,7 @@ public static class SnapshotExtensions
     public static void MatchSnapshot<T>(
         this GenericCollectionAssertions<T> result,
         string? snapshotName = null,
-        Func<MatchOptions, MatchOptions>? matchOptions = null) 
+        Func<MatchOptions, MatchOptions>? matchOptions = null)
     {
         result.Subject.MatchSnapshot(SnapshotNameExtension.Create(snapshotName), matchOptions);
     }

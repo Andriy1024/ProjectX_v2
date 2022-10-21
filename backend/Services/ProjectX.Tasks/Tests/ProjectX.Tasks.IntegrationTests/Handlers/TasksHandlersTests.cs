@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using ProjectX.Tasks.Application.Contracts;
 using ProjectX.Core;
 using ProjectX.Tasks.Domain.Entities;
+using ProjectX.Tasks.Tests.Common;
 
 namespace ProjectX.Tasks.IntegrationTests.Handlers;
 

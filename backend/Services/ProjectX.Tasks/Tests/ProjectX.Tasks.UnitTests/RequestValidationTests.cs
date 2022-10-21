@@ -1,10 +1,7 @@
 using FluentAssertions;
 using ProjectX.Core.Validation;
 using ProjectX.Tasks.Application;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using ProjectX.Tasks.Tests.Common;
 using Xunit;
 
 namespace ProjectX.Tasks.UnitTests;
@@ -25,7 +22,7 @@ public class RequestValidationTests
         }
         else
         {
-            act.Should().Throw<InvalidDataException>();
+            act.Should().Throw<System.IO.InvalidDataException>();
         }
     }
 
@@ -43,34 +40,33 @@ public class RequestValidationTests
                 Name = ""
             });
 
-            //TODO: tests for the rest requests
+            ValidCase(new UpdateTaskCommand() 
+            {
+                Id = 1,
+                Name = "Updated name"
+            });
+
+            InvalidCase("Invalid Id", new UpdateTaskCommand()
+            {
+                Id = 0,
+                Name = "Updated name"
+            });
+
+            InvalidCase("Empty Name", new UpdateTaskCommand()
+            {
+                Id = 1,
+                Name = " "
+            });
+
+            ValidCase(new DeleteTaskCommand()
+            {
+                Id = 1
+            });
+
+            InvalidCase("Invalid Id", new DeleteTaskCommand()
+            {
+                Id = 0
+            });
         }
     }
-}
-
-public record TestCase<TPayload>(string Description, bool SuccessCase, TPayload Payload);
-
-public class TestCaseGenerator<TPayload> : IEnumerable<object[]>
-    where TPayload : notnull
-{
-    private readonly List<TestCase<TPayload>> _testCases = new();
-
-    protected void ValidCase(TPayload payload, string? description = null)
-    {
-        description ??= $"Valid: {payload.GetType().Name}";
-
-        _testCases.Add(new(description, true, payload));
-    }
-
-    protected void InvalidCase(string description, TPayload payload)
-    {
-        _testCases.Add(new(description, false, payload));
-    }
-
-    public IEnumerator<object[]> GetEnumerator()
-    {
-        return _testCases.Select(x => new object[] { x }).GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }
