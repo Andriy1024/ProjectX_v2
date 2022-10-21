@@ -18,6 +18,7 @@ public static class ValidationExtensions
         {
             var stringErrors = failures.Select(x => $"{Environment.NewLine} -- {x.PropertyName}: {x.ErrorMessage}");
 
+            //TODO: Create Custom Validation Exception
             throw new InvalidDataException("Validation failed: " + string.Join(string.Empty, stringErrors));
         }
     }

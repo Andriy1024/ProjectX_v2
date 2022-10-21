@@ -11,6 +11,7 @@ using Serilog;
 using ProjectX.Core;
 using ProjectX.Core.Observability;
 using ProjectX.AspNetCore.Swagger;
+using ProjectX.Core.Validation;
 
 namespace ProjectX.Tasks.API;
 
@@ -37,6 +38,8 @@ public static class Startup
         services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
         
         services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         services.AddCors(options =>
         {
