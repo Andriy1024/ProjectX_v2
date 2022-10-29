@@ -48,3 +48,10 @@
     height: 32px;
     width: 32px;
 }
+
+.tile-icon.error {
+  background: rgba(45, 48, 53, 0.7);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+}

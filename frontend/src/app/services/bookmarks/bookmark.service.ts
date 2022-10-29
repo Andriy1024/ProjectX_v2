@@ -6,7 +6,7 @@ import { Bookmark } from 'src/app/models/bookmark.model';
 })
 export class BookmarkService {
 
-  private todos: Bookmark[] = [
+  private bookmarks: Bookmark[] = [
     new Bookmark('Google', 'https://www.google.com/'),
     new Bookmark('YouTube', 'https://www.youtube.com/'),
     new Bookmark('Twitter', 'https://www.twitter.com/')
@@ -15,15 +15,15 @@ export class BookmarkService {
   constructor() { }
 
   public getBookmarks() {
-    return this.todos;
+    return this.bookmarks;
   }
 
   public findBookmark(id: string) {
-    return this.todos.find(t => t.id === id);
+    return this.bookmarks.find(t => t.id === id);
   }
 
   public addBookmark(todo: Bookmark) {
-    this.todos.push(todo);
+    this.bookmarks.push(todo);
   }
 
   public updateBookmark(id: string, updatedFields: Partial<Bookmark>){
@@ -34,6 +34,6 @@ export class BookmarkService {
   }
 
   public deleteBookmark(id: string) {
-    this.todos = this.todos.filter(t => t.id !== id);
+    this.bookmarks = this.bookmarks.filter(t => t.id !== id);
   }
 }
