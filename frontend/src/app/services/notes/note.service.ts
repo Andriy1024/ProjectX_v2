@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Note } from 'src/app/models/note.model';
+import { NotificationData } from 'src/app/models/notification-data.model';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,7 @@ export class NoteService {
     new Note("note 2", "content 2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsssssssssssssssssssssssssssssssss")
   ];
 
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   public getNotes(): Note[] {
     return this.notes;
@@ -23,6 +25,7 @@ export class NoteService {
 
   public addNote(note: Note) {
     this.notes.push(note);
+    this.notificationService.show('Note created');
   }
 
   public updateNote(id: string, updateFields: Partial<Note>) {
@@ -31,9 +34,12 @@ export class NoteService {
     if (note) {
       Object.assign(note, updateFields);
     }
+
+    this.notificationService.show('Note updated');
   }
 
   public deleteNote(id: string) {
     this.notes = this.notes.filter(n => n.id !== id);
+    this.notificationService.show('Note deleted');
   }
 }

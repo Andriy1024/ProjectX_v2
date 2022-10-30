@@ -20,6 +20,7 @@ import { TodoEditComponent } from './todo-edit/todo-edit.component';
 import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
 import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.component';
 import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
     TodoEditComponent,
     BookmarkAddComponent,
     BookmarksManageComponent,
-    BookmarkEditComponent
+    BookmarkEditComponent,
+    NotificationComponent
   ],
   imports: [
     BrowserModule,

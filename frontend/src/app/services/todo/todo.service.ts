@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Todo } from 'src/app/models/todo.model';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class TodoService {
     new Todo('long text jdv;uevks jfsbvuiwewkev kjhjkWEBF  xxxxxxxxxxxxxxxxxxxxxxsssssssssssssssssssssssssssssssss', false)
   ];
 
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   public getTodos() {
     return this.todos;
@@ -27,6 +28,7 @@ export class TodoService {
 
   public addTodo(todo: Todo) {
     this.todos.push(todo);
+    this.notificationService.show('Todo created');
   }
 
   public updateTodo(id: string, updatedFields: Partial<Todo>){
@@ -34,9 +36,11 @@ export class TodoService {
     if (todo) {
       Object.assign(todo, updatedFields);
     }
+    this.notificationService.show('Todo updated');
   }
 
   public deleteTodo(id: string) {
     this.todos = this.todos.filter(t => t.id !== id);
+    this.notificationService.show('Todo deleted');
   }
 }
