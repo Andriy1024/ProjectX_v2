@@ -2,5 +2,5 @@
 
 public interface IValidatable
 {
-    void Validate();
+    IEnumerable<ValidationFailure> Validate();
 }

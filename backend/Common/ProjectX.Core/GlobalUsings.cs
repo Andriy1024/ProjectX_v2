@@ -7,4 +7,5 @@ global using System.Threading.Tasks;
 
 //Libraries
 global using MediatR;
+global using FluentValidation.Results;
 

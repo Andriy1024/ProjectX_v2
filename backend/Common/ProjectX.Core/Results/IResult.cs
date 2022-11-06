@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.Core;
 
-public interface IMaybeFailed
+public interface IResult
 {
     Error? Error { get; }
 

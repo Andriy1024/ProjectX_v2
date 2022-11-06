@@ -11,7 +11,7 @@ public static class ValidationUtility
         obj.ThrowIfNull(paramName);
 
         var ctx = new ValidationContext(obj);
-        var results = new List<ValidationResult>();
+        var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
 
         if (!Validator.TryValidateObject(obj, ctx, results, true))
         {

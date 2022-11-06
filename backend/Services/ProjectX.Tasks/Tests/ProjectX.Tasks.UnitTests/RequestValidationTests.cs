@@ -13,7 +13,7 @@ public class RequestValidationTests
     public void RequestValidatesCorrectly(TestCase<IValidatable> testCase)
     {
         // Act
-        var act = () => testCase.Payload.Validate();
+        var act = () => testCase.Payload.Validate().ThrowIfInvalid();
 
         // Assert
         if (testCase.SuccessCase)
@@ -22,7 +22,7 @@ public class RequestValidationTests
         }
         else
         {
-            act.Should().Throw<System.IO.InvalidDataException>();
+            act.Should().Throw<FluentValidation.ValidationException>();
         }
     }
 

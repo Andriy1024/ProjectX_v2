@@ -27,12 +27,11 @@ public sealed class ErrorHandlerMiddleware
         {
             await _next.Invoke(context);
         }
-        ////TODO: Handle Custom Validation Exception
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Exception message: {ex.Message}.\nInner exception: {ex.InnerException?.Message}.\nStack trace: {ex.StackTrace}.");
 
-            ResultOf<Unit> error = Error.From(ex);
+            ResultOf<Unit> error = Error.ServerError(message: ex.Message);
 
             context.Response.StatusCode = 500;
 

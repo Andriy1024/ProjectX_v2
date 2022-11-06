@@ -2,11 +2,11 @@
 
 namespace ProjectX.Core;
 
-public class ResultOf<TResult> : IMaybeFailed
+public class ResultOf<TResult> : IResult
 {
     public static readonly ResultOf<Unit> Unit = new(MediatR.Unit.Value);
 
-    public TResult? Data { get; set; }
+    public TResult? Data { get; }
 
     public Error? Error { get; }
 
@@ -31,3 +31,4 @@ public class ResultOf<TResult> : IMaybeFailed
 
     public static implicit operator ResultOf<TResult>(TResult value) => new(value);
 }
+

@@ -1,4 +1,6 @@
-﻿namespace ProjectX.Core;
+﻿using System.Text.Json.Serialization;
+
+namespace ProjectX.Core;
 
 public class Error
 {
@@ -21,6 +23,7 @@ public class Error
 
     public ErrorType Type { get; }
 
+    [JsonIgnore]
     public Exception? Exception { get; }
 
     public static Error From(Exception exception)

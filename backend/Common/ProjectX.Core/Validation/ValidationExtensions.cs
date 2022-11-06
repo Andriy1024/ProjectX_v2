@@ -4,23 +4,41 @@ namespace ProjectX.Core.Validation;
 
 public static class ValidationExtensions
 {
-    public static void ThrowIfInvalid<TObject>(this TObject obj, IEnumerable<IValidator<TObject>> validators)
+    public static IEnumerable<ValidationFailure> Validate<TObject>(this TObject obj, IEnumerable<IValidator<TObject>> validators) 
     {
         var context = new ValidationContext<TObject>(obj);
 
-        var failures = validators
+        return validators
             .Select(x => x.Validate(context))
             .SelectMany(x => x.Errors)
             .Where(x => x != null)
             .ToList();
+    }
 
-        if (failures.Count != 0)
+    public static IEnumerable<ValidationFailure> Validate<TObject>(this TObject obj, Action<DynamicValidator<TObject>> configuration)
+    {
+        return obj.Validate(new[] { new DynamicValidator<TObject>(configuration) });
+    }
+
+    public static string BuildErrorMessage(this IEnumerable<ValidationFailure> failures) 
+    {
+        return string.Join(string.Empty, failures.Select(x => $"{Environment.NewLine} -- {x.PropertyName}: {x.ErrorMessage}"));
+    }
+
+    public static void ThrowIfInvalid(this IEnumerable<ValidationFailure> failures)
+    {
+        if (failures.Any())
         {
-            var stringErrors = failures.Select(x => $"{Environment.NewLine} -- {x.PropertyName}: {x.ErrorMessage}");
+            var stringErrors = failures.BuildErrorMessage();
 
             //TODO: Create Custom Validation Exception
-            throw new InvalidDataException("Validation failed: " + string.Join(string.Empty, stringErrors));
+            throw new ValidationException("Validation failed: " + stringErrors);
         }
+    }
+
+    public static void ThrowIfInvalid<TObject>(this TObject obj, IEnumerable<IValidator<TObject>> validators)
+    {
+        Validate(obj, validators).ThrowIfInvalid();
     }
 
     public static void ThrowIfInvalid<TObject>(this TObject obj, Action<DynamicValidator<TObject>> configuration)

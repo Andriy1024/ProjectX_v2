@@ -41,7 +41,7 @@ internal class ProjectXTracer : ITracer
             {
                 var result = await func();
 
-                var code = result is IMaybeFailed r && r.IsFailed
+                var code = result is IResult r && r.IsFailed
                                   ? TraceCode.Error
                                   : TraceCode.Success;
 
