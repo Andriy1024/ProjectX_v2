@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
 
         var secret = Encoding.UTF8.GetBytes(configuration["AuthenticationConfig:Secret"]);
 
-        var tokenValidationParameters = new TokenValidationParameters()
+        var validationParametersFactory = () => new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(secret),
@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
             ClockSkew = TimeSpan.Zero
         };
 
-        services.AddSingleton(tokenValidationParameters);
+        services.AddTransient((provider) => validationParametersFactory());
 
         services.AddAuthentication(o =>
         {
@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
         {
             jwt.SaveToken = true;
             jwt.RequireHttpsMetadata = false;
-            jwt.TokenValidationParameters = tokenValidationParameters;
+            jwt.TokenValidationParameters = validationParametersFactory();
         });
 
         return services;
