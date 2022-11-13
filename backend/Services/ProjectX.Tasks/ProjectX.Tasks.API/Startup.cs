@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectX.Persistence.Extensions;
-using ProjectX.Tasks.Infrastructure.Handlers.Tasks;
+using ProjectX.Tasks.Application.Handlers.Tasks;
 using ProjectX.Tasks.Persistence.Context;
 using System.Reflection;
 using ProjectX.Tasks.Application.Mapper;
