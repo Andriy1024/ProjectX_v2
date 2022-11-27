@@ -71,6 +71,8 @@ services:
   #Seq
   projectx-seq:
     image: datalust/seq:latest
+    container_name: projectx-seq
+    restart: unless-stopped
     environment:
     - ACCEPT_EULA=Y
     ports:
@@ -79,7 +81,7 @@ services:
   #Jaeger
   projectx-jaeger:
     image: jaegertracing/opentelemetry-all-in-one
-    container_name: jaeger
+    container_name: projectx-jaeger
     restart: unless-stopped
     ports:
       - 5775:5775/udp

@@ -31,12 +31,11 @@ public static class ObservabilitySetup
 
     public static WebApplicationBuilder AddLogging(this WebApplicationBuilder app)
     {
-        var serviceName = $"{app.Environment.ApplicationName}.{app.Environment.EnvironmentName}";
-
         app.Services.AddLogging(builder =>
         {
             var loggerConfig = new LoggerConfiguration()
-                 .Enrich.WithProperty("Application", serviceName)
+                 .Enrich.WithProperty("Application", app.Environment.ApplicationName)
+                 .Enrich.WithProperty("Environment", app.Environment.EnvironmentName)
                  .MinimumLevel.Information()
                  .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                  .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
@@ -109,6 +108,7 @@ public static class ObservabilitySetup
             .SetSampler(new AlwaysOnSampler())
             .SetResourceBuilder(ResourceBuilder
                 .CreateDefault()
+                .AddTelemetrySdk()
                 .AddService(serviceName, serviceVersion: serviceVersion, serviceInstanceId: Environment.MachineName)));
 
         return app;

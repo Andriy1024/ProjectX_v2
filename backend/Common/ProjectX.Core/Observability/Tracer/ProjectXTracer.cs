@@ -1,6 +1,8 @@
 ﻿using ProjectX.Core;
+using ProjectX.Core.Context;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 
 namespace ProjectX.Core.Observability;
 
@@ -9,6 +11,13 @@ internal class ProjectXTracer : ITracer
     public static readonly string Name = "ProjectX";
 
     private static readonly ActivitySource Source = new ActivitySource(Name);
+
+    private readonly IContextProvider _contextProvider;
+
+    public ProjectXTracer(IContextProvider contextProvider)
+    {
+        _contextProvider = contextProvider;
+    }
 
     public void Trace([NotNull] TraceCode code, [NotNull] string description)
     {
@@ -35,10 +44,15 @@ internal class ProjectXTracer : ITracer
     public async Task<TResult> Trace<TResult>(string actionName, Func<Task<TResult>> func)
         where TResult : notnull
     {
-        using (Activity? activity = Source.StartActivity(actionName))
+        var context = _contextProvider.Current();
+
+        using (Activity? activity = Source.StartActivity(actionName, ActivityKind.Producer, parentId: context.ActivityId))
         {
             try
             {
+                activity?.SetTag("correlation_id", context.CorrelationId);
+                activity?.SetTag("causation_id", context.CausationId);
+
                 var result = await func();
 
                 var code = result is IResult r && r.IsFailed

@@ -12,6 +12,7 @@ using ProjectX.Core;
 using ProjectX.Core.Observability;
 using ProjectX.AspNetCore.Swagger;
 using ProjectX.Core.Validation;
+using ProjectX.Core.Context;
 
 namespace ProjectX.Tasks.API;
 
@@ -26,6 +27,8 @@ public static class Startup
         app.AddProjectXSwagger();
 
         app.AddObservabilityServices();
+
+        services.AddContexts();
 
         services.AddControllers();
 
@@ -49,15 +52,17 @@ public static class Startup
 
     public static void Configure(WebApplication app) 
     {
-        app.UseProjectXSwagger();
-
-        app.UseSerilogRequestLogging();
-
         app.UseCors("Open");
+
+        app.UseProjectXSwagger();
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
+        app.UseSerilogRequestLogging();
+
         app.UseProjectXAuthentication();
+
+        app.UseContexts();
 
         app.MapControllers();
     }

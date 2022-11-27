@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectX.AspNetCore.Http;
 using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
+using ProjectX.Core.Context;
 using ProjectX.Core.Observability;
 using ProjectX.Identity.API.Authentication;
 using ProjectX.Identity.API.Database;
@@ -22,6 +23,8 @@ public static class Startup
         app.AddProjectXSwagger();
 
         app.AddObservabilityServices();
+
+        services.AddContexts();
 
         services.AddControllers();
 
@@ -48,17 +51,19 @@ public static class Startup
 
     public static void Configure(WebApplication app)
     {
-        app.UseProjectXSwagger();
-
-        app.UseSerilogRequestLogging();
-
         app.UseCors("Open");
 
+        app.UseProjectXSwagger();
+
         app.UseMiddleware<ErrorHandlerMiddleware>();
+
+        app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
 
         app.UseProjectXAuthentication();
+
+        app.UseContexts();
 
         app.MapControllers();
     }
