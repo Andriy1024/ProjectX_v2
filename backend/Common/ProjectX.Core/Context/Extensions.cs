@@ -11,6 +11,7 @@ public static class Extensions
 
     public static IServiceCollection AddContexts(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
         services.AddSingleton<IContextProvider, ContextProvider>();
         services.AddSingleton<IContextAccessor, ContextAccessor>();
         services.AddTransient<ContextHttpHandler>();

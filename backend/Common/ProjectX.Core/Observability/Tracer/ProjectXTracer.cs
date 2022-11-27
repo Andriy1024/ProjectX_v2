@@ -1,8 +1,6 @@
-﻿using ProjectX.Core;
-using ProjectX.Core.Context;
+﻿using ProjectX.Core.Context;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 
 namespace ProjectX.Core.Observability;
 
