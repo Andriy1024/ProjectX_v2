@@ -6,7 +6,7 @@ EXPOSE 80
 EXPOSE 443
 
 #Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 WORKDIR /src
 #Build context must be backend folder
 COPY ./Common ./Common/
