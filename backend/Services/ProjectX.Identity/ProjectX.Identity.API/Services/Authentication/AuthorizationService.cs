@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -40,7 +41,7 @@ public sealed class AuthorizationService
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Secret)),
             SecurityAlgorithms.HmacSha256);
-
+        
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = _jwtConfig.Issuer,
@@ -54,7 +55,9 @@ public sealed class AuthorizationService
                 new(JwtRegisteredClaimNames.Email, user.Email),
                 new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // used by the refresh token
-            })
+            }
+            //,JwtBearerDefaults.AuthenticationScheme //TODO: test it
+            )
         };
 
         var token = jwtHandler.CreateToken(tokenDescriptor);
