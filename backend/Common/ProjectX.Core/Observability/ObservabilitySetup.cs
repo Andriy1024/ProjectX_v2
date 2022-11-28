@@ -74,7 +74,8 @@ public static class ObservabilitySetup
             .AddJaegerExporter(o => 
             {
                 //ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
-                o.Endpoint = new Uri(EnvironmentVariables.JAEGER_URI);
+                o.AgentHost = EnvironmentVariables.JAEGER_HOST;
+                o.AgentPort = EnvironmentVariables.JAEGER_PORT;
             })
             .AddConsoleExporter(options => 
             {

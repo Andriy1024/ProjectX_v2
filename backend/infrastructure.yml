@@ -1,10 +1,5 @@
 version: '3.7'
 
-networks:
-  projectx:
-    name: projectx-network
-    external: true
-
 services:
   projectx-postgres:
     image: postgres:12.4
@@ -75,14 +70,18 @@ services:
     restart: unless-stopped
     environment:
     - ACCEPT_EULA=Y
+    networks:
+      - projectx
     ports:
-      - "5340:80"
+      - "5341:80"
   
   #Jaeger
   projectx-jaeger:
     image: jaegertracing/opentelemetry-all-in-one
     container_name: projectx-jaeger
     restart: unless-stopped
+    networks:
+      - projectx
     ports:
       - 5775:5775/udp
       - 5778:5778
@@ -91,3 +90,7 @@ services:
       - 9411:9411
       - 14268:14268
       - 16686:16686
+
+networks:
+  projectx:
+    name: projectx-network

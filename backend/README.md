@@ -6,7 +6,10 @@ docker compose ps
 
 docker compose stop
 
-docker-compose -f docker-compose.yml up -d --force-recreate --build <service name>
+docker-compose -f services.yml up -d --force-recreate --build <service name>
+
+docker-compose -f infrastructure.yml up -d --force-recreate --build <service name>
+
 ```
 
 ### Jaeger
@@ -57,5 +60,5 @@ seq:
   environment:
     - ACCEPT_EULA=Y
   ports:
-    - "5340:80"
-```
+    - "5341:80"
+``` 

@@ -14,7 +14,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:5000
-      - JAEGER_URI=http://projectx-jaeger:6831
+      - JAEGER_HOST=projectx-jaeger
+      - JAEGER_PORT=6831
       - SEQ_URI=http://projectx-seq:5341
 
   projectx-tasks:
@@ -30,7 +31,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:5001
-      - JAEGER_URI=http://projectx-jaeger:6831
+      - JAEGER_HOST=projectx-jaeger
+      - JAEGER_PORT=6831
       - SEQ_URI=http://projectx-seq:5341
 
 networks:

@@ -30,6 +30,7 @@ public static class Extensions
                 correlationId = Guid.NewGuid().ToString("N");
             }
 
+            //ctx.Response.Headers.Add(CorrelationIdKey, correlationId);
             ctx.Items.Add(CorrelationIdKey, correlationId);
             return next();
         });
