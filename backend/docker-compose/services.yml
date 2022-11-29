@@ -4,8 +4,8 @@ services:
   projectx-identity:
     image: projectx-identity:latest
     build:
-      context: .
-      dockerfile: .\Services\ProjectX.Identity\ProjectX.Identity.API\Dockerfile
+      context: ..\
+      dockerfile: Services\ProjectX.Identity\ProjectX.Identity.API\Dockerfile
     restart: on-failure
     networks:
       - projectx 
@@ -21,8 +21,8 @@ services:
   projectx-tasks:
     image: projectx-tasks:latest
     build:
-      context: .
-      dockerfile: .\Services\ProjectX.Tasks\ProjectX.Tasks.API\Dockerfile
+      context: ..\
+      dockerfile: Services\ProjectX.Tasks\ProjectX.Tasks.API\Dockerfile
     restart: on-failure
     networks:
       - projectx 
