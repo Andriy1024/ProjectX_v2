@@ -13,6 +13,9 @@ using ProjectX.Core.Observability;
 using ProjectX.AspNetCore.Swagger;
 using ProjectX.Core.Validation;
 using ProjectX.Core.Context;
+using ProjectX.Persistence.Abstractions;
+using ProjectX.Core.StartupTasks;
+using ProjectX.Tasks.Persistence;
 
 namespace ProjectX.Tasks.API;
 
@@ -36,8 +39,13 @@ public static class Startup
         
         services.AddTransient<IEventDispatcher, EventDispatcher>();
         
-        services.AddDbServices<TasksDbContext>(o => o.UseInMemoryDatabase(databaseName: "ProjectX.Tasks"));
-        
+        services.AddDbServices<TasksDbContext>((p, o) =>    
+        {
+            o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString());
+        });
+
+        services.AddScoped<IStartupTask, DbStartupTask>();
+
         services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
         
         services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
@@ -58,7 +66,10 @@ public static class Startup
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
-        app.UseSerilogRequestLogging();
+        app.UseSerilogRequestLogging(o => 
+        {
+            // o.EnrichDiagnosticContext = TODO: enrich with IContext
+        });
 
         app.UseProjectXAuthentication();
 

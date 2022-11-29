@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
 using Serilog.Events;
+using ProjectX.Core.Observability.Logging;
 
 namespace ProjectX.Core.Observability;
 
@@ -40,6 +41,7 @@ public static class ObservabilitySetup
                  .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                  .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
                  .Enrich.FromLogContext()
+                 .Enrich.With<CorrelationLogEventEnricher>()
                  .Enrich.WithSpan()
                  .WriteTo.Console()
                  .WriteTo.Seq(EnvironmentVariables.SEQ_URI)

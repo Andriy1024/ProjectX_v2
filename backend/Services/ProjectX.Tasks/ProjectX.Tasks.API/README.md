@@ -67,3 +67,8 @@ docker push andriy1024/projectx-tasks:latest
 docker run -d -p 5555:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_URLS=http://+:80" -P --name ProjectX.Tasks.API andriy1024/projectx-tasks:latest
 
 ```
+
+### Migrations
+```
+dotnet ef migrations add "init" -c TasksDbContext -o "Migrations/Tasks"
+```
