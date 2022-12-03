@@ -1,3 +1,4 @@
+using ProjectX.AspNetCore.StartupTasks;
 using ProjectX.Identity.API;
 using Serilog;
 
@@ -15,7 +16,7 @@ try
 {
     Log.Information("Starting web host");
 
-    await app.RunAsync();
+    await app.RunWithTasksAsync();
 
     return 0;
 }

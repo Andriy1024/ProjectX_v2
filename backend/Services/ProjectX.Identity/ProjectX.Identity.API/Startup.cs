@@ -1,14 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProjectX.AspNetCore.Http;
 using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
+using ProjectX.Core;
 using ProjectX.Core.Context;
 using ProjectX.Core.Observability;
+using ProjectX.Core.StartupTasks;
 using ProjectX.Identity.API.Authentication;
 using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
+using ProjectX.Persistence.Abstractions;
+using ProjectX.Persistence.Extensions;
 using Serilog;
+using System.Reflection;
 
 namespace ProjectX.Identity.API;
 
@@ -30,15 +36,22 @@ public static class Startup
 
         services.AddProjectXAuthentication(configuration);
 
-        services.AddDbContext<IdentityXDbContext>(o =>
+        services.AddDbServices<IdentityDatabase>((p, o) =>
         {
-            o.UseInMemoryDatabase(databaseName: "ProjectX.Identity");
+            o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString(), 
+                x => x.MigrationsHistoryTable("MigrationsHistory", IdentityDatabase.SchemaName));
         });
+
+        services.AddMediatR(Assembly.GetAssembly(typeof(Startup))!);
+
+        services.AddTransient<IEventDispatcher, EventDispatcher>();
+
+        services.AddScoped<IStartupTask, DbStartupTask>();
 
         services
             .AddIdentity<AccountEntity, RoleEntity>(o => { o.User.RequireUniqueEmail = true; })
             .AddRoles<RoleEntity>()
-            .AddEntityFrameworkStores<IdentityXDbContext>()
+            .AddEntityFrameworkStores<IdentityDatabase>()
             .AddUserManager<UserManager<AccountEntity>>();
 
         services.AddTransient<AuthorizationService>();

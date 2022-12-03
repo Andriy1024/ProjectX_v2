@@ -41,7 +41,8 @@ public static class Startup
         
         services.AddDbServices<TasksDbContext>((p, o) =>    
         {
-            o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString());
+            o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString(),
+                x => x.MigrationsHistoryTable("MigrationsHistory", TasksDbContext.SchemaName));
         });
 
         services.AddScoped<IStartupTask, DbStartupTask>();

@@ -19,13 +19,13 @@ public sealed class AuthorizationService
 {
     private readonly AuthenticationConfig _jwtConfig;
     private readonly TokenValidationParameters _tokenValidationParams;
-    private readonly IdentityXDbContext _dbContext;
+    private readonly IdentityDatabase _dbContext;
     private readonly UserManager<AccountEntity> _userManager;
 
     public AuthorizationService(
         IOptions<AuthenticationConfig> jwtConfig,
         TokenValidationParameters tokenValidationParams,
-        IdentityXDbContext dbContext,
+        IdentityDatabase dbContext,
         UserManager<AccountEntity> userManager)
     {
         _jwtConfig = jwtConfig.Value;

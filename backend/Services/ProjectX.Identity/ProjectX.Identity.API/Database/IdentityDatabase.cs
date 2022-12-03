@@ -6,7 +6,7 @@ using ProjectX.Identity.API.Database.Models;
 
 namespace ProjectX.Identity.API.Database;
 
-public class IdentityXDbContext : IdentityDbContext
+public class IdentityDatabase : IdentityDbContext
     <AccountEntity, RoleEntity, int, IdentityUserClaim<int>, 
      AccountRoleEntity, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
@@ -18,7 +18,7 @@ public class IdentityXDbContext : IdentityDbContext
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
-    public IdentityXDbContext(DbContextOptions<IdentityXDbContext> options) 
+    public IdentityDatabase(DbContextOptions<IdentityDatabase> options) 
         : base(options)
     {
     }

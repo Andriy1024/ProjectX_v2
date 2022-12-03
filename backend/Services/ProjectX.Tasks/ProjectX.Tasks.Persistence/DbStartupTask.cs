@@ -7,7 +7,7 @@ namespace ProjectX.Tasks.Persistence;
 
 public sealed class DbStartupTask : IStartupTask
 {
-    readonly TasksDbContext _dbContext;
+    private readonly TasksDbContext _dbContext;
 
     public DbStartupTask(TasksDbContext dbContext)
     {
@@ -22,7 +22,7 @@ public sealed class DbStartupTask : IStartupTask
         {
             _dbContext.Tasks.Add(new TaskEntity("Default task", "Default task created by system"));
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

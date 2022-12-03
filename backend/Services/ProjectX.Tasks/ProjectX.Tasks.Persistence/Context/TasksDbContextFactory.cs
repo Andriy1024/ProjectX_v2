@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using ProjectX.Core;
-using ProjectX.Persistence.Implementations;
 
 namespace ProjectX.Tasks.Persistence.Context;
 
