@@ -71,4 +71,6 @@ docker run -d -p 5555:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_
 ### Migrations
 ```
 dotnet ef migrations add "init" -c TasksDbContext -o "Migrations/Tasks"
+dotnet ef migrations remove
+dotnet ef database update --connection your_connection
 ```
