@@ -10,6 +10,7 @@ import { TodoEditComponent } from './todo-edit/todo-edit.component';
 import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
 import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.component';
 import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/bookmarks', pathMatch: 'full' },
@@ -23,7 +24,9 @@ const routes: Routes = [
   { path: 'todos/:id', component: TodoEditComponent },
   { path: 'notes', component: NotesComponent, data: { tab: 3 } },
   { path: 'notes/add', component: NoteAddComponent },
-  { path: 'notes/:id', component: NoteEditComponent }
+  { path: 'notes/:id', component: NoteEditComponent },
+
+  { path: 'form', component: DynamicFormComponent }
 ];
 
 @NgModule({

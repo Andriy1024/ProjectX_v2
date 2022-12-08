@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,6 +21,7 @@ import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
 import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.component';
 import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
 import { NotificationComponent } from './notification/notification.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 @NgModule({
   declarations: [
@@ -39,13 +40,15 @@ import { NotificationComponent } from './notification/notification.component';
     BookmarkAddComponent,
     BookmarksManageComponent,
     BookmarkEditComponent,
-    NotificationComponent
+    NotificationComponent,
+    DynamicFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
