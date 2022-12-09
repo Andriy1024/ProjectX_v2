@@ -1,24 +1,25 @@
+@import '../../style-variables.scss';
+
 .todo-item {
     position: relative;
     display: flex;
     align-items: center;
-    background-color: rgba(black, 0.5);
     border-radius: 25px;
     padding: 10px 12px;
     cursor: pointer;
 }
 
 .todo-text {
-    color: rgba(white, 0.9);
     font-size: 16px;
     word-wrap: break-word;
+    hyphens: auto;
 }
 
 .check-box {
     display: flex;
     margin-right: 15px;
     padding: 4px;
-    
+
     border: 2px solid rgba(white, 0.6);
     border-radius: 50%;
 
@@ -29,16 +30,6 @@
 }
 
 .todo-item:hover {
-    background-color: rgba(black, 0.7);
-
-    .todo-text {
-        color: white;
-        hyphens: auto;
-        word-wrap: break-word;
-        text-align: justify;
-        overflow-wrap: break-word;
-    }
-
     .check-box {
         border-color: transparent;
         background-color: rgba(white, 0.35);
@@ -50,7 +41,7 @@
 }
 
 .todo-item.completed {
-    background-color: rgba(black, 0.7);
+    background-color: $background-black-hover;
 
     .todo-text {
         color: rgba(white, 0.8)
@@ -61,7 +52,7 @@
         border-color: transparent;
 
         i {
-            color: black;
+            color: $background-black-hover;
         }
     }
 }
@@ -106,7 +97,7 @@
         border-bottom-right-radius: 20px;
         padding-right: 14px;
     }
-    
+
     &:hover {
         background: rgb(50,50,53);
     }

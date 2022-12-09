@@ -3,13 +3,13 @@
 
         <app-todo-item
             @todoItemAnimation
-            *ngFor="let todo of todos" 
-            [todo]="todo" 
+            *ngFor="let todo of todos"
+            [todo]="todo"
             (click)="toggleCompleted(todo)"
             (editClick)="onEditClick(todo)"
             (deleteClick)="onDeleteClick(todo)">
         </app-todo-item>
-        
+
         <div class="buttons-container buttons-centered">
             <a routerLink="add" class="btn add-btn">
                 <i class="material-icons-outlined">add</i>

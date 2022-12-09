@@ -13,6 +13,13 @@ export class TodoService {
     new Todo('third to do', true),
     new Todo('fourth to do', true),
     new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
+    new Todo('fifth to do', true),
     new Todo('long text jdv;uevks jfsbvuiwewkev kjhjkWEBF  xxxxxxxxxxxxxxxxxxxxxxsssssssssssssssssssssssssssssssss', false)
   ];
 

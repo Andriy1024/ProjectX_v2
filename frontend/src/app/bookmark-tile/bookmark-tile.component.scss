@@ -8,17 +8,10 @@
     justify-content: center;
     align-items: center;
 
-    background: rgba(black, 0.55);
     border-radius: 5px;
 
     gap: 10px;
     cursor: pointer;
-    transition: all 0.1s;
-
-    &:hover {
-        background: rgba(black, 0.68);
-        backdrop-filter: blur(2px);
-    }
 
     &:active {
         background: rgba(black, 0.75);
@@ -33,7 +26,6 @@
 
 .tile-text {
     font-size: 14px;
-    color: rgba(white, 0.7);
 
     max-width: 100%;
     overflow: hidden;

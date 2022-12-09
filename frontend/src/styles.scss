@@ -6,6 +6,7 @@
 
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined|Material+Icons');
 
+@import './style-variables.scss';
 
 html, body {
   height: 100%;
@@ -38,15 +39,55 @@ h3.is-bold {
 .container {
   max-width: 800px;
   margin: auto;
+  padding: 25px;
+  border-radius: 5px;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.container::-webkit-scrollbar {
+	width: 8px;
+}
+
+.container::-webkit-scrollbar-track {
+	background: $background-black;
+  backdrop-filter: blur(2px);
+  border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb {
+	background-color: $text-color-white;
+  border-radius: 10px;
+}
+
+.has-blur-white-bg {
+  background: $background-white;
+  backdrop-filter: blur(2px);
+}
+
+.has-black-background {
+  background: $background-black;
+  color: $text-color-white;
+  transition: 0.1s;
+}
+
+.has-hovered-black-background {
+  @extend .has-black-background;
+
+  &:hover {
+    background-color: $background-black-hover;
+    color: $text-color-white-hover;
+    backdrop-filter: blur(2px);
+  }
 }
 
 .btn {
   display: inline-flex;
   padding: 10px 15px;
-  background: rgba(black, 0.65);
+  background: $background-black;
   align-items: center;
 
-  color: rgba(white, 0.9);
+  color: $text-color-white;
   font-size: 18px;
   font-weight: 600;
   text-decoration: none;
@@ -57,18 +98,17 @@ h3.is-bold {
   cursor: pointer;
 
   &:not([disabled]):hover {
-    background: rgba(black, 0.78);
+    background: $background-black-hover;
     backdrop-filter: blur(2px);
   }
 
   &:disabled {
-    opacity: 0.3;
+    opacity: 0.5;
   }
 
   &:not([disabled]):active {
     background: rgba(black, 0.88);
   }
-
 }
 
 .add-btn a {
@@ -87,11 +127,6 @@ h3.is-bold {
   .align-end {
     margin-left: auto;
   }
-}
-
-.has-blur-white-bg {
-  background: rgba(white, 0.85);
-  backdrop-filter: blur(2px);
 }
 
 .textbox,

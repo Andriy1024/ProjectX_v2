@@ -1,4 +1,4 @@
-<div class="edit-todo-wrapper container has-blur-white-bg">
+<div class="container has-blur-white-bg">
     <h3 class="is-bold">Edit Todo</h3>
     <p *ngIf="!todo">To do not found!</p>
     <form #form="ngForm" (ngSubmit)="onFormSubmit(form)" *ngIf="todo">

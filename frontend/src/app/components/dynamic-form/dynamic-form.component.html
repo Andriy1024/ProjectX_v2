@@ -1,27 +1,32 @@
-<div class="form-wraper">
-    <h1>Dynamic Form</h1>
+<div class="container has-blur-white-bg">
+    <h3 class="is-bold">Dynamic Form</h3>
 
     <div>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-           <div *ngFor="let control of controls" [ngSwitch]="control.controlType">
+           <div *ngFor="let control of controls" [ngSwitch]="control.controlType" class="form-control">
 
                 <label>{{ control.label }}</label>
-                
+
                 <div *ngSwitchCase="controlType.input">
-                    <input 
-                        [type]="control.fieldType" 
+                    <input
+                        class="textbox"
+                        [type]="control.fieldType"
                         [formControlName]="control.key">
                 </div>
 
                 <div *ngSwitchCase="controlType.textarea">
-                    <textarea 
+                    <textarea
+                        class="textarea"
                         [formControlName]="control.key">
                     </textarea>
                 </div>
 
-           </div> 
-           
-           <button [disabled]="form.invalid">Save</button>
+           </div>
+
+           <div class="buttons-container">
+            <button class="btn" [disabled]="form.invalid">Save</button>
+           </div>
+
         </form>
     </div>
 </div>
