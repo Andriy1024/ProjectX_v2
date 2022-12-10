@@ -1,22 +1,24 @@
 <div class="container has-blur-white-bg">
-    <h3 class="is-bold">Dynamic Form</h3>
+    <h3 class="is-bold">{{config?.title}}</h3>
 
-    <div>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-           <div *ngFor="let control of controls" [ngSwitch]="control.controlType" class="form-control">
+    <div *ngIf="config">
+        <form [formGroup]="form">
+           <div *ngFor="let control of visibleControls" [ngSwitch]="control.controlType" class="form-control">
 
-                <label>{{ control.label }}</label>
+                <label for="control.key">{{ control.label }}</label>
 
-                <div *ngSwitchCase="controlType.input">
+                <div *ngSwitchCase="controlTypes.input">
                     <input
                         class="textbox"
+                        id="control.key"
                         [type]="control.fieldType"
                         [formControlName]="control.key">
                 </div>
 
-                <div *ngSwitchCase="controlType.textarea">
+                <div *ngSwitchCase="controlTypes.textarea">
                     <textarea
                         class="textarea"
+                        id="control.key"
                         [formControlName]="control.key">
                     </textarea>
                 </div>
@@ -24,7 +26,29 @@
            </div>
 
            <div class="buttons-container">
-            <button class="btn" [disabled]="form.invalid">Save</button>
+            <ng-container *ngFor="let button of config.buttons" [ngSwitch]="button.type" >
+                <button *ngSwitchCase="buttonTypes.submit"
+                    type="submit"
+                    class="btn"
+                    [class.align-end]="button.alignEnd"
+                    [disabled]="form.invalid"
+                    (click)="button.onClick?.emit(form.value)"
+                >{{button.label}}</button>
+
+                <button *ngSwitchCase="buttonTypes.button"
+                    type="button"
+                    class="btn"
+                    [class.align-end]="button.alignEnd"
+                    (click)="button.onClick?.emit(form.value)"
+                >{{button.label}}</button>
+
+                <a *ngSwitchCase="buttonTypes.link"
+                    class="btn"
+                    [class.align-end]="button.alignEnd"
+                    routerLink="{{button.linkUrl}}"
+                >{{button.label}}</a>
+
+            </ng-container>
            </div>
 
         </form>
