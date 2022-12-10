@@ -11,8 +11,7 @@ import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.com
 
 import { NotesComponent } from './components/notes/notes.component';
 
-import { TodosComponent } from './todos/todos.component';
-import { TodoEditComponent } from './todo-edit/todo-edit.component';
+import { TodosComponent } from './components/todos/todos.component';
 
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
@@ -34,7 +33,6 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
     BookmarkTileComponent,
 
     TodosComponent,
-    TodoEditComponent,
 
     NotesComponent,
   ],
