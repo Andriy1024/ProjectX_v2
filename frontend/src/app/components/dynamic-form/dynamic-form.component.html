@@ -32,14 +32,14 @@
                     class="btn"
                     [class.align-end]="button.alignEnd"
                     [disabled]="form.invalid"
-                    (click)="button.onClick?.emit(form.value)"
+                    (click)="button.onClick?.(form.value)"
                 >{{button.label}}</button>
 
                 <button *ngSwitchCase="buttonTypes.button"
                     type="button"
                     class="btn"
                     [class.align-end]="button.alignEnd"
-                    (click)="button.onClick?.emit(form.value)"
+                    (click)="button.onClick?.(form.value)"
                 >{{button.label}}</button>
 
                 <a *ngSwitchCase="buttonTypes.link"

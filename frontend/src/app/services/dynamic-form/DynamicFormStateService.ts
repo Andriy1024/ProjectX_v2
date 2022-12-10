@@ -1,18 +1,20 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ButtonType, ControlType, IDynamicFormConfig, FieldType, IButton, IFormControl } from 'src/app/models/dynamic-form.model';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicFormStateService {
 
-    private $config = new BehaviorSubject<IDynamicFormConfig | null>(this.getDefaultConfig());
+    private $configSubject = new BehaviorSubject<IDynamicFormConfig | null>(this.getDefaultConfig());
 
-    public push(config: IDynamicFormConfig): void {
-        this.$config.next(config);
+    public config$ = this.$configSubject.asObservable();
+
+    public get config(): IDynamicFormConfig | null {
+        return this.$configSubject.getValue();
     }
 
-    public getConfig() {
-        return this.$config.asObservable();
+    public push(config: IDynamicFormConfig): void {
+        this.$configSubject.next(config);
     }
 
     private getDefaultConfig(): IDynamicFormConfig {
@@ -47,24 +49,20 @@ export class DynamicFormStateService {
             label: 'Save',
             type: ButtonType.submit,
             alignEnd: true,
-            onClick: new EventEmitter<object>()
+            onClick: (value) => {
+                console.log('on save:');
+                console.log(value);
+            }
         };
-
-        saveButton.onClick!.subscribe((value) => {
-            console.log('on save:');
-            console.log(value);
-        });
 
         const deleteButton: IButton = {
             label: 'Delete',
             type: ButtonType.button,
-            onClick: new EventEmitter<object>()
+            onClick: (value) => {
+                console.log('on delete');
+                console.log(value);
+            }
         };
-
-        deleteButton.onClick!.subscribe((value) => {
-            console.log('on delete');
-            console.log(value);
-        });
 
         const cancelButton: IButton = {
             label: 'Cancel',

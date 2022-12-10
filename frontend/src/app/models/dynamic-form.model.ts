@@ -25,19 +25,20 @@ export interface IFormControl {
   fieldType: FieldType;
   controlType: ControlType;
   required: boolean;
-  visible: boolean,
+  visible: boolean;
 }
 
 export interface IButton {
-  label: string,
-  type: ButtonType,
-  linkUrl?: string,
-  alignEnd?: boolean,
-  onClick?: EventEmitter<any>;
+  label: string;
+  type: ButtonType;
+  linkUrl?: string;
+  alignEnd?: boolean;
+  onClick?: (value: object) => void;
 }
 
 export interface IDynamicFormConfig {
   title: string;
   controls: IFormControl[];
   buttons: IButton[];
+  data?: { [key: string]: any }
 }

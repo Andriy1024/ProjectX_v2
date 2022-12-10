@@ -1,7 +1,7 @@
 <div class="notes-wrapper">
     <div class="container">
         <div class="notes-list">
-            <div class="note-card has-hovered-black-background" *ngFor="let note of notes">
+            <div *ngFor="let note of notes" (click)="onEdit(note)" class="note-card has-hovered-black-background">
                 <div class="note-card-title">{{ note.title }}</div>
                 <div class="note-card-content">{{ note.content }}</div>
             </div>

@@ -1,6 +1,8 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ButtonType, ControlType, FieldType, IButton, IDynamicFormConfig, IFormControl } from 'src/app/models/dynamic-form.model';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ButtonType, ControlType, FieldType, IDynamicFormConfig, IFormControl } from 'src/app/models/dynamic-form.model';
 import { DynamicFormStateService } from 'src/app/services/dynamic-form/DynamicFormStateService';
 
 @Component({
@@ -14,37 +16,38 @@ export class DynamicFormComponent implements OnInit {
     return this.config?.controls.filter(x => x.visible);
   }
 
-  public config: IDynamicFormConfig | undefined;
+  public config: IDynamicFormConfig | null = null;
 
   public form: FormGroup = new FormGroup({});
-  public data: any = {};
 
   public controlTypes = ControlType;
   public buttonTypes = ButtonType;
 
-  constructor(
-    private readonly stateService: DynamicFormStateService) {
+  private configSubsription: Subscription;
 
-      this.stateService.getConfig().subscribe(config => {
+  constructor(
+    private readonly _stateService: DynamicFormStateService,
+    private readonly _router: Router) {
+      this.configSubsription = this._stateService.config$.subscribe(config => {
         if (config == null) {
           console.log('config empty');
-          return;
+          this._router.navigate(['/']);
         }
 
         console.log(config);
-
-        this.config = config;
-
+        this.config = config!;
         this.config.controls.forEach(x => {
-          const control =  new FormControl(this.data[x.key], this.getValidators(x));
-
+          const control = new FormControl(this.config!.data?.[x.key] ?? null, this.getValidators(x));
           this.form.addControl(x.key, control);
         });
-
-      });
+    });
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.configSubsription.unsubscribe();
   }
 
   private getValidators(control: IFormControl): ValidatorFn[] {
