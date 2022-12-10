@@ -23,25 +23,6 @@ export class NotesComponent implements OnInit {
     this.notes = this._noteService.getNotes();
   }
 
-  public onNoteUpdated = (note: Object) => {
-    const { id, title, content } = note as Note;
-    this._noteService.updateNote(id, {title, content});
-    this._router.navigate(['/notes']);
-  }
-
-  public onNoteDeleted = (note: Object): void => {
-    console.log('onNoteDeleted');
-    const { id } = note as Note;
-    this._noteService.deleteNote(id);
-    this._router.navigate(['/notes']);
-  }
-
-  public onNoteAdded = (note: Object): void => {
-    const { title, content } = note as Note;
-    this._noteService.addNote(new Note(title, content));
-    this._router.navigate(['/notes']);
-  }
-
   public onEdit(note: Note) {
     this._router.navigate(['/form']);
 
@@ -134,4 +115,22 @@ export class NotesComponent implements OnInit {
     });
   }
 
+  private onNoteUpdated = (note: Object): void => {
+    const { id, title, content } = note as Note;
+    this._noteService.updateNote(id, {title, content});
+    this._router.navigate(['/notes']);
+  }
+
+  private onNoteDeleted = (note: Object): void => {
+    console.log('onNoteDeleted');
+    const { id } = note as Note;
+    this._noteService.deleteNote(id);
+    this._router.navigate(['/notes']);
+  }
+
+  private onNoteAdded = (note: Object): void => {
+    const { title, content } = note as Note;
+    this._noteService.addNote(new Note(title, content));
+    this._router.navigate(['/notes']);
+  }
 }

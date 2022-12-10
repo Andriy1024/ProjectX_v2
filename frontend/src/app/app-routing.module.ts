@@ -5,7 +5,6 @@ import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.com
 import { NotesComponent } from './components/notes/notes.component';
 
 import { TodosComponent } from './todos/todos.component';
-import { TodoAddComponent } from './todo-add/todo-add.component';
 import { TodoEditComponent } from './todo-edit/todo-edit.component';
 
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
@@ -21,7 +20,6 @@ const routes: Routes = [
     { path: ':id', component: BookmarkEditComponent }
   ] },
   { path: 'todos', component: TodosComponent, data: { tab: 2 } },
-  { path: 'todos/add', component: TodoAddComponent },
   { path: 'todos/:id', component: TodoEditComponent },
   { path: 'notes', component: NotesComponent, data: { tab: 3 } },
   { path: 'form', component: DynamicFormComponent }
