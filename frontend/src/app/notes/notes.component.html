@@ -1,9 +1,10 @@
 <div class="notes-wrapper">
     <div class="container">
         <div class="notes-list">
-            <a [routerLink]="[note.id]" *ngFor="let note of notes" class="">
-                <app-note-card [note]="note"></app-note-card>
-            </a>
+            <div class="note-card has-hovered-black-background" *ngFor="let note of notes">
+                <div class="note-card-title">{{ note.title }}</div>
+                <div class="note-card-content">{{ note.content }}</div>
+            </div>
         </div>
 
         <div class="buttons-container buttons-centered">

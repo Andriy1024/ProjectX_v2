@@ -10,7 +10,6 @@ import { NotificationComponent } from './notification/notification.component';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 import { NotesComponent } from './notes/notes.component';
-import { NoteCardComponent } from './note-card/note-card.component';
 import { NoteEditComponent } from './note-edit/note-edit.component';
 
 import { TodosComponent } from './todos/todos.component';
@@ -43,7 +42,6 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
     TodoEditComponent,
 
     NotesComponent,
-    NoteCardComponent,
     NoteEditComponent,
   ],
   imports: [

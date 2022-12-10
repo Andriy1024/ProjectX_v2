@@ -12,3 +12,15 @@
 a {
     text-decoration: none;
 }
+
+.note-card {
+    word-wrap: break-word;
+    padding: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.note-card-title {
+    font-size: 20px;
+    font-weight: 600;
+}
