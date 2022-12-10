@@ -7,9 +7,13 @@
         </div>
 
         <div class="buttons-container buttons-centered">
-            <a routerLink="add" class="btn add-btn">
+            <button
+                class="btn add-btn"
+                type="button"
+                (click)="onAdd()"
+            >
                 <i class="material-icons-outlined">add</i>
-            </a>
+            </button>
         </div>
 
     </div>
