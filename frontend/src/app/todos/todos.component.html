@@ -1,14 +1,41 @@
 <div class="todos-wrapper">
     <div class="container">
 
-        <app-todo-item
+        <div @todoItemAnimation
+            *ngFor="let todo of todos"
+            class="todo-item-container"
+            (click)="toggleCompleted(todo)"
+        >
+
+            <div class="todo-item has-hovered-black-background" [class.completed]="todo.completed">
+                <div class="check-box">
+                    <i class="material-icons-outlined">check</i>
+                </div>
+
+                <p class="todo-text">{{ todo.text }}</p>
+
+                <div class="todo-item-actions" (click)="$event.stopPropagation()">
+                    <div class="btn todo-action-btn" (click)="onEditClick(todo)">
+                        <i class="material-icons">edit</i>
+                    </div>
+                    <div class="btn todo-action-btn" (click)="onDeleteClick(todo)">
+                        <i class="material-icons">delete</i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <!-- <app-todo-item
             @todoItemAnimation
             *ngFor="let todo of todos"
             [todo]="todo"
             (click)="toggleCompleted(todo)"
             (editClick)="onEditClick(todo)"
             (deleteClick)="onDeleteClick(todo)">
-        </app-todo-item>
+        </app-todo-item> -->
 
         <div class="buttons-container buttons-centered">
             <a routerLink="add" class="btn add-btn">

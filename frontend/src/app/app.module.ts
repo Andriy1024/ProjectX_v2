@@ -9,10 +9,9 @@ import { TabsComponent } from './tabs/tabs.component';
 import { NotificationComponent } from './notification/notification.component';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
-import { NotesComponent } from './notes/notes.component';
+import { NotesComponent } from './components/notes/notes.component';
 
 import { TodosComponent } from './todos/todos.component';
-import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoAddComponent } from './todo-add/todo-add.component';
 import { TodoEditComponent } from './todo-edit/todo-edit.component';
 
@@ -36,7 +35,6 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
     BookmarkTileComponent,
 
     TodosComponent,
-    TodoItemComponent,
     TodoAddComponent,
     TodoEditComponent,
 

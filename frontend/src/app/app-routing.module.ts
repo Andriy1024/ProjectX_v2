@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
-import { NotesComponent } from './notes/notes.component';
+import { NotesComponent } from './components/notes/notes.component';
 
 import { TodosComponent } from './todos/todos.component';
 import { TodoAddComponent } from './todo-add/todo-add.component';

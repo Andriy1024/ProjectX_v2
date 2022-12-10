@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ButtonType, ControlType, FieldType, IButton } from '../models/dynamic-form.model';
-import { Note } from '../models/note.model';
-import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormStateService';
-import { NoteService } from '../services/notes/note.service';
+import { ButtonType, ControlType, FieldType, IButton } from '../../models/dynamic-form.model';
+import { Note } from '../../models/note.model';
+import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
+import { NoteService } from '../../services/notes/note.service';
 
 @Component({
   selector: 'app-notes',
