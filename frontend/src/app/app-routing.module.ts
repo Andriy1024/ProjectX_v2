@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 import { NotesComponent } from './notes/notes.component';
-import { NoteEditComponent } from './note-edit/note-edit.component';
 
 import { TodosComponent } from './todos/todos.component';
 import { TodoAddComponent } from './todo-add/todo-add.component';
@@ -25,7 +24,6 @@ const routes: Routes = [
   { path: 'todos/add', component: TodoAddComponent },
   { path: 'todos/:id', component: TodoEditComponent },
   { path: 'notes', component: NotesComponent, data: { tab: 3 } },
-  { path: 'notes/:id', component: NoteEditComponent },
   { path: 'form', component: DynamicFormComponent }
 ];
 

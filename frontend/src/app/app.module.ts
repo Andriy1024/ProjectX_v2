@@ -10,7 +10,6 @@ import { NotificationComponent } from './notification/notification.component';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 import { NotesComponent } from './notes/notes.component';
-import { NoteEditComponent } from './note-edit/note-edit.component';
 
 import { TodosComponent } from './todos/todos.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
@@ -42,7 +41,6 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
     TodoEditComponent,
 
     NotesComponent,
-    NoteEditComponent,
   ],
   imports: [
     BrowserModule,
