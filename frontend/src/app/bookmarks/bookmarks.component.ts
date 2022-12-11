@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import { Bookmark } from '../models/bookmark.model';
 import { ButtonType, ControlType, FieldType } from '../models/dynamic-form.model';
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
@@ -12,7 +13,7 @@ import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormSta
 })
 export class BookmarksComponent implements OnInit {
 
-  public bookmarks: Bookmark[] = [];
+  public bookmarks$: Observable<Bookmark[]> = of([]);
 
   constructor(
     private readonly _bookmarkService: BookmarkService,
@@ -20,7 +21,7 @@ export class BookmarksComponent implements OnInit {
     private readonly _stateService: DynamicFormStateService) { }
 
   ngOnInit(): void {
-    this.bookmarks = this._bookmarkService.getBookmarks();
+    this.bookmarks$ = this._bookmarkService.getBookmarks();
   }
 
   public onAdd(): void {

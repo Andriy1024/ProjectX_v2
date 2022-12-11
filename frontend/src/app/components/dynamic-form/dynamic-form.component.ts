@@ -13,7 +13,7 @@ import { DynamicFormStateService } from 'src/app/services/dynamic-form/DynamicFo
 export class DynamicFormComponent implements OnInit {
 
   public config: IDynamicFormConfig | null = null;
-  public form: FormGroup = new FormGroup({});
+  public form: FormGroup | undefined;
   public controlTypes = ControlType;
   public fieldTypes = FieldType;
   public buttonTypes = ButtonType;
@@ -34,14 +34,14 @@ export class DynamicFormComponent implements OnInit {
           this._router.navigate(['/']);
         }
 
-        console.log(config);
         this.config = config!;
+        this.form = new FormGroup({});
         this.config.controls.forEach(x => {
           const control = new FormControl(this.config!.data?.[x.key] ?? null, this.getValidators(x));
-          this.form.addControl(x.key, control);
+          this.form!.addControl(x.key, control);
         });
-    });
-  }
+      });
+    }
 
   ngOnInit(): void {
   }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { Bookmark } from 'src/app/models/bookmark.model';
 import { NotificationService } from '../notification/notification.service';
 
@@ -13,10 +14,12 @@ export class BookmarkService {
     new Bookmark('Twitter', 'https://www.twitter.com/')
   ];
 
+  private bookmarkUpdates$ = new BehaviorSubject<Bookmark[]>(this.bookmarks);
+
   constructor(private readonly _notificationService: NotificationService) { }
 
   public getBookmarks() {
-    return this.bookmarks;
+    return this.bookmarkUpdates$.asObservable();
   }
 
   public findBookmark(id: string) {
@@ -25,6 +28,7 @@ export class BookmarkService {
 
   public addBookmark(todo: Bookmark) {
     this.bookmarks.push(todo);
+    this.bookmarkUpdates$.next(this.bookmarks);
     this._notificationService.show('Bookmark created');
   }
 
@@ -38,6 +42,7 @@ export class BookmarkService {
 
   public deleteBookmark(id: string) {
     this.bookmarks = this.bookmarks.filter(t => t.id !== id);
+    this.bookmarkUpdates$.next(this.bookmarks);
     this._notificationService.show('Bookmark deleted');
   }
 }

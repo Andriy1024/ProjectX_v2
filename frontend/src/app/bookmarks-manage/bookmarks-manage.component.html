@@ -4,7 +4,7 @@
     <p class="sidebar-heading">Your Bookmarks</p>
 
     <div class="sidebar-items">
-      <a *ngFor="let bookmark of bookmarks"
+      <a *ngFor="let bookmark of bookmarks$ | async"
         [routerLink]="bookmark.id"
         routerLinkActive="selected"
         class="sidebar-item">{{bookmark.name}}</a>

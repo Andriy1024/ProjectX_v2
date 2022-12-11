@@ -1,8 +1,8 @@
-<div class="container has-blur-white-bg">
-    <h3 class="is-bold">{{config?.title}}</h3>
+<div class="container has-blur-white-bg" *ngIf="config">
+    <h3 class="is-bold">{{config.title}}</h3>
 
     <div *ngIf="config">
-        <form [formGroup]="form">
+        <form [formGroup]="form" *ngIf="form">
            <div *ngFor="let control of visibleControls" [ngSwitch]="control.controlType" class="form-control">
 
                 <label for="control.key">{{ control.label }}</label>
