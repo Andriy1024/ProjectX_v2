@@ -10,15 +10,15 @@
                 <div *ngSwitchCase="controlTypes.input">
                     <input
                         class="textbox"
-                        id="control.key"
-                        [type]="control.fieldType"
+                        [id]="control.key"
+                        [type]="fieldTypes[control.fieldType]"
                         [formControlName]="control.key">
                 </div>
 
                 <div *ngSwitchCase="controlTypes.textarea">
                     <textarea
                         class="textarea"
-                        id="control.key"
+                        [id]="control.key"
                         [formControlName]="control.key">
                     </textarea>
                 </div>

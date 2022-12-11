@@ -7,14 +7,12 @@ import { NotesComponent } from './components/notes/notes.component';
 import { TodosComponent } from './components/todos/todos.component';
 
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
-import { BookmarkAddComponent } from './bookmark-add/bookmark-add.component';
 import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.component';
 import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/bookmarks', pathMatch: 'full' },
   { path: 'bookmarks', component: BookmarksComponent, data: { tab: 1 } },
-  { path: 'bookmarks/add', component: BookmarkAddComponent },
   { path: 'bookmarks/manage', component: BookmarksManageComponent, children: [
     { path: ':id', component: BookmarkEditComponent }
   ] },

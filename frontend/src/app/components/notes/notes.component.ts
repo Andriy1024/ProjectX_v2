@@ -25,7 +25,6 @@ export class NotesComponent implements OnInit {
 
   public onEdit(note: Note) {
     this._router.navigate(['/form']);
-
     this._stateService.push({
       title: 'Update Note',
       controls: [
@@ -78,7 +77,6 @@ export class NotesComponent implements OnInit {
 
   public onAdd():void {
     this._router.navigate(['/form']);
-
     this._stateService.push({
       title: 'New Note',
       controls: [

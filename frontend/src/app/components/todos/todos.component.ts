@@ -27,25 +27,25 @@ export class TodosComponent implements OnInit {
   public todos: Todo[] = [];
 
   constructor(
-    private readonly todoService: TodoService,
-    private readonly router: Router,
+    private readonly _todoService: TodoService,
+    private readonly _router: Router,
     private readonly _stateService: DynamicFormStateService) { }
 
   ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
+    this.todos = this._todoService.getTodos();
   }
 
   public toggleCompleted(todo: Todo): void {
-    this.todoService.updateTodo(todo.id, { completed: !todo.completed });
+    this._todoService.updateTodo(todo.id, { completed: !todo.completed });
   }
 
   public onDeleteClick(todo: Todo): void {
-    this.todoService.deleteTodo(todo.id);
-    this.todos = this.todoService.getTodos();
+    this._todoService.deleteTodo(todo.id);
+    this.todos = this._todoService.getTodos();
   }
 
   public onEditClick(todo: Todo): void {
-    this.router.navigate(['/form']);
+    this._router.navigate(['/form']);
     this._stateService.push({
       title: 'Edit Todo',
       controls: [
@@ -84,7 +84,7 @@ export class TodosComponent implements OnInit {
   }
 
   public onAdd(): void {
-    this.router.navigate(['/form']);
+    this._router.navigate(['/form']);
     this._stateService.push({
       title: 'New Todo',
       controls: [
@@ -115,13 +115,13 @@ export class TodosComponent implements OnInit {
 
   private onNoteAdded = (value: object): void => {
     const { text } = value as Todo;
-    this.todoService.addTodo(new Todo(text, false));
-    this.router.navigate(['/todos']);
+    this._todoService.addTodo(new Todo(text, false));
+    this._router.navigate(['/todos']);
   }
 
   private onNoteUpdated = (value: object): void => {
     const { id } = value as Todo;
-    this.todoService.updateTodo(id, value);
-    this.router.navigate(['/todos']);
+    this._todoService.updateTodo(id, value);
+    this._router.navigate(['/todos']);
   }
 }

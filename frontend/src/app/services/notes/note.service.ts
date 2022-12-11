@@ -13,7 +13,7 @@ export class NoteService {
     new Note("note 2", "content 2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsssssssssssssssssssssssssssssssss")
   ];
 
-  constructor(private notificationService: NotificationService) { }
+  constructor(private readonly _notificationService: NotificationService) { }
 
   public getNotes(): Note[] {
     return this.notes;
@@ -25,7 +25,7 @@ export class NoteService {
 
   public addNote(note: Note) {
     this.notes.push(note);
-    this.notificationService.show('Note created');
+    this._notificationService.show('Note created');
   }
 
   public updateNote(id: string, updateFields: Partial<Note>) {
@@ -35,11 +35,11 @@ export class NoteService {
       Object.assign(note, updateFields);
     }
 
-    this.notificationService.show('Note updated');
+    this._notificationService.show('Note updated');
   }
 
   public deleteNote(id: string) {
     this.notes = this.notes.filter(n => n.id !== id);
-    this.notificationService.show('Note deleted');
+    this._notificationService.show('Note deleted');
   }
 }

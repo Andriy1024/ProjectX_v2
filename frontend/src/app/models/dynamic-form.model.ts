@@ -1,5 +1,3 @@
-import { EventEmitter } from "@angular/core";
-
 export enum ControlType {
   'input',
   'textarea'
@@ -16,7 +14,8 @@ export enum FieldType {
   'text',
   'number',
   'email',
-  'password' //checkbox
+  'password',
+  'url' //checkbox
 }
 
 export interface IFormControl {

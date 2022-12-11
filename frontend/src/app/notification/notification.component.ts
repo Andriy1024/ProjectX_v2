@@ -28,17 +28,17 @@ import { NotificationService } from '../services/notification/notification.servi
 export class NotificationComponent implements OnInit {
 
   public notification: string | null = null;
+
   private timeout: any;
 
-  constructor(private notificationService: NotificationService) { }
+  constructor(private readonly _notificationService: NotificationService) { }
 
   ngOnInit(): void {
-    this.notificationService.notifications
+    this._notificationService.notifications
       .subscribe((notification) => {
         this.notification = notification.text;
         clearTimeout(this.timeout);
         setTimeout(() => { this.notification = null; }, notification.duration);
       });
   }
-
 }

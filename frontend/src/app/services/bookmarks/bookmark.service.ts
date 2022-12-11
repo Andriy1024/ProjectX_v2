@@ -13,7 +13,7 @@ export class BookmarkService {
     new Bookmark('Twitter', 'https://www.twitter.com/')
   ];
 
-  constructor(private notificationService: NotificationService) { }
+  constructor(private readonly _notificationService: NotificationService) { }
 
   public getBookmarks() {
     return this.bookmarks;
@@ -25,19 +25,19 @@ export class BookmarkService {
 
   public addBookmark(todo: Bookmark) {
     this.bookmarks.push(todo);
-    this.notificationService.show('Bookmark created');
+    this._notificationService.show('Bookmark created');
   }
 
-  public updateBookmark(id: string, updatedFields: Partial<Bookmark>){
+  public updateBookmark(id: string, updatedFields: Partial<Bookmark>) {
     const todo = this.findBookmark(id);
     if (todo) {
       Object.assign(todo, updatedFields);
     }
-    this.notificationService.show('Bookmark updated');
+    this._notificationService.show('Bookmark updated');
   }
 
   public deleteBookmark(id: string) {
     this.bookmarks = this.bookmarks.filter(t => t.id !== id);
-    this.notificationService.show('Bookmark deleted');
+    this._notificationService.show('Bookmark deleted');
   }
 }
