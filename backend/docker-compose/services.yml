@@ -18,11 +18,11 @@ services:
       - JAEGER_PORT=6831
       - SEQ_URI=http://projectx-seq:5341
 
-  projectx-tasks:
-    image: projectx-tasks:latest
+  projectx-dashboard:
+    image: projectx-dashboard:latest
     build:
       context: ..\
-      dockerfile: Services\ProjectX.Tasks\ProjectX.Tasks.API\Dockerfile
+      dockerfile: Services\ProjectX.Dashboard\ProjectX.Dashboard.API\Dockerfile
     restart: on-failure
     networks:
       - projectx 

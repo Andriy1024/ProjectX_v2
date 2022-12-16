@@ -9,15 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Core", "Common\ProjectX.Core\ProjectX.Core.csproj", "{5AFAE758-C8C0-49F4-A9E6-29A70336A5C0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{9C2A0C56-3C90-4EF3-AC04-D0C234B011D9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dashboard", "Dashboard", "{9C2A0C56-3C90-4EF3-AC04-D0C234B011D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.API", "Services\ProjectX.Tasks\ProjectX.Tasks.API\ProjectX.Tasks.API.csproj", "{38E89EF0-F403-47E2-824A-ED0D696614E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.API", "Services\ProjectX.Dashboard\ProjectX.Dashboard.API\ProjectX.Dashboard.API.csproj", "{38E89EF0-F403-47E2-824A-ED0D696614E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.Domain", "Services\ProjectX.Tasks\ProjectX.Tasks.Domain\ProjectX.Tasks.Domain.csproj", "{0DA9CBED-F492-4B37-82F7-EC9927C8E4C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.Domain", "Services\ProjectX.Dashboard\ProjectX.Dashboard.Domain\ProjectX.Dashboard.Domain.csproj", "{0DA9CBED-F492-4B37-82F7-EC9927C8E4C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.Persistence", "Services\ProjectX.Tasks\ProjectX.Tasks.Persistence\ProjectX.Tasks.Persistence.csproj", "{AC6F767F-C152-4ED5-AB42-796AEFF9EA43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.Persistence", "Services\ProjectX.Dashboard\ProjectX.Dashboard.Persistence\ProjectX.Dashboard.Persistence.csproj", "{AC6F767F-C152-4ED5-AB42-796AEFF9EA43}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.Application", "Services\ProjectX.Tasks\ProjectX.Tasks.Application\ProjectX.Tasks.Application.csproj", "{8196CF6A-56FB-4D9E-BB60-5A204DD9EF96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.Application", "Services\ProjectX.Dashboard\ProjectX.Dashboard.Application\ProjectX.Dashboard.Application.csproj", "{8196CF6A-56FB-4D9E-BB60-5A204DD9EF96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Persistence", "Common\ProjectX.Persistence\ProjectX.Persistence.csproj", "{482CC61A-C211-467D-8AD1-56B9B217F003}"
 EndProject
@@ -31,17 +31,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Authentication", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EF3073E7-AEB9-4E48-B15E-844F75823824}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.IntegrationTests", "Services\ProjectX.Tasks\Tests\ProjectX.Tasks.IntegrationTests\ProjectX.Tasks.IntegrationTests.csproj", "{57AE038B-8E5F-4083-8A2A-06EB273E9F02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.IntegrationTests", "Services\ProjectX.Dashboard\Tests\ProjectX.Dashboard.IntegrationTests\ProjectX.Dashboard.IntegrationTests.csproj", "{57AE038B-8E5F-4083-8A2A-06EB273E9F02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.UnitTests", "Services\ProjectX.Tasks\Tests\ProjectX.Tasks.UnitTests\ProjectX.Tasks.UnitTests.csproj", "{09FEF551-E530-4D81-A5FF-7E0F807769CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.UnitTests", "Services\ProjectX.Dashboard\Tests\ProjectX.Dashboard.UnitTests\ProjectX.Dashboard.UnitTests.csproj", "{09FEF551-E530-4D81-A5FF-7E0F807769CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Tasks.Tests.Common", "Services\ProjectX.Tasks\Tests\ProjectX.Tasks.Tests.Common\ProjectX.Tasks.Tests.Common.csproj", "{FB245472-66F4-41F4-9230-EB53CA9B026A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Dashboard.Tests.Common", "Services\ProjectX.Dashboard\Tests\ProjectX.Dashboard.Tests.Common\ProjectX.Dashboard.Tests.Common.csproj", "{FB245472-66F4-41F4-9230-EB53CA9B026A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35C2978F-0478-4122-8D64-DC6C190AB448}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
-		docker-compose-core.yml = docker-compose-core.yml
-		docker-compose.yml = docker-compose.yml
+		docker-compose\infrastructure.yml = docker-compose\infrastructure.yml
+		docker-compose\services.yml = docker-compose\services.yml
 	EndProjectSection
 EndProject
 Global
