@@ -2,22 +2,25 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProjectX.Dashboard.Persistence.Context;
 
 #nullable disable
 
-namespace ProjectX.Dashboard.Persistence.Migrations.Tasks
+namespace ProjectX.Dashboard.Persistence.Migrations.Dashboard
 {
     [DbContext(typeof(DashboardDbContext))]
-    partial class TasksDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221216224218_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("ProjectX.Tasks")
+                .HasDefaultSchema("ProjectX.Dashboard")
                 .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -47,7 +50,7 @@ namespace ProjectX.Dashboard.Persistence.Migrations.Tasks
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bookmark", "ProjectX.Tasks");
+                    b.ToTable("Bookmark", "ProjectX.Dashboard");
                 });
 
             modelBuilder.Entity("ProjectX.Dashboard.Domain.Entities.NoteEntity", b =>
@@ -74,7 +77,7 @@ namespace ProjectX.Dashboard.Persistence.Migrations.Tasks
 
                     b.HasKey("Id");
 
-                    b.ToTable("Note", "ProjectX.Tasks");
+                    b.ToTable("Note", "ProjectX.Dashboard");
                 });
 
             modelBuilder.Entity("ProjectX.Dashboard.Domain.Entities.TaskEntity", b =>
@@ -100,7 +103,7 @@ namespace ProjectX.Dashboard.Persistence.Migrations.Tasks
 
                     b.HasKey("Id");
 
-                    b.ToTable("Task", "ProjectX.Tasks");
+                    b.ToTable("Task", "ProjectX.Dashboard");
                 });
 #pragma warning restore 612, 618
         }

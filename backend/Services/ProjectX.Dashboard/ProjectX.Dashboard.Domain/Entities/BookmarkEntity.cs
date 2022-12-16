@@ -28,8 +28,8 @@ public sealed class BookmarkEntity : Entity<int>
         {
             Name = name,
             URL = url,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow,
         };
 
         bookmarkEntity.AddDomainEvent(new EntityCreated<BookmarkEntity>(bookmarkEntity));
@@ -41,7 +41,8 @@ public sealed class BookmarkEntity : Entity<int>
     {
         Name = name;
         URL = url;
-        UpdatedAt = DateTimeOffset.Now;
+        UpdatedAt = DateTimeOffset.UtcNow;
+
         AddDomainEvent(new EntityUpdated<BookmarkEntity>(this));
     }
 

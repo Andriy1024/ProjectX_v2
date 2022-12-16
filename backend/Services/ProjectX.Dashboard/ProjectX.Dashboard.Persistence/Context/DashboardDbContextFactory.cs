@@ -9,7 +9,7 @@ public class DashboardDbContextFactory : IDesignTimeDbContextFactory<DashboardDb
     {
         var optionsBuilder = new DbContextOptionsBuilder<DashboardDbContext>();
 
-        optionsBuilder.UseNpgsql("Host=localhost;Database=ProjectX.Tasks;Username=postgres;Password=root");
+        optionsBuilder.UseNpgsql("Host=localhost;Database=ProjectX.Dashboard;Username=postgres;Password=root");
 
         return new DashboardDbContext(optionsBuilder.Options);
     }

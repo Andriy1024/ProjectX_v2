@@ -27,8 +27,8 @@ public sealed class NoteEntity : Entity<int>
         {
             Title = title,
             Content = content,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow
         };
 
         note.AddDomainEvent(new EntityCreated<NoteEntity>(note));
@@ -40,7 +40,8 @@ public sealed class NoteEntity : Entity<int>
     {
         Title = title;
         Content = content;
-        UpdatedAt= DateTimeOffset.Now;
+        UpdatedAt= DateTimeOffset.UtcNow;
+
         AddDomainEvent(new EntityUpdated<NoteEntity>(this));
     }
 

@@ -7,30 +7,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ProjectX.Dashboard.Persistence.Migrations.Dashboard
 {
     /// <inheritdoc />
-    public partial class notesbookmarks : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTimeOffset>(
-                name: "CreatedAt",
-                schema: "ProjectX.Tasks",
-                table: "Task",
-                type: "timestamp with time zone",
-                nullable: false,
-                defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-            migrationBuilder.AddColumn<DateTimeOffset>(
-                name: "UpdatedAt",
-                schema: "ProjectX.Tasks",
-                table: "Task",
-                type: "timestamp with time zone",
-                nullable: false,
-                defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
+            migrationBuilder.EnsureSchema(
+                name: "ProjectX.Dashboard");
 
             migrationBuilder.CreateTable(
                 name: "Bookmark",
-                schema: "ProjectX.Tasks",
+                schema: "ProjectX.Dashboard",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -47,7 +34,7 @@ namespace ProjectX.Dashboard.Persistence.Migrations.Dashboard
 
             migrationBuilder.CreateTable(
                 name: "Note",
-                schema: "ProjectX.Tasks",
+                schema: "ProjectX.Dashboard",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -61,6 +48,23 @@ namespace ProjectX.Dashboard.Persistence.Migrations.Dashboard
                 {
                     table.PrimaryKey("PK_Note", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Task",
+                schema: "ProjectX.Dashboard",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Task", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -68,21 +72,15 @@ namespace ProjectX.Dashboard.Persistence.Migrations.Dashboard
         {
             migrationBuilder.DropTable(
                 name: "Bookmark",
-                schema: "ProjectX.Tasks");
+                schema: "ProjectX.Dashboard");
 
             migrationBuilder.DropTable(
                 name: "Note",
-                schema: "ProjectX.Tasks");
+                schema: "ProjectX.Dashboard");
 
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                schema: "ProjectX.Tasks",
-                table: "Task");
-
-            migrationBuilder.DropColumn(
-                name: "UpdatedAt",
-                schema: "ProjectX.Tasks",
-                table: "Task");
+            migrationBuilder.DropTable(
+                name: "Task",
+                schema: "ProjectX.Dashboard");
         }
     }
 }

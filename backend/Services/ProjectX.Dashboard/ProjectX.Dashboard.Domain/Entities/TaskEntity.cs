@@ -25,8 +25,8 @@ public class TaskEntity : Entity<int>
     {
         Name = name;
         Description = description;
-        CreatedAt = DateTimeOffset.Now;
-        UpdatedAt = DateTimeOffset.Now;
+        CreatedAt = DateTimeOffset.UtcNow;
+        UpdatedAt = DateTimeOffset.UtcNow;
 
         AddDomainEvent(new EntityCreated<TaskEntity>(this));
     }
@@ -35,7 +35,7 @@ public class TaskEntity : Entity<int>
     {
         Name = name;
         Description = description;
-        UpdatedAt = DateTimeOffset.Now;
+        UpdatedAt = DateTimeOffset.UtcNow;
 
         AddDomainEvent(new EntityDeleted<TaskEntity>(this));
     }

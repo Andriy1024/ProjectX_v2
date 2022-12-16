@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectX.Core.StartupTasks;
-using ProjectX.Dashboard.Domain.Entities;
 using ProjectX.Dashboard.Persistence.Context;
 
 namespace ProjectX.Dashboard.Persistence;
