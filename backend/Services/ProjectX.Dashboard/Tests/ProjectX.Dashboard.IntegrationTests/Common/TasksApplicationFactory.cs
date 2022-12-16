@@ -39,9 +39,9 @@ public sealed class TasksApplicationFactory : WebApplicationFactory<Program>
 
         builder.ConfigureServices(s =>
         {
-            s.RemoveAll(typeof(DbContextOptions<TasksDbContext>));
+            s.RemoveAll(typeof(DbContextOptions<DashboardDbContext>));
 
-            s.AddDbContext<TasksDbContext>(options =>
+            s.AddDbContext<DashboardDbContext>(options =>
                 options.UseInMemoryDatabase("Testing", root));
 
             s.AddEntityFrameworkInMemoryDatabase();
@@ -54,8 +54,8 @@ public sealed class TasksApplicationFactory : WebApplicationFactory<Program>
         where T : class
         => ServiceProvider.GetRequiredService<T>();
 
-    public TasksDbContext GetDbContext()
-        => GetService<TasksDbContext>();
+    public DashboardDbContext GetDbContext()
+        => GetService<DashboardDbContext>();
 
     public async Task SeedAsync<T>(IEnumerable<T> items)
         where T : class
@@ -64,7 +64,7 @@ public sealed class TasksApplicationFactory : WebApplicationFactory<Program>
            .GetRequiredService<IServiceScopeFactory>()
            .CreateScope();
 
-        var dbContext = scope.ServiceProvider.GetRequiredService<TasksDbContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<DashboardDbContext>();
 
         var entity = dbContext.Set<T>();
         await entity.AddRangeAsync(items);

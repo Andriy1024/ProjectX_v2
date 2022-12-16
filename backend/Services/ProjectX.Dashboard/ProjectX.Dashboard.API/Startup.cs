@@ -39,17 +39,17 @@ public static class Startup
         
         services.AddTransient<IEventDispatcher, EventDispatcher>();
         
-        services.AddDbServices<TasksDbContext>((p, o) =>    
+        services.AddDbServices<DashboardDbContext>((p, o) =>    
         {
             o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString(),
-                x => x.MigrationsHistoryTable("MigrationsHistory", TasksDbContext.SchemaName));
+                x => x.MigrationsHistoryTable("MigrationsHistory", DashboardDbContext.SchemaName));
         });
 
-        services.AddScoped<IStartupTask, DbStartupTask>();
+        services.AddScoped<IStartupTask, DashboardDatabaseStartup>();
 
         services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
         
-        services.AddAutoMapper(Assembly.GetAssembly(typeof(TaskProfile))!);
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(DashboardProfile))!);
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 

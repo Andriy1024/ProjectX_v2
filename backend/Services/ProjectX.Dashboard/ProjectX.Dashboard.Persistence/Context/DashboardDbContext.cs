@@ -1,16 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjectX.Dashboard.Domain.Entities;
 using System.Reflection;
 
 namespace ProjectX.Dashboard.Persistence.Context;
 
-public class TasksDbContext : DbContext
+public class DashboardDbContext : DbContext
 {
     public const string SchemaName = "ProjectX.Tasks";
 
     public DbSet<TaskEntity> Tasks { get; set; }
 
-    public TasksDbContext(DbContextOptions<TasksDbContext> options) 
+    public DbSet<NoteEntity> Notes { get; set; }
+    
+    public DbSet<BookmarkEntity> Bookmarks { get; set; }
+
+    public DashboardDbContext(DbContextOptions<DashboardDbContext> options) 
         : base(options)
     {
     }

@@ -16,6 +16,10 @@ public class TasksController : ProjectXController
     public Task<IActionResult> GetTasks([FromQuery] TasksQuery query, CancellationToken cancellationToken)
         => Send(query, cancellationToken);
 
+    [HttpGet("{id:long:min(1)}")]
+    public Task<IActionResult> FindTask([FromRoute] int id, CancellationToken cancellationToken)
+       => Send(new FindTaskQuery { Id = id }, cancellationToken);
+
     [HttpPost]
     public Task<IActionResult> CreateTask([FromBody] CreateTaskCommand command)
         => Send(command);

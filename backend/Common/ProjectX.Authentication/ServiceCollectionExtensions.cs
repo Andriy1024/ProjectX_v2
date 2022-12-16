@@ -36,12 +36,14 @@ public static class ServiceCollectionExtensions
             o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-        .AddJwtBearer(jwt =>
-        {
-            jwt.SaveToken = true;
-            jwt.RequireHttpsMetadata = false;
-            jwt.TokenValidationParameters = validationParametersFactory();
-        });
+        .AddJwtBearer(
+            //JwtBearerDefaults.AuthenticationScheme, TODO: need to test
+            jwt =>
+            {
+                jwt.SaveToken = true;
+                jwt.RequireHttpsMetadata = false;
+                jwt.TokenValidationParameters = validationParametersFactory();
+            });
 
         return services;
     }

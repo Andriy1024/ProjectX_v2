@@ -10,17 +10,23 @@ public class TaskEntity : Entity<int>
 
     public string? Description { get; private set; }
 
+    public DateTimeOffset CreatedAt { get; private set; }
+
+    public DateTimeOffset UpdatedAt { get; private set; }
+
+    #pragma warning disable CS8618
     /// <summary>
     /// For EF
     /// </summary>
-#pragma warning disable CS8618
     private TaskEntity() {}
-#pragma warning restore CS8618
+    #pragma warning restore CS8618
 
     public TaskEntity(string name, string? description)
     {
         Name = name;
         Description = description;
+        CreatedAt = DateTimeOffset.Now;
+        UpdatedAt = DateTimeOffset.Now;
 
         AddDomainEvent(new EntityCreated<TaskEntity>(this));
     }
@@ -29,6 +35,7 @@ public class TaskEntity : Entity<int>
     {
         Name = name;
         Description = description;
+        UpdatedAt = DateTimeOffset.Now;
 
         AddDomainEvent(new EntityDeleted<TaskEntity>(this));
     }

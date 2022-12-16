@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using MediatR;
-using ProjectX.Persistence;
-using ProjectX.Dashboard.Application;
-using ProjectX.Dashboard.Application.Contracts;
-using ProjectX.Dashboard.Domain.Entities;
+﻿using ProjectX.Dashboard.Application.Contracts;
 
 namespace ProjectX.Dashboard.Application.Handlers.Tasks;
 
 public sealed class TasksHandlers :
     IQueryHandler<TasksQuery, IEnumerable<TaskContarct>>,
+    IQueryHandler<FindTaskQuery, TaskContarct>,
     ICommandHandler<CreateTaskCommand, TaskContarct>,
     ICommandHandler<UpdateTaskCommand, TaskContarct>,
     ICommandHandler<DeleteTaskCommand>
@@ -26,9 +22,19 @@ public sealed class TasksHandlers :
     {
         var tasks = await _repository.GetAsync(cancellationToken: cancellationToken);
 
-        var result = _mapper.Map<TaskContarct[]>(tasks);
+        return _mapper.Map<TaskContarct[]>(tasks);
+    }
 
-        return result;
+    public async Task<ResultOf<TaskContarct>> Handle(FindTaskQuery request, CancellationToken cancellationToken)
+    {
+        var maybeTask = await _repository.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+        if (maybeTask.IsFailed)
+        {
+            return maybeTask.Error!;
+        }
+
+        return _mapper.Map<TaskContarct>(maybeTask.Data);
     }
 
     public async Task<ResultOf<TaskContarct>> Handle(CreateTaskCommand command, CancellationToken cancellationToken)

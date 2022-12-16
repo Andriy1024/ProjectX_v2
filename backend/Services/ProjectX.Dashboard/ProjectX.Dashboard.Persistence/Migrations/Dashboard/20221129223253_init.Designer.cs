@@ -10,7 +10,7 @@ using ProjectX.Dashboard.Persistence.Context;
 
 namespace ProjectX.Dashboard.Persistence.Migrations.Tasks
 {
-    [DbContext(typeof(TasksDbContext))]
+    [DbContext(typeof(DashboardDbContext))]
     [Migration("20221129223253_init")]
     partial class init
     {

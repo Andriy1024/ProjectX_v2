@@ -2,11 +2,11 @@
 
 namespace ProjectX.Dashboard.Application;
 
-public class TasksQuery : IQuery<IEnumerable<TaskContarct>> 
+public class BookmarksQuery : IQuery<IEnumerable<BookmarkContarct>>
 {
 }
 
-public class FindTaskQuery : IQuery<TaskContarct>
+public class FindBookmarkQuery : IQuery<BookmarkContarct>
 {
     public int Id { get; init; }
 
@@ -19,28 +19,29 @@ public class FindTaskQuery : IQuery<TaskContarct>
     }
 }
 
-public class CreateTaskCommand : ICommand<TaskContarct>, IValidatable
+public class CreateBookmarkCommand : ICommand<BookmarkContarct>, IValidatable
 {
     public string Name { get; init; }
 
-    public string Description { get; init; }
+    public string URL { get; init; }
 
     public IEnumerable<ValidationFailure> Validate()
     {
         return this.Validate(command =>
         {
             command.RuleFor(x => x.Name).NotEmpty();
+            command.RuleFor(x => x.URL).NotEmpty();
         });
     }
 }
 
-public class UpdateTaskCommand : ICommand<TaskContarct>, IValidatable
+public class UpdateBookmarkCommand : ICommand<BookmarkContarct>, IValidatable
 {
     public int Id { get; init; }
 
     public string Name { get; init; }
 
-    public string Description { get; init; }
+    public string URL { get; init; }
 
     public IEnumerable<ValidationFailure> Validate()
     {
@@ -48,11 +49,12 @@ public class UpdateTaskCommand : ICommand<TaskContarct>, IValidatable
         {
             command.RuleFor(x => x.Id).GreaterThan(0);
             command.RuleFor(x => x.Name).NotEmpty();
+            command.RuleFor(x => x.URL).NotEmpty();
         });
     }
 }
 
-public class DeleteTaskCommand : ICommand, IValidatable
+public class DeleteBookmarkCommand : ICommand, IValidatable
 {
     public int Id { get; init; }
 
