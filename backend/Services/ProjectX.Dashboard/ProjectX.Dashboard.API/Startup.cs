@@ -16,6 +16,7 @@ using ProjectX.Core.Context;
 using ProjectX.Persistence.Abstractions;
 using ProjectX.Core.StartupTasks;
 using ProjectX.Dashboard.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ProjectX.Dashboard.API;
 
@@ -33,7 +34,18 @@ public static class Startup
 
         services.AddContexts();
 
-        services.AddControllers();
+        services.AddControllers(o => 
+        {
+            o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+        })
+        .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = c =>
+        {
+            var errors = string.Join(' ', c.ModelState.Values.Where(v => v.Errors.Count > 0)
+                .SelectMany(v => v.Errors)
+                .Select(v => v.ErrorMessage));
+
+            return new BadRequestObjectResult(new ResultOf<Unit>(Error.InvalidData(message: errors)));
+        });
 
         services.AddProjectXAuthentication(configuration);
         

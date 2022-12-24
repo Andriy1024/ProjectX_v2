@@ -54,7 +54,10 @@ public class UpdateNoteCommand : ICommand<NoteContarct>, IValidatable
 
 public class DeleteNoteCommand : ICommand, IValidatable
 {
-    public int Id { get; init; }
+    public int Id { get; }
+
+    public DeleteNoteCommand(int id)
+        => Id = id;
 
     public IEnumerable<ValidationFailure> Validate()
     {

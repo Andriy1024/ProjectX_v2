@@ -57,7 +57,7 @@ public sealed class TasksHandlers :
             return taskResult.Error!;
         }
 
-        taskResult.Data!.Update(command.Name, command.Description);
+        taskResult.Data!.Update(command.Name, command.Description, command.Completed);
 
         await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 

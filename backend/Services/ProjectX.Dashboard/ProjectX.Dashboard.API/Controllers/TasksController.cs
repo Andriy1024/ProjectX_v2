@@ -28,7 +28,7 @@ public class TasksController : ProjectXController
     public Task<IActionResult> UpdateTask([FromBody] UpdateTaskCommand command)
         => Send(command);
 
-    [HttpDelete]
-    public Task<IActionResult> DeleteTask([FromBody] DeleteTaskCommand command)
-        => Send(command);
+    [HttpDelete("{id:long:min(1)}")]
+    public Task<IActionResult> DeleteTask([FromRoute] int id)
+        => Send(new DeleteTaskCommand(id));
 }
