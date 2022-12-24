@@ -44,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose\services.yml = docker-compose\services.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.BackgroundWork", "Common\ProjectX.BackgroundWork\ProjectX.BackgroundWork.csproj", "{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{FB245472-66F4-41F4-9230-EB53CA9B026A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB245472-66F4-41F4-9230-EB53CA9B026A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB245472-66F4-41F4-9230-EB53CA9B026A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +124,7 @@ Global
 		{57AE038B-8E5F-4083-8A2A-06EB273E9F02} = {EF3073E7-AEB9-4E48-B15E-844F75823824}
 		{09FEF551-E530-4D81-A5FF-7E0F807769CE} = {EF3073E7-AEB9-4E48-B15E-844F75823824}
 		{FB245472-66F4-41F4-9230-EB53CA9B026A} = {EF3073E7-AEB9-4E48-B15E-844F75823824}
+		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0} = {7F78CC10-9988-410B-92AF-EF5710B74EED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C6E7CD24-B1DF-4643-8D18-884E9669D929}
