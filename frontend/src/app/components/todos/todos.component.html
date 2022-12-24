@@ -2,7 +2,7 @@
     <div class="container">
 
         <div @todoItemAnimation
-            *ngFor="let todo of todos"
+            *ngFor="let todo of todos | async"
             class="todo-item-container"
             (click)="toggleCompleted(todo)"
         >
@@ -11,7 +11,7 @@
                     <i class="material-icons-outlined">check</i>
                 </div>
 
-                <p class="todo-text">{{ todo.text }}</p>
+                <p class="todo-text">{{ todo.name }}</p>
 
                 <div class="todo-item-actions" (click)="$event.stopPropagation()">
                     <div class="btn todo-action-btn" (click)="onEditClick(todo)">

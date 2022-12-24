@@ -15,7 +15,7 @@ export class NotificationService {
 
   constructor() { }
 
-  public show(text: string, duration: number  = 1000) {
+  public show(text: string, duration: number  = 3000) {
     this.notification$.next({text, duration});
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ButtonType, ControlType, FieldType, IButton } from '../../models/dynamic-form.model';
+import { from, Observable } from 'rxjs';
+import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
 import { Note } from '../../models/note.model';
 import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
 import { NoteService } from '../../services/notes/note.service';
@@ -12,7 +13,7 @@ import { NoteService } from '../../services/notes/note.service';
 })
 export class NotesComponent implements OnInit {
 
-  public notes: Note[] = [];
+  public notes: Observable<Note[]> = from([]);
 
   constructor(
     private readonly _noteService: NoteService,
@@ -114,21 +115,26 @@ export class NotesComponent implements OnInit {
   }
 
   private onNoteUpdated = (note: Object): void => {
-    const { id, title, content } = note as Note;
-    this._noteService.updateNote(id, {title, content});
-    this._router.navigate(['/notes']);
+    this._noteService.updateNote(note as Note).subscribe(
+      r => {
+        this._router.navigate(['/notes']);
+      }
+    );
   }
 
   private onNoteDeleted = (note: Object): void => {
-    console.log('onNoteDeleted');
     const { id } = note as Note;
-    this._noteService.deleteNote(id);
-    this._router.navigate(['/notes']);
+    this._noteService.deleteNote(id)
+      .subscribe(r => {
+        this._router.navigate(['/notes']);
+      });
   }
 
   private onNoteAdded = (note: Object): void => {
-    const { title, content } = note as Note;
-    this._noteService.addNote(new Note(title, content));
-    this._router.navigate(['/notes']);
+    const newNote = note as Note;
+    this._noteService.addNote(newNote)
+    .subscribe(r => {
+      this._router.navigate(['/notes']);
+    });
   }
 }

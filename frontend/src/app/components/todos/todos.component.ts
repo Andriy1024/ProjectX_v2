@@ -1,6 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { from, Observable } from 'rxjs';
 import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
 import { Todo } from '../../models/todo.model';
 import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
@@ -24,7 +25,7 @@ import { TodoService } from '../../services/todo/todo.service';
 })
 export class TodosComponent implements OnInit {
 
-  public todos: Todo[] = [];
+  public todos: Observable<Todo[]> = from([]);
 
   constructor(
     private readonly _todoService: TodoService,
@@ -32,16 +33,26 @@ export class TodosComponent implements OnInit {
     private readonly _stateService: DynamicFormStateService) { }
 
   ngOnInit(): void {
+    this.loadTodos();
+  }
+
+  public loadTodos(): void {
     this.todos = this._todoService.getTodos();
   }
 
   public toggleCompleted(todo: Todo): void {
-    this._todoService.updateTodo(todo.id, { completed: !todo.completed });
+    todo.completed = !todo.completed;
+    this._todoService.updateTodo(todo)
+        .subscribe(r => {
+          this.loadTodos();
+        });
   }
 
   public onDeleteClick(todo: Todo): void {
-    this._todoService.deleteTodo(todo.id);
-    this.todos = this._todoService.getTodos();
+    this._todoService.deleteTodo(todo.id)
+      .subscribe(r => {
+        this.loadTodos();
+      });
   }
 
   public onEditClick(todo: Todo): void {
@@ -58,8 +69,8 @@ export class TodosComponent implements OnInit {
           visible: false,
         },
         {
-          label: 'Text',
-          key: 'text',
+          label: 'Name',
+          key: 'name',
           fieldType: FieldType.text,
           controlType: ControlType.input,
           required: true,
@@ -89,8 +100,8 @@ export class TodosComponent implements OnInit {
       title: 'New Todo',
       controls: [
         {
-          label: 'Text',
-          key: 'text',
+          label: 'Name',
+          key: 'name',
           fieldType: FieldType.text,
           controlType: ControlType.input,
           required: true,
@@ -114,14 +125,17 @@ export class TodosComponent implements OnInit {
   }
 
   private onNoteAdded = (value: object): void => {
-    const { text } = value as Todo;
-    this._todoService.addTodo(new Todo(text, false));
-    this._router.navigate(['/todos']);
+    const task = value as Todo;
+    this._todoService.addTodo(task)
+      .subscribe(r => {
+        this._router.navigate(['/todos']);
+      });
   }
 
   private onNoteUpdated = (value: object): void => {
-    const { id } = value as Todo;
-    this._todoService.updateTodo(id, value);
-    this._router.navigate(['/todos']);
+    this._todoService.updateTodo(value as Todo)
+      .subscribe(r => {
+        this._router.navigate(['/todos']);
+      });
   }
 }

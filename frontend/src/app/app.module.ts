@@ -16,6 +16,11 @@ import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.co
 import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
 import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
 
+import { DASHBOARD_API_URL, IDENTITY_API_URL } from './app-injection-tokens';
+import { environment } from 'src/environments/environment';
+import { HttpErrorInterceptor } from './http/http-error.interceptor';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,9 +40,14 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: IDENTITY_API_URL, useValue: environment.identityApi },
+    { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
