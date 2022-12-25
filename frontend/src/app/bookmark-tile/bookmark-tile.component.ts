@@ -17,7 +17,7 @@ export class BookmarkTileComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.tileIconSrc = this.bookmark!.url.origin + '/favicon.ico';
+    this.tileIconSrc = this.bookmark!.url + '/favicon.ico';
   }
 
 }

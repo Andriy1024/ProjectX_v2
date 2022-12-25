@@ -13,7 +13,8 @@ import { NotificationService } from '../notification/notification.service';
 export class NoteService {
   constructor(
     private readonly _noteClient: HttpClient,
-    @Inject(DASHBOARD_API_URL) private  readonly _dashboardUrl: string,
+    @Inject(DASHBOARD_API_URL)
+    private  readonly _dashboardUrl: string,
     private readonly _notificationService: NotificationService)
     { }
 

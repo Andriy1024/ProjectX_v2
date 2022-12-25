@@ -63,9 +63,9 @@ export class BookmarksComponent implements OnInit {
   }
 
   private onBookmarkAdded = (value: object): void => {
-    const { name, url } = value as any;
-    const bookmark = new Bookmark(name, url);
-    this._bookmarkService.addBookmark(bookmark);
-    this._router.navigate(['/bookmarks']);
+    this._bookmarkService.addBookmark(value as Bookmark)
+    .subscribe(r => {
+      this._router.navigate(['/bookmarks']);
+    });
   }
 }

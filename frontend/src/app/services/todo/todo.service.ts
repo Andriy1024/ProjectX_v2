@@ -11,13 +11,14 @@ import { NotificationService } from '../notification/notification.service';
 })
 export class TodoService {
   constructor(
-    private readonly _noteClient: HttpClient,
-    @Inject(DASHBOARD_API_URL) private readonly _dashboardUrl: string,
+    private readonly _todoClient: HttpClient,
+    @Inject(DASHBOARD_API_URL)
+    private readonly _dashboardUrl: string,
     private readonly _notificationService: NotificationService)
     { }
 
   public getTodos(): Observable<Todo[]> {
-    return this._noteClient
+    return this._todoClient
       .get<IDataResponseOf<Todo[]>>(`${this._dashboardUrl}/api/tasks`)
       .pipe(
         map(mapResponseOf),
@@ -28,13 +29,13 @@ export class TodoService {
   }
 
   public findTodo(id: number): Observable<Todo> {
-    return this._noteClient
+    return this._todoClient
       .get<IDataResponseOf<Todo>>(`${this._dashboardUrl}/api/tasks/${id}`)
       .pipe(map(mapResponseOf));
   }
 
   public addTodo(todo: Todo) {
-    return this._noteClient
+    return this._todoClient
       .post<IDataResponseOf<Todo>>(`${this._dashboardUrl}/api/tasks`, todo)
       .pipe(
         map(mapResponseOf),
@@ -43,7 +44,7 @@ export class TodoService {
   }
 
   public updateTodo(todo: Todo) {
-    return this._noteClient
+    return this._todoClient
       .put<IDataResponseOf<Todo>>(`${this._dashboardUrl}/api/tasks`, todo)
       .pipe(
         map(mapResponseOf),
@@ -52,7 +53,7 @@ export class TodoService {
   }
 
   public deleteTodo(id: number) {
-    return this._noteClient
+    return this._todoClient
       .delete<IResponse>(`${this._dashboardUrl}/api/tasks/${id}`)
       .pipe(
         map(mapResponse),

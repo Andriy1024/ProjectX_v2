@@ -27,74 +27,75 @@ export class BookmarkEditComponent implements OnInit {
         return;
       }
 
-      this.bookmark = this.bookmarkService.findBookmark(bookmarkId);
-      if (!this.bookmark) {
-        return;
-      }
-
-      this._stateService.push({
-        title: 'Edit Bookmark',
-        controls: [
-          {
-            label: 'Id',
-            key: 'id',
-            fieldType: FieldType.number,
-            controlType: ControlType.input,
-            required: true,
-            visible: false,
-          },
-          {
-            label: 'Name',
-            key: 'name',
-            fieldType: FieldType.text,
-            controlType: ControlType.input,
-            required: true,
-            visible: true,
-          },
-          {
-            label: 'URL',
-            key: 'url',
-            fieldType: FieldType.url,
-            controlType: ControlType.input,
-            required: true,
-            visible: true,
+      this.bookmarkService.findBookmark(Number(bookmarkId))
+        .subscribe(b => {
+          this.bookmark = b;
+          if (this.bookmark) {
+            this.pushFormConfig();
           }
-        ],
-        buttons: [
-          {
-            label: 'Cancel',
-            type: ButtonType.link,
-            linkUrl: '/bookmarks/manage'
-          },
-          {
-            label: 'Delete',
-            type: ButtonType.button,
-            onClick: this.onDeleted
-          },
-          {
-            label: 'Save',
-            type: ButtonType.submit,
-            alignEnd: true,
-            onClick: this.onUpdated
-          }
-        ],
-        data: this.bookmark
-      });
+        });
+    });
+  }
 
+  private pushFormConfig() {
+    this._stateService.push({
+      title: 'Edit Bookmark',
+      controls: [
+        {
+          label: 'Id',
+          key: 'id',
+          fieldType: FieldType.number,
+          controlType: ControlType.input,
+          required: true,
+          visible: false,
+        },
+        {
+          label: 'Name',
+          key: 'name',
+          fieldType: FieldType.text,
+          controlType: ControlType.input,
+          required: true,
+          visible: true,
+        },
+        {
+          label: 'URL',
+          key: 'url',
+          fieldType: FieldType.url,
+          controlType: ControlType.input,
+          required: true,
+          visible: true,
+        }
+      ],
+      buttons: [
+        {
+          label: 'Cancel',
+          type: ButtonType.link,
+          linkUrl: '/bookmarks/manage'
+        },
+        {
+          label: 'Delete',
+          type: ButtonType.button,
+          onClick: this.onDeleted
+        },
+        {
+          label: 'Save',
+          type: ButtonType.submit,
+          alignEnd: true,
+          onClick: this.onUpdated
+        }
+      ],
+      data: this.bookmark
     });
   }
 
   public onUpdated = (value: object): void => {
-    const { name, url } = value as Bookmark;
-
-    this.bookmarkService.updateBookmark(this.bookmark!.id, {
-      name,
-      url: new URL(url)
-    });
+    this.bookmarkService.updateBookmark(value as Bookmark)
+      .subscribe();
   }
 
   public onDeleted = (value: object): void => {
     this.router.navigate(['../'], { relativeTo: this.route });
-    this.bookmarkService.deleteBookmark(this.bookmark!.id);
+    this.bookmarkService.deleteBookmark(this.bookmark!.id)
+    .subscribe();
   }
 }
