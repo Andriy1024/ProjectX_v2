@@ -26,7 +26,7 @@ public class BookmarksController : ProjectXController
     public Task<IActionResult> UpdateBookmark([FromBody] UpdateBookmarkCommand command)
         => Send(command);
 
-    [HttpDelete]
-    public Task<IActionResult> DeleteBookmark([FromBody] DeleteBookmarkCommand command)
-        => Send(command);
+    [HttpDelete("{id:long:min(1)}")]
+    public Task<IActionResult> DeleteBookmark([FromRoute] int id)
+        => Send(new DeleteBookmarkCommand(id));
 }

@@ -58,6 +58,9 @@ public class DeleteBookmarkCommand : ICommand, IValidatable
 {
     public int Id { get; init; }
 
+    public DeleteBookmarkCommand(int id)
+        => Id = id;
+    
     public IEnumerable<ValidationFailure> Validate()
     {
         return this.Validate(command =>
