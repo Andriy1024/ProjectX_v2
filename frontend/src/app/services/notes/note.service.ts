@@ -40,7 +40,7 @@ export class NoteService {
       .post<IDataResponseOf<Note>>(`${this._dashboardUrl}/api/notes`, note)
       .pipe(
         map(mapResponseOf),
-        tap(() => this._notificationService.show('Note created'))
+        tap((s) => this._notificationService.show('Note created'))
       );
   }
 

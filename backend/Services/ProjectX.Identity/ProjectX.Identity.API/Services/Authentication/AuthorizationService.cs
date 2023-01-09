@@ -9,6 +9,7 @@ using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
 using ProjectX.Identity.API.Requests;
 using ProjectX.Identity.API.Results;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -38,6 +39,17 @@ public sealed class AuthorizationService
     {
         var jwtHandler = new JwtSecurityTokenHandler();
 
+        /*
+         * At Auth0 we allow signing of tokens using either a symmetric algorithm (HS256), 
+         * or an asymmetric algorithm (RS256).RS256: 
+         * <see href="https://www.jerriepelser.com/blog/manually-validating-rs256-jwt-dotnet/"/>
+         * <see href="https://developer.okta.com/code/dotnet/jwt-validation/"/>
+         * HS256 tokens are signed and verified using a simple secret, 
+         * where as RS256 use a private and public key for signing and verifying the token signatures.
+         * SHA-256 it's Hashing function. This means that if we take our Header and Payload and run it through this function,
+         * no one will be able to get the data back again just by looking at the output.
+         * Hashing is not encryption: encryption by definition is a reversible action - we do need to get back the original input from the encrypted output.
+        */
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Secret)),
             SecurityAlgorithms.HmacSha256);
@@ -101,7 +113,8 @@ public sealed class AuthorizationService
 
                 if (result == false)
                 {
-                    return Error.InvalidData(message: "Invalid signature algoritm");
+                    //throw new SecurityTokenValidationException("The alg must be RS256.");
+                    return Error.InvalidData(message: $"Invalid signature algoritm, expected: {SecurityAlgorithms.HmacSha256}, actual: {jwtSecurityToken.Header.Alg}.");
                 }
             }
 

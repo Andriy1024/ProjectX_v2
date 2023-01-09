@@ -32,20 +32,15 @@ export class BookmarkService {
       .get<IDataResponseOf<Bookmark[]>>(`${this._dashboardUrl}/api/bookmarks`)
       .pipe(
         map(mapResponseOf),
-        tap(result => this.bookmarkUpdates$.next(result))
+        switchMap(result => {
+          this.bookmarkUpdates$.next(result);
+          return this.bookmarkUpdates$.asObservable();
+        })
       );
   }
 
   public getBookmarks(): Observable<Bookmark[]> {
-    return this.loadBookmarks()
-      .pipe(switchMap(r => {
-        return this.bookmarkUpdates$.asObservable();
-      }));
-
-    // return this.loadBookmarks()
-    //   .subscribe(r => {
-    //     return this.bookmarkUpdates$.asObservable();
-    //   });
+    return this.loadBookmarks();
   }
 
   public findBookmark(id: number) {

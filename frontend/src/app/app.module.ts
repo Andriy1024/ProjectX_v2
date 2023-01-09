@@ -18,8 +18,10 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
 
 import { DASHBOARD_API_URL, IDENTITY_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
-import { HttpErrorInterceptor } from './http/http-error.interceptor';
+import { ApplicationHttpInterceptor } from './http/http-error.interceptor';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
     BookmarksManageComponent,
     BookmarkEditComponent,
     BookmarkTileComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,13 +44,33 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: environment.tokenWhiteListedDomains,
+        disallowedRoutes: [''],
+      },
+    })
   ],
   providers: [
     { provide: IDENTITY_API_URL, useValue: environment.identityApi },
     { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ApplicationHttpInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function tokenGetter()
+{
+      // const stringToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+      // if(stringToken != null)
+      // {
+      //     const parsed = JSON.parse(stringToken);
+      //     return parsed?.access_token;
+      // }
+
+      return null;
+}
