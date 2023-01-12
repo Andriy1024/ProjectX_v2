@@ -44,7 +44,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose\services.yml = docker-compose\services.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.BackgroundWork", "Common\ProjectX.BackgroundWork\ProjectX.BackgroundWork.csproj", "{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.BackgroundWork", "Common\ProjectX.BackgroundWork\ProjectX.BackgroundWork.csproj", "{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Realtime", "Realtime", "{6184CE06-22FF-44F8-9CBE-79C1B7DC46E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Realtime.API", "Services\ProjectX.Realtime\ProjectX.Realtime.API\ProjectX.Realtime.API.csproj", "{F175189C-7BAE-4BDA-9C0B-902EB791E5FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Realtime", "Common\ProjectX.Realtime\ProjectX.Realtime.csproj", "{8DDDB2CB-3206-4CCB-972C-5BD0FD983EA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.RabbitMq", "Common\ProjectX.RabbitMq\ProjectX.RabbitMq.csproj", "{9722B2DB-88FB-4CB1-9F8F-7515150B7693}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +112,18 @@ Global
 		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F175189C-7BAE-4BDA-9C0B-902EB791E5FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F175189C-7BAE-4BDA-9C0B-902EB791E5FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F175189C-7BAE-4BDA-9C0B-902EB791E5FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F175189C-7BAE-4BDA-9C0B-902EB791E5FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDDB2CB-3206-4CCB-972C-5BD0FD983EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDDB2CB-3206-4CCB-972C-5BD0FD983EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDDB2CB-3206-4CCB-972C-5BD0FD983EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDDB2CB-3206-4CCB-972C-5BD0FD983EA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9722B2DB-88FB-4CB1-9F8F-7515150B7693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9722B2DB-88FB-4CB1-9F8F-7515150B7693}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9722B2DB-88FB-4CB1-9F8F-7515150B7693}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9722B2DB-88FB-4CB1-9F8F-7515150B7693}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +145,10 @@ Global
 		{09FEF551-E530-4D81-A5FF-7E0F807769CE} = {EF3073E7-AEB9-4E48-B15E-844F75823824}
 		{FB245472-66F4-41F4-9230-EB53CA9B026A} = {EF3073E7-AEB9-4E48-B15E-844F75823824}
 		{FE41FB68-AAB7-489C-84BD-684BD9DD96D0} = {7F78CC10-9988-410B-92AF-EF5710B74EED}
+		{6184CE06-22FF-44F8-9CBE-79C1B7DC46E0} = {C5401EA4-FF08-4682-AA70-D119357AE238}
+		{F175189C-7BAE-4BDA-9C0B-902EB791E5FF} = {6184CE06-22FF-44F8-9CBE-79C1B7DC46E0}
+		{8DDDB2CB-3206-4CCB-972C-5BD0FD983EA9} = {7F78CC10-9988-410B-92AF-EF5710B74EED}
+		{9722B2DB-88FB-4CB1-9F8F-7515150B7693} = {7F78CC10-9988-410B-92AF-EF5710B74EED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C6E7CD24-B1DF-4643-8D18-884E9669D929}

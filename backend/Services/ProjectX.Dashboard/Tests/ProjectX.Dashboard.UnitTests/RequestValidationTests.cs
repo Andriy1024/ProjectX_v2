@@ -58,15 +58,9 @@ public class RequestValidationTests
                 Name = " "
             });
 
-            ValidCase(new DeleteTaskCommand()
-            {
-                Id = 1
-            });
+            ValidCase(new DeleteTaskCommand(1));
 
-            InvalidCase("Invalid Id", new DeleteTaskCommand()
-            {
-                Id = 0
-            });
+            InvalidCase("Invalid Id", new DeleteTaskCommand(0));
         }
     }
 }
