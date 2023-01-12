@@ -1,10 +1,12 @@
-﻿namespace ProjectX.Core;
+﻿using ProjectX.Core.Events;
 
-public interface IDomainEvent : INotification
+namespace ProjectX.Core;
+
+public interface IDomainEvent : IApplicationEvent
 {
 }
 
-public interface IDomainEventHandler<TDomainEvent> : INotificationHandler<TDomainEvent>
+public interface IDomainEventHandler<TDomainEvent> : IApplicationEventHandler<TDomainEvent>
     where TDomainEvent : IDomainEvent
 {
 }

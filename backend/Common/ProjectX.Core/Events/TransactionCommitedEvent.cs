@@ -1,9 +1,11 @@
-﻿namespace ProjectX.Core;
+﻿using ProjectX.Core.Events;
 
-public class TransactionCommitedEvent : IDomainEvent
+namespace ProjectX.Core;
+
+public class TransactionCommitedEvent : IApplicationEvent
 {
 }
 
-public interface ITransactionCommitedEventHandler : INotificationHandler<TransactionCommitedEvent>
+public interface ITransactionCommitedEventHandler : IApplicationEventHandler<TransactionCommitedEvent>
 {
 }

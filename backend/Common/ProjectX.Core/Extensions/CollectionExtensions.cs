@@ -2,6 +2,9 @@
 
 public static class CollectionExtensions
 {
+    public static bool IsOneOf<T>(this T target, params T[] items)
+        => items.Contains(target);
+
     public static bool IsOneOf<T>(this T target, IEnumerable<T> items)
         => items.Contains(target);
 

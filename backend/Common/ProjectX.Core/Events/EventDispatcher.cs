@@ -1,15 +1,16 @@
-﻿using ProjectX.Core.Observability;
+﻿using ProjectX.Core.Events;
+using ProjectX.Core.Observability;
 
 namespace ProjectX.Core;
 
 public interface IEventDispatcher
 {
-    Task DispatchAsync(IDomainEvent domainEvent);
+    Task DispatchAsync(IApplicationEvent domainEvent);
 
-    Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents);
+    Task DispatchAsync(IEnumerable<IApplicationEvent> domainEvents);
 }
 
-public class EventDispatcher : IEventDispatcher
+public sealed class EventDispatcher : IEventDispatcher
 {
     private readonly IMediator _mediator;
     private readonly ITracer _tracer; 
@@ -20,7 +21,7 @@ public class EventDispatcher : IEventDispatcher
         _tracer = tracer;
     }
 
-    public async Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents)
+    public async Task DispatchAsync(IEnumerable<IApplicationEvent> domainEvents)
     {
         foreach (var domainEvent in domainEvents)
         {
@@ -28,7 +29,7 @@ public class EventDispatcher : IEventDispatcher
         }
     }
 
-    public Task DispatchAsync(IDomainEvent domainEvent)
+    public Task DispatchAsync(IApplicationEvent domainEvent)
     {
         return _tracer.Trace(domainEvent.GetType().Name, () => _mediator.Publish(domainEvent));
     }
