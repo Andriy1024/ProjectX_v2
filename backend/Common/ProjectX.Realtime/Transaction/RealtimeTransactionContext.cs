@@ -2,8 +2,7 @@
 
 public sealed class RealtimeTransactionContext : IRealtimeTransactionContext
 {
-    private readonly Queue<(RealtimeIntegrationEvent, PublishProperties)> _messages =
-                 new Queue<(RealtimeIntegrationEvent, PublishProperties)>();
+    private readonly Queue<(RealtimeIntegrationEvent, PublishProperties)> _messages = new();
 
     public void Add(RealtimeMessageContext message, IEnumerable<int> receivers)
     {
@@ -17,7 +16,7 @@ public sealed class RealtimeTransactionContext : IRealtimeTransactionContext
                                         autoDelete: true,
                                         durable: false));
 
-        var integrationEvent = new RealtimeIntegrationEvent(Guid.NewGuid(), message, receivers);
+        var integrationEvent = new RealtimeIntegrationEvent(message, receivers);
 
         _messages.Enqueue((integrationEvent, publishProperties));
     }

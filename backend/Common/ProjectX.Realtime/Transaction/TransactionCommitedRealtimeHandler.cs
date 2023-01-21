@@ -1,22 +1,25 @@
-﻿namespace ProjectX.Core.Realtime.Transaction;
+﻿using ProjectX.Core.Events;
 
-public sealed class TransactionCommitedRealtimeHandler : ITransactionCommitedEventHandler
+namespace ProjectX.Core.Realtime.Transaction;
+
+public sealed class TransactionCommitedRealtimeHandler : IApplicationEventHandler<TransactionCommitedEvent>
 {
     private readonly IRabbitMqPublisher _publisher;
     private readonly IRealtimeTransactionContext _transactionContext;
 
-    public TransactionCommitedRealtimeHandler(IRabbitMqPublisher publisher,
-                                              IRealtimeTransactionContext transactionContext)
+    public TransactionCommitedRealtimeHandler(IRabbitMqPublisher publisher, IRealtimeTransactionContext transactionContext)
     {
         _publisher = publisher;
         _transactionContext = transactionContext;
     }
 
-    public async Task Handle(TransactionCommitedEvent @event, CancellationToken cancellationToken)
+    public Task Handle(TransactionCommitedEvent @event, CancellationToken cancellationToken)
     {
         foreach (var message in _transactionContext.ExtractMessages())
         {
             _publisher.Publish(message.Item1, message.Item2);
         }
+
+        return Task.CompletedTask;
     }
 }

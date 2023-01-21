@@ -1,31 +1,35 @@
 ﻿namespace ProjectX.Core;
 
-public class EntityCreated<TEntity> : IDomainEvent
+public abstract class EntityDomainEvent<TEntity> : IDomainEvent
 {
     public TEntity Entity { get; }
 
+    public EntityDomainEvent(TEntity entity)
+    {
+        Entity = entity;
+    }
+}
+
+public class EntityCreated<TEntity> : EntityDomainEvent<TEntity>
+{
     public EntityCreated(TEntity entity)
+        : base(entity)
     {
-        Entity = entity;
     }
 }
 
-public class EntityUpdated<TEntity> : IDomainEvent
+public class EntityUpdated<TEntity> : EntityDomainEvent<TEntity>
 {
-    public TEntity Entity { get; }
-
     public EntityUpdated(TEntity entity)
+        :base(entity)
     {
-        Entity = entity;
     }
 }
 
-public class EntityDeleted<TEntity> : IDomainEvent
+public class EntityDeleted<TEntity> : EntityDomainEvent<TEntity>
 {
-    public TEntity Entity { get; }
-
     public EntityDeleted(TEntity entity)
+        : base(entity)
     {
-        Entity = entity;
     }
 }

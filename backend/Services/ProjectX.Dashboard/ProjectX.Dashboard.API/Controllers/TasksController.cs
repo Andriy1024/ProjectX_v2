@@ -9,7 +9,7 @@ using ProjectX.Dashboard.Application;
 namespace ProjectX.Dashboard.API.Controllers;
 
 [Route("api/tasks")]
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class TasksController : ProjectXController
 {
     [HttpGet]

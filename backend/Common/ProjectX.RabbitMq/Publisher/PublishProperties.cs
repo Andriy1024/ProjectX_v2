@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.RabbitMq;
 
-public class PublishProperties 
+public record PublishProperties 
 {
     public ExchangeProperties Exchange { get; }
 
@@ -15,7 +15,7 @@ public class PublishProperties
 
     public PublishProperties(Exchange.Name exchangeName)
     {
-        Exchange.Name = exchangeName;
+        Exchange = new ExchangeProperties(exchangeName);
     }
 
     public PublishProperties(ExchangeProperties exchange)

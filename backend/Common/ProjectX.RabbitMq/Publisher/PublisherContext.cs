@@ -43,6 +43,6 @@ internal sealed class PublisherContext
 
     public override string ToString()
     {
-        return $"{nameof(Exchange)}: {Exchange.ToString()}, {nameof(RoutingKey)}: {RoutingKey}.";
+        return $"{nameof(Exchange)}: {Exchange}, {nameof(RoutingKey)}: {RoutingKey}.";
     }
 }

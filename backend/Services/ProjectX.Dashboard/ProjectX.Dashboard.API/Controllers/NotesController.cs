@@ -7,7 +7,7 @@ using ProjectX.Dashboard.Application;
 namespace ProjectX.Dashboard.API.Controllers;
 
 [Route("api/notes")]
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class NotesController : ProjectXController
 {
     [HttpGet]

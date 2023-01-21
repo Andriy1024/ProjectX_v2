@@ -17,11 +17,11 @@ public sealed class WebSocketAuthenticationManager
     /// First step of authentication. 
     /// The action is triggered from RealtimeController.
     /// </summary>
-    public ConnectionId GenerateConnectionId(ICurrentUser currentUser)
+    public ConnectionId GenerateConnectionId(IUserContext currentUser)
     {
         ConnectionId connectionId = Guid.NewGuid();
 
-        _pendingConnectionIds.Set(connectionId, currentUser.IdentityId, _cacheItemExpirationTime);
+        _pendingConnectionIds.Set(connectionId, currentUser.Id, _cacheItemExpirationTime);
 
         return connectionId;
     }

@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.Realtime.Messages;
 
-public class TaskCreatedMessage : IRealtimeMessage
+public abstract class TaskRealtimeMessage : IRealtimeMessage
 {
     public int Id { get; set; }
 
@@ -14,3 +14,9 @@ public class TaskCreatedMessage : IRealtimeMessage
 
     public DateTimeOffset UpdatedAt { get; set; }
 }
+
+public class TaskCreatedMessage : TaskRealtimeMessage {}
+
+public class TaskUpdatedMessage : TaskRealtimeMessage {}
+
+public class TaskDeletedMessage : TaskRealtimeMessage {}

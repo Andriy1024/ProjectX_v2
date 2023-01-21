@@ -4,77 +4,79 @@ using Newtonsoft.Json.Serialization;
 using ProjectX.Core.Realtime.Abstractions;
 using System.Runtime.Serialization;
 
-namespace ProjectX.Realtime.PublicContract
+namespace ProjectX.Realtime.PublicContract;
+
+/// <summary>
+/// Returns all possible realtime's messages.
+/// </summary>
+public class RealtimeContractsMiddleware
 {
-    /// <summary>
-    /// Returns all possible realtime's messages.
-    /// </summary>
-    public class RealtimeContractsMiddleware
+    private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
     {
-        private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
+        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+        Converters = new List<JsonConverter>
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            Converters = new List<JsonConverter>
-            {
-                new StringEnumConverter(new CamelCaseNamingStrategy())
-            },
-            Formatting = Formatting.Indented
-        };
+            new StringEnumConverter(new CamelCaseNamingStrategy())
+        },
+        Formatting = Formatting.Indented
+    };
 
-        private static readonly ContractTypes _contracts = new ContractTypes();
-        private static int _initialized;
-        private static string _serializedContracts = "{}";
+    private static readonly ContractTypes _contracts = new ContractTypes();
+    private static int _initialized;
+    private static string _serializedContracts = "{}";
 
-        public RealtimeContractsMiddleware(RequestDelegate next)
+    public RealtimeContractsMiddleware(RequestDelegate next)
+    {
+        if (_initialized == 1) return;
+        
+        Load();
+    }
+
+    public Task InvokeAsync(HttpContext context)
+    {
+        context.Response.ContentType = "application/json";
+        context.Response.WriteAsync(_serializedContracts);
+        return Task.CompletedTask;
+    }
+
+    private void Load()
+    {
+        if (Interlocked.Exchange(ref _initialized, 1) == 1)
         {
-            if (_initialized == 1) return;
+            return;
+        }
+
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        
+        var realTimeType = typeof(IRealtimeMessage);
+
+        var realTimecontracts = assemblies
+                                  .SelectMany(a => a.GetTypes())
+                                  .Where(t =>
+                                        !t.IsInterface && 
+                                        !t.IsAbstract && 
+                                        realTimeType.IsAssignableFrom(t))
+                                  .ToArray();
+
+        foreach (var realtimeMessage in realTimecontracts)
+        {
+            var instance = FormatterServices.GetUninitializedObject(realtimeMessage);
+            var name = instance.GetType().Name;
             
-            Load();
-        }
-
-        public Task InvokeAsync(HttpContext context)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.WriteAsync(_serializedContracts);
-            return Task.CompletedTask;
-        }
-
-        private void Load()
-        {
-            if (Interlocked.Exchange(ref _initialized, 1) == 1)
+            if (_contracts.RealtimeMessages.ContainsKey(name))
             {
-                return;
+                throw new InvalidOperationException($"RealtimeMessage: '{name}' already exists.");
             }
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            
-            var realTimeType = typeof(IRealtimeMessage);
-
-            var realTimecontracts = assemblies
-                                      .SelectMany(a => a.GetTypes())
-                                      .Where(t => !t.IsInterface && realTimeType.IsAssignableFrom(t))
-                                      .ToArray();
-
-            foreach (var realtimeMessage in realTimecontracts)
-            {
-                var instance = FormatterServices.GetUninitializedObject(realtimeMessage);
-                var name = instance.GetType().Name;
-                
-                if (_contracts.RealtimeMessages.ContainsKey(name))
-                {
-                    throw new InvalidOperationException($"RealtimeMessage: '{name}' already exists.");
-                }
-
-                instance.SetDefaultInstanceProperties();
-                _contracts.RealtimeMessages[name] = instance;
-            }
-
-            _serializedContracts = JsonConvert.SerializeObject(_contracts, _serializerSettings);
+            instance.SetDefaultInstanceProperties();
+            _contracts.RealtimeMessages[name] = instance;
         }
 
-        private class ContractTypes
-        {
-            public Dictionary<string, object> RealtimeMessages { get; } = new Dictionary<string, object>();
-        }
+        _serializedContracts = JsonConvert.SerializeObject(_contracts, _serializerSettings);
+    }
+
+    private class ContractTypes
+    {
+        public Dictionary<string, object> RealtimeMessages { get; } = new Dictionary<string, object>();
     }
 }

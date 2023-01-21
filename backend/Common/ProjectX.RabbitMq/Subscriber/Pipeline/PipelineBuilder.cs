@@ -4,14 +4,7 @@ internal partial class Pipe
 {
     public sealed class Builder<T>
     {
-        private readonly Handler<T> _handler;
-
         private readonly List<Line<T>> _pipes = new List<Line<T>>();
-
-        public Builder(Handler<T> lastPipe)
-        {
-            _handler = lastPipe;
-        }
 
         public Builder<T> Add(Line<T> pipe)
         {
@@ -23,26 +16,26 @@ internal partial class Pipe
             _pipes.Add(pipe.Handle); return this;
         }
 
-        private Handler<T> Build(int index)
+        public Handler<T> Build(Handler<T> lastPipe)
+        {
+            if (_pipes.Count == 0)
+            {
+                return lastPipe;
+            }
+
+            return Build(0, lastPipe);
+        }
+
+        private Handler<T> Build(int index, Handler<T> lastPipe)
         {
             if (index < _pipes.Count - 1)
             {
-                return (T request) => _pipes[index](request, Build(index + 1));
+                return (T request) => _pipes[index](request, Build(index + 1, lastPipe));
             }
             else
             {
-                return (T request) => _pipes[index](request, _handler);
+                return (T request) => _pipes[index](request, lastPipe);
             }
-        }
-
-        public Handler<T> Build() 
-        {
-            if(_pipes.Count == 0) 
-            {
-                return _handler;
-            }
-
-            return Build(0);
         }
     }
 }

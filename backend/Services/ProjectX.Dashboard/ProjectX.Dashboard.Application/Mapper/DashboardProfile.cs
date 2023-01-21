@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using ProjectX.Dashboard.Application.Contracts;
+﻿using ProjectX.Dashboard.Application.Contracts;
+using ProjectX.Realtime.Messages;
 
 namespace ProjectX.Dashboard.Application.Mapper;
 
@@ -10,5 +10,17 @@ public class DashboardProfile : Profile
         CreateMap<TaskEntity, TaskContarct>();
         CreateMap<NoteEntity, NoteContarct>();
         CreateMap<BookmarkEntity, BookmarkContarct>();
+
+        CreateMap<TaskEntity, TaskCreatedMessage>();
+        CreateMap<TaskEntity, TaskUpdatedMessage>();
+        CreateMap<TaskEntity, TaskDeletedMessage>();
+
+        CreateMap<NoteEntity, NoteCreated>();
+        CreateMap<NoteEntity, NoteUpdated>();
+        CreateMap<NoteEntity, NoteDeleted>();
+
+        CreateMap<BookmarkEntity, BookmarkCreated>();
+        CreateMap<BookmarkEntity, BookmarkUpdated>();
+        CreateMap<BookmarkEntity, BookmarkDeleted>();
     }
 }

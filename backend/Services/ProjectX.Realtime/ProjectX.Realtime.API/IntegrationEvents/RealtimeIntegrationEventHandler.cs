@@ -21,8 +21,6 @@ public sealed class RealtimeMessageDispatcher : IMessageDispatcher
     {
         if(integrationEvent is RealtimeIntegrationEvent message) 
         {
-            //await _webSocketManager.SendAsync(message.Message, message.Receivers);
-            
             await _webSocketManager.SendAsync(message.Message, message.Receivers);
         }
     }

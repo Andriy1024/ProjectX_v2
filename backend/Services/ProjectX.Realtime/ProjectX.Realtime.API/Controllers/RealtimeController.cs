@@ -12,7 +12,7 @@ public class RealtimeController : ControllerBase
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("connect")]
-    public IActionResult GenerateConnectionId([FromServices] WebSocketAuthenticationManager authenticationManager, [FromServices] ICurrentUser currentUser)
+    public IActionResult GenerateConnectionId([FromServices] WebSocketAuthenticationManager authenticationManager, [FromServices] IUserContext currentUser)
     {
         return Ok(new
         {

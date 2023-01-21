@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ProjectX.Authentication.Services;
 using ProjectX.Core.Auth;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ProjectX.Authentication;
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtensions
 {
     public static WebApplicationBuilder AddCurrentUser(this WebApplicationBuilder app)
     {
-        app.Services.AddScoped<ICurrentUser, CurrentUser>();
+        app.Services.AddScoped<IUserContext, UserContext>();
 
         return app;
     }
@@ -65,6 +66,10 @@ public static class ServiceCollectionExtensions
 
     public static IApplicationBuilder UseAppAuthentication(this IApplicationBuilder app)
     {
+        // https://stackoverflow.com/questions/57998262/why-is-claimtypes-nameidentifier-not-mapping-to-sub
+        // http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier -  sub
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
         app.UseAuthentication();
 
         app.UseAuthorization();

@@ -186,11 +186,25 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
 
         channel.BasicQos(0, properties.Consumer.PrefetchCount, false);
 
+        var pipeBuilder = new Pipe.Builder<SubscriberRequest>();
+
+        if (!properties.Consumer.Autoack)
+        {
+            pipeBuilder.Add(new AcknowledgmentPipe(channel, properties.Consumer.RequeueFailedMessages));
+        }
+
+        if (properties.Consumer.RetryOnFailure)
+        {
+            pipeBuilder.Add(new RetryPipe(_logger));
+        }
+
+        Pipe.Handler<SubscriberRequest> handler = pipeBuilder.Build(lastPipe: (r) => _dispatcher.HandleAsync(r.IntegrationEvent));
+
         var consumer = new AsyncEventingBasicConsumer(channel);
 
         consumer.Received += async (sender, args) => 
         {
-            await OnMessageReceived<T>(sender, args);
+            await OnMessageReceived<T>(sender, args, handler);
         };
 
         channel.BasicConsume(queue: queueName, autoAck: properties.Consumer.Autoack, consumer: consumer);
@@ -204,49 +218,17 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
             CreateSubscriberChannel<T>(key, properties);
         };
 
-        var pipeBuilder = new Pipe.Builder<SubscriberRequest>(lastPipe: (r) => _dispatcher.HandleAsync(r.IntegrationEvent));
-
-        if (!properties.Consumer.Autoack) 
-        {
-            pipeBuilder.Add(new AcknowledgmentPipe(channel, properties.Consumer.RequeueFailedMessages));
-        }
-
-        if (properties.Consumer.RetryOnFailure) 
-        {
-            pipeBuilder.Add(new RetryPipe(_logger));
-        }
-
-        Pipe.Handler<SubscriberRequest> handler = pipeBuilder.Build();
-
-        return new SubscriberContext(key, eventType: typeof(T), channel, properties.Queue, properties.Exchange, properties.Consumer, handler: handler);
+        return new SubscriberContext(key, EventType: typeof(T), channel, properties.Queue, properties.Exchange, properties.Consumer);
     }
 
-    private async Task OnMessageReceived<T>(object sender, BasicDeliverEventArgs ea)
+    private async Task OnMessageReceived<T>(object sender, BasicDeliverEventArgs ea, Pipe.Handler<SubscriberRequest> handler)
         where T : IIntegrationEvent
     {
-        var key = new SubscriptionKey(ea.Exchange, ea.RoutingKey);
-
-        SubscriberContext subscriber = null;
-        
-        var isSubscriberExist = false;
-
-        using (new ReadLock(_syncRootForSubscribers)) 
-        {
-            isSubscriberExist = _subscribers.TryGetValue(key, out subscriber);
-        }
-
-        if (!isSubscriberExist)
-        {
-            _logger.LogError($"Subscriber: {key} was not found.");
-            
-            return;
-        }
-
         var message = _serializer.Deserialize<T>(ea.Body.Span);
 
         try
         {
-            await subscriber.Handler(new SubscriberRequest(ea, message));
+            await handler(new SubscriberRequest(ea, message));
         }
         catch (Exception e)
         {

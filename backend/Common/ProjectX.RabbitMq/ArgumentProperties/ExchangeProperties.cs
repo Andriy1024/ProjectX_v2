@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.RabbitMq;
 
-public class ExchangeProperties 
+public record ExchangeProperties 
 {
     public Exchange.Name Name { get; set; }
 
@@ -19,19 +19,12 @@ public class ExchangeProperties
         Name = name;
     }
 
-    public ExchangeProperties(Exchange.Name name, 
-                              Exchange.Type type, 
-                              bool autoDelete, 
-                              bool durable) : this(name)
+    public ExchangeProperties(Exchange.Name name, Exchange.Type type, 
+        bool autoDelete, bool durable) : this(name)
     {
         Type = type;
         AutoDelete = autoDelete;
         Durable = durable;
-    }
-
-    public override string ToString()
-    {
-        return $"{nameof(Name)}: {Name?.Value}, {nameof(Type)}: {Type?.Value}, {nameof(AutoDelete)}: {AutoDelete}, {nameof(Durable)}: {Durable}.";
     }
 
     public static ExchangeProperties Validate(ExchangeProperties exchange) 

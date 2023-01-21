@@ -16,10 +16,10 @@ using ProjectX.Core.Context;
 using ProjectX.Persistence.Abstractions;
 using ProjectX.Core.StartupTasks;
 using ProjectX.Dashboard.Persistence;
-using Microsoft.AspNetCore.Mvc;
 using ProjectX.RabbitMq.Configuration;
 using ProjectX.Realtime;
 using ProjectX.AspNetCore.Extensions;
+using ProjectX.Dashboard.Application;
 
 namespace ProjectX.Dashboard.API;
 
@@ -41,7 +41,8 @@ public static class Startup
                 x => x.MigrationsHistoryTable("MigrationsHistory", DashboardDbContext.SchemaName));
         })
         .AddTransactinBehaviour()
-        .AddScoped<IStartupTask, DashboardDatabaseStartup>();
+        .AddScoped<IStartupTask, DashboardDatabaseStartup>()
+        .AddDomainEventsHandlers();
     
     public static void Configure(WebApplication app) 
     {

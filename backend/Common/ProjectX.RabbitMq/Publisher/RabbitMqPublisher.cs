@@ -2,15 +2,9 @@
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.CircuitBreaker;
-using ProjectX.Core.Events.IntegrationEvent;
-using ProjectX.Core.Threading;
 using ProjectX.RabbitMq.Configuration;
-using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Threading;
 
 namespace ProjectX.RabbitMq.Publisher;
 

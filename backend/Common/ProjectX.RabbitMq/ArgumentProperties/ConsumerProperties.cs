@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.RabbitMq;
 
-public class ConsumerProperties 
+public record ConsumerProperties 
 {
     /// <summary>
     /// Limit the number of unacknowledged messages on a channel (or connection) when consuming (aka "prefetch count").
@@ -22,9 +22,4 @@ public class ConsumerProperties
     public bool RequeueFailedMessages { get; set; } = false;
 
     public bool RetryOnFailure { get; set; } = true;
-
-    public override string ToString()
-    {
-        return $"{nameof(PrefetchCount)}: {PrefetchCount}, {nameof(Autoack)}: {Autoack}.";
-    }
 }
