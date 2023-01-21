@@ -1,8 +1,10 @@
-﻿namespace ProjectX.Core;
+﻿using ProjectX.Core.Abstractions;
+
+namespace ProjectX.Core;
 
 public interface ICommand : ICommand<Unit> {}
 
-public interface ICommand<TResult> : IRequest<ResultOf<TResult>> {}
+public interface ICommand<TResult> : IRequest<ResultOf<TResult>>, IHasTransaction {}
 
 public interface IQuery<TResult> : IRequest<ResultOf<TResult>> {}
 

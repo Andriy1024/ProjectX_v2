@@ -8,11 +8,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ProjectX.AspNetCore\ProjectX.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Common\ProjectX.Authentication\ProjectX.Authentication.csproj" />
     <ProjectReference Include="..\..\..\Common\ProjectX.Core\ProjectX.Core.csproj" />
+    <ProjectReference Include="..\..\..\Common\ProjectX.RabbitMq\ProjectX.RabbitMq.csproj" />
+    <ProjectReference Include="..\..\..\Common\ProjectX.Realtime\ProjectX.Realtime.csproj" />
   </ItemGroup>
 
 </Project>

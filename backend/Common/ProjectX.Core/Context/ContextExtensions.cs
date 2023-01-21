@@ -5,7 +5,7 @@ using ProjectX.Core.Context.HTTP;
 
 namespace ProjectX.Core.Context;
 
-public static class Extensions
+public static class ContextExtensions
 {
     private const string CorrelationIdKey = "correlation-id";
 
@@ -22,7 +22,7 @@ public static class Extensions
     public static IHttpClientBuilder AddContextHandler(this IHttpClientBuilder builder)
         => builder.AddHttpMessageHandler<ContextHttpHandler>();
 
-    public static IApplicationBuilder UseContexts(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCorrelationContext(this IApplicationBuilder app)
         => app.Use((ctx, next) =>
         {
             if (!ctx.Request.Headers.TryGetValue(CorrelationIdKey, out var correlationId))

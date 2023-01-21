@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ProjectX.Realtime.API.WebSockets;
 
@@ -9,37 +10,43 @@ public sealed class WebSocketMiddleware
     private readonly ApplicationWebSocketManager _connectionManager;
     private readonly WebSocketAuthenticationManager _authenticationManager;
 
+    private RequestDelegate _next;
+
     public WebSocketMiddleware(RequestDelegate next,
            ApplicationWebSocketManager connectionManager,
            WebSocketAuthenticationManager authenticationManager)
     {
+        _next = next;
         _connectionManager = connectionManager;
         _authenticationManager = authenticationManager;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!context.WebSockets.IsWebSocketRequest) return;
-
-        var cancellationToken = context.RequestAborted;
-
-        ConnectionId? connectionId = GetConnectionId(context);
-
-        if (!connectionId.HasValue)
+        if (context.WebSockets.IsWebSocketRequest) 
         {
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            return;
+            var cancellationToken = context.RequestAborted;
+
+            ConnectionId? connectionId = GetConnectionId(context);
+
+            if (!connectionId.HasValue)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return;
+            }
+
+            if (!_authenticationManager.Validate(connectionId.Value, out int userId))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return;
+            }
+
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+
+            await _connectionManager.HandleAsync(connectionId.Value, userId, webSocket, cancellationToken);
         }
 
-        if (!_authenticationManager.Validate(connectionId.Value, out long userId))
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            return;
-        }
-
-        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
-        await _connectionManager.HandleAsync(connectionId.Value, userId, webSocket, cancellationToken);
+        await _next(context);
     }
 
     private static ConnectionId? GetConnectionId(HttpContext context)

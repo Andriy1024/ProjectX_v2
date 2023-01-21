@@ -3,13 +3,28 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using ProjectX.Authentication.Services;
+using ProjectX.Core.Auth;
 using System.Text;
 
 namespace ProjectX.Authentication;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddProjectXAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static WebApplicationBuilder AddCurrentUser(this WebApplicationBuilder app)
+    {
+        app.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+        return app;
+    }
+
+    public static WebApplicationBuilder AddAppAuthentication(this WebApplicationBuilder app)
+    {
+        app.Services.AddAppAuthentication(app.Configuration);
+        return app;
+    }
+
+    public static IServiceCollection AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthenticationConfig>(configuration.GetSection(nameof(AuthenticationConfig)));
 
@@ -25,7 +40,7 @@ public static class ServiceCollectionExtensions
             ValidAudience = configuration["AuthenticationConfig:Audience"],
             RequireExpirationTime = false, //TODO later true
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
         };
 
         services.AddTransient((provider) => validationParametersFactory());
@@ -48,10 +63,12 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static void UseProjectXAuthentication(this WebApplication app)
+    public static IApplicationBuilder UseAppAuthentication(this IApplicationBuilder app)
     {
         app.UseAuthentication();
 
         app.UseAuthorization();
+
+        return app;
     }
 }

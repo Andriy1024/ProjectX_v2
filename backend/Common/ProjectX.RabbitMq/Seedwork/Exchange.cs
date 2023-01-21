@@ -2,7 +2,7 @@
 
 public class Exchange 
 {
-    public sealed class Type : StringEnumeration
+    public sealed class Type : Enumeration
     {
         public readonly static Type Direct = new Type("direct");
         public readonly static Type Fanout = new Type("fanout");
@@ -16,7 +16,7 @@ public class Exchange
         }
     }
 
-    public sealed class Name : StringEnumeration
+    public sealed class Name : Enumeration
     {
         public readonly static Name Identity = new Name("ProjectX.Identity");
         public readonly static Name Realtime = new Name("ProjectX.Realtime");

@@ -28,7 +28,7 @@ public abstract class ProjectXController : ControllerBase
         {
             ErrorType.ServerError => new InternalServerErrorObjectResult(response),
             ErrorType.NotFound => new NotFoundObjectResult(response),
-            ErrorType.InvalidData => new BadRequestObjectResult(response),
+            ErrorType.BadData => new BadRequestObjectResult(response),
             ErrorType.InvalidPermission => new ForbiddenObjectResult(response),
             _ => throw new ArgumentOutOfRangeException($"Invalid error type: {response.Error}")
         };

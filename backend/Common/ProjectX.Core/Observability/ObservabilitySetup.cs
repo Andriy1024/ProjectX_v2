@@ -16,19 +16,23 @@ namespace ProjectX.Core.Observability;
 
 public static class ObservabilitySetup
 {
-    public static IServiceCollection AddTracer(this IServiceCollection services)
-        => services.AddSingleton<ITracer, ProjectXTracer>();
-
-    public static IServiceCollection AddTracerBehaviour(this IServiceCollection services)
-        => services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracerBehaviour<,>));
-
-    public static IServiceCollection AddObservabilityServices(this WebApplicationBuilder app) 
-        => app
+    public static WebApplicationBuilder AddObservabilityServices(this WebApplicationBuilder app)
+    {
+        app
         .AddLogging()
         .AddOpenTelemetry()
         .Services
         .AddTracer()
         .AddTracerBehaviour();
+
+        return app;
+    }
+
+    public static IServiceCollection AddTracer(this IServiceCollection services)
+        => services.AddSingleton<ITracer, ProjectXTracer>();
+
+    public static IServiceCollection AddTracerBehaviour(this IServiceCollection services)
+        => services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracerBehaviour<,>));
 
     public static WebApplicationBuilder AddLogging(this WebApplicationBuilder app)
     {
@@ -124,14 +128,14 @@ public static class ObservabilitySetup
 
             if (httpContext?.User == null) return;
 
-            var identityId = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimType.IdentityId)?.Value;
+            var identityId = httpContext.User.Claims.FirstOrDefault(c => c.Type == ApplicationClaimTypes.IdentityId)?.Value;
 
             if (!string.IsNullOrWhiteSpace(identityId))
             {
                 activity.SetTag("identity.id", identityId);
             }
 
-            var identityRole = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimType.IdentityRole)?.Value;
+            var identityRole = httpContext.User.Claims.FirstOrDefault(c => c.Type == ApplicationClaimTypes.IdentityRole)?.Value;
 
             if (!string.IsNullOrWhiteSpace(identityRole))
             {

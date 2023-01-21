@@ -8,11 +8,11 @@ public class ResultOf<TResult> : IResult
 
     public TResult? Data { get; }
 
-    public Error? Error { get; }
+    public ApplicationError? Error { get; }
 
     public bool IsFailed => Error is not null;
 
-    public ResultOf([NotNull] Error error) 
+    public ResultOf([NotNull] ApplicationError error) 
         => Error = error.ThrowIfNull(); 
 
     public ResultOf([NotNull] TResult data) 
@@ -27,7 +27,7 @@ public class ResultOf<TResult> : IResult
         return result;
     }
 
-    public static implicit operator ResultOf<TResult>(Error error) => new(error);
+    public static implicit operator ResultOf<TResult>(ApplicationError error) => new(error);
 
     public static implicit operator ResultOf<TResult>(TResult value) => new(value);
 }

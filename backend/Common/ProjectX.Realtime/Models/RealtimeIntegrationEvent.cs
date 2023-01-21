@@ -8,13 +8,13 @@ public class RealtimeIntegrationEvent : IIntegrationEvent
 
     public RealtimeMessageContext Message { get; set; }
 
-    public IEnumerable<long> Receivers { get; set; }
+    public IEnumerable<int> Receivers { get; set; }
 
     public RealtimeIntegrationEvent()
     {
     }
 
-    public RealtimeIntegrationEvent(Guid id, RealtimeMessageContext message, IEnumerable<long> receivers)
+    public RealtimeIntegrationEvent(Guid id, RealtimeMessageContext message, IEnumerable<int> receivers)
     {
         Id = id;
         Message = message;

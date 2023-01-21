@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectX.Authentication;
+using ProjectX.Authentication.Constants;
 using ProjectX.Core;
 using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
@@ -56,13 +57,15 @@ public sealed class AuthorizationService
         
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Issuer = _jwtConfig.Issuer,
-            Audience = _jwtConfig.Audience,
+            Issuer = ProjectXAudience.Identity,
+            //Audience = _jwtConfig.Audience,
             Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame),
             SigningCredentials = credentials,
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new(JwtRegisteredClaimNames.Aud, "ProjectX.Tasks"),
+                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Identity),
+                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Dashboard),
+                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Realtime),
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, user.Email),
                 new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
@@ -114,7 +117,7 @@ public sealed class AuthorizationService
                 if (result == false)
                 {
                     //throw new SecurityTokenValidationException("The alg must be RS256.");
-                    return Error.InvalidData(message: $"Invalid signature algoritm, expected: {SecurityAlgorithms.HmacSha256}, actual: {jwtSecurityToken.Header.Alg}.");
+                    return ApplicationError.InvalidData(message: $"Invalid signature algoritm, expected: {SecurityAlgorithms.HmacSha256}, actual: {jwtSecurityToken.Header.Alg}.");
                 }
             }
 
@@ -125,7 +128,7 @@ public sealed class AuthorizationService
 
             if (expiryDate > DateTime.UtcNow)
             {
-                return Error.InvalidData(message: "Token has not yet expired");
+                return ApplicationError.InvalidData(message: "Token has not yet expired");
             }
 
             // validation 4 - validate existence of the token
@@ -133,19 +136,19 @@ public sealed class AuthorizationService
 
             if (storedToken == null)
             {
-                return Error.InvalidData(message: "Token does not exist");
+                return ApplicationError.InvalidData(message: "Token does not exist");
             }
 
             // Validation 5 - validate if used
             if (storedToken.IsUsed)
             {
-                return Error.InvalidData(message: "Token has been used");
+                return ApplicationError.InvalidData(message: "Token has been used");
             }
 
             // Validation 6 - validate if revoked
             if (storedToken.IsRevorked)
             {
-                return Error.InvalidData(message: "Token has been revoked");
+                return ApplicationError.InvalidData(message: "Token has been revoked");
             }
 
             // Validation 7 - validate the id
@@ -153,13 +156,13 @@ public sealed class AuthorizationService
 
             if (storedToken.JwtId != jti)
             {
-                return Error.InvalidData(message: "Token doesn't match");
+                return ApplicationError.InvalidData(message: "Token doesn't match");
             }
 
             // Validation 8 - validate stored token expiry date
             if (storedToken.ExpiryDate < DateTime.UtcNow)
             {
-                return Error.InvalidData(message: "Refresh token has expired");
+                return ApplicationError.InvalidData(message: "Refresh token has expired");
             }
 
             // update current token 
@@ -179,11 +182,11 @@ public sealed class AuthorizationService
         {
             if (ex.Message.Contains("Lifetime validation failed. The token is expired."))
             {
-                return Error.ServerError(message: "Token has expired please re-login");
+                return ApplicationError.ServerError(message: "Token has expired please re-login");
             }
             else
             {
-                return Error.ServerError(message: "Something went wrong.");
+                return ApplicationError.ServerError(message: "Something went wrong.");
             }
         }
     }

@@ -20,7 +20,7 @@ public sealed class WebSocketContext : IDisposable
     private readonly MessageHandler _messageHandler;
 
     public WebSocketContext(ConnectionId connectionId,
-                            long userId,
+                            int userId,
                             WebSocket webSocket,
                             CancellationToken cancellationToken,
                             ILoggerFactory loggerFactory,
@@ -37,7 +37,7 @@ public sealed class WebSocketContext : IDisposable
 
     public ConnectionId ConnectionId { get; }
 
-    public long UserId { get; }
+    public int UserId { get; }
 
     public WebSocketState GetWebSocketState()
     {

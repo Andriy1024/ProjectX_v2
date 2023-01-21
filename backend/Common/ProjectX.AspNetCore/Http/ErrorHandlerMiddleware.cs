@@ -31,7 +31,7 @@ public sealed class ErrorHandlerMiddleware
         {
             _logger.LogError(ex, $"Exception message: {ex.Message}.\nInner exception: {ex.InnerException?.Message}.\nStack trace: {ex.StackTrace}.");
 
-            ResultOf<Unit> error = Error.ServerError(message: ex.Message);
+            ResultOf<Unit> error = ApplicationError.ServerError(message: ex.Message);
 
             context.Response.StatusCode = 500;
 

@@ -3,13 +3,13 @@
 /// <summary>
 /// Base class for constant class that holds the string value.
 /// </summary>
-public class StringEnumeration
+public class Enumeration
 {
     static readonly object _staticFieldsLock = new object();
-    static Dictionary<Type, Dictionary<string, StringEnumeration>> _staticFields =
-        new Dictionary<Type, Dictionary<string, StringEnumeration>>();
+    static Dictionary<Type, Dictionary<string, Enumeration>> _staticFields =
+        new Dictionary<Type, Dictionary<string, Enumeration>>();
 
-    protected StringEnumeration(string value)
+    protected Enumeration(string value)
     {
         this.Value = value;
     }
@@ -29,7 +29,7 @@ public class StringEnumeration
     public string ToString(IFormatProvider provider)
         => this.Intern().Value;
     
-    public static implicit operator string(StringEnumeration value)
+    public static implicit operator string(Enumeration value)
         => value == null
             ? null
             : value.Intern().Value;
@@ -41,17 +41,17 @@ public class StringEnumeration
     /// user to (a) remember the specific case and (b) actually type it correctly.
     /// </summary>
     /// <returns>The properly cased service constant matching the value</returns>
-    internal StringEnumeration Intern()
+    internal Enumeration Intern()
     {
         if (!_staticFields.ContainsKey(this.GetType()))
             LoadFields(this.GetType());
 
         var map = _staticFields[this.GetType()];
-        StringEnumeration foundValue;
+        Enumeration foundValue;
         return map.TryGetValue(this.Value, out foundValue) ? foundValue : this;
     }
 
-    protected static bool HasValue<T>(string value) where T : StringEnumeration
+    protected static bool HasValue<T>(string value) where T : Enumeration
     {
         if (value == null)
             return false;
@@ -63,7 +63,7 @@ public class StringEnumeration
         return fields.ContainsKey(value);
     }
 
-    protected static void Validate<T>(string value) where T : StringEnumeration
+    protected static void Validate<T>(string value) where T : Enumeration
     {
         if (value == null)
             throw new ArgumentNullException(nameof(value));
@@ -77,7 +77,7 @@ public class StringEnumeration
             throw new ArgumentOutOfRangeException(value);
     }
 
-    public static T FindValue<T>(string value) where T : StringEnumeration
+    public static T FindValue<T>(string value) where T : Enumeration
     {
         if (value == null)
             throw new ArgumentNullException(nameof(value));
@@ -87,7 +87,7 @@ public class StringEnumeration
             LoadFields(type);
 
         var fields = _staticFields[type];
-        StringEnumeration foundValue;
+        Enumeration foundValue;
         if (!fields.TryGetValue(value, out foundValue))
         {
             throw new ArgumentOutOfRangeException($"Type: {type.Name}, value: {value}");
@@ -105,19 +105,19 @@ public class StringEnumeration
         {
             if (_staticFields.ContainsKey(t)) return;
 
-            var map = new Dictionary<string, StringEnumeration>(StringComparer.OrdinalIgnoreCase);
+            var map = new Dictionary<string, Enumeration>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var fieldInfo in t.GetFields())
             {
                 if (fieldInfo.IsStatic && fieldInfo.FieldType == t)
                 {
-                    var cc = fieldInfo.GetValue(null) as StringEnumeration;
+                    var cc = fieldInfo.GetValue(null) as Enumeration;
                     map[cc.Value] = cc;
                 }
             }
 
             // create copy of dictionary with new value
-            var newDictionary = new Dictionary<Type, Dictionary<string, StringEnumeration>>(_staticFields);
+            var newDictionary = new Dictionary<Type, Dictionary<string, Enumeration>>(_staticFields);
             newDictionary[t] = map;
 
             // swap in the new dictionary
@@ -137,7 +137,7 @@ public class StringEnumeration
         if (System.Object.ReferenceEquals(this, obj))
             return true;
 
-        var objConstantClass = obj as StringEnumeration;
+        var objConstantClass = obj as Enumeration;
         if (this.Equals(objConstantClass))
             return true;
 
@@ -149,7 +149,7 @@ public class StringEnumeration
         return false;
     }
 
-    public virtual bool Equals(StringEnumeration obj)
+    public virtual bool Equals(Enumeration obj)
     {
         if ((object)obj == null)
             return false;
@@ -160,7 +160,7 @@ public class StringEnumeration
     protected virtual bool Equals(string value)
         => StringComparer.OrdinalIgnoreCase.Equals(this.Value, value);
     
-    public static bool operator ==(StringEnumeration a, StringEnumeration b)
+    public static bool operator ==(Enumeration a, Enumeration b)
     {
         if (System.Object.ReferenceEquals(a, b))
         {
@@ -179,7 +179,7 @@ public class StringEnumeration
         }
     }
     
-    public static bool operator ==(StringEnumeration a, string b)
+    public static bool operator ==(Enumeration a, string b)
     {
         if ((object)a == null && b == null)
         {
@@ -197,15 +197,15 @@ public class StringEnumeration
         }
     }
 
-    public static bool operator !=(StringEnumeration a, StringEnumeration b)
+    public static bool operator !=(Enumeration a, Enumeration b)
         => !(a == b);
 
-    public static bool operator ==(string a, StringEnumeration b)
+    public static bool operator ==(string a, Enumeration b)
         => (b == a);
     
-    public static bool operator !=(StringEnumeration a, string b)
+    public static bool operator !=(Enumeration a, string b)
         => !(a == b);
     
-    public static bool operator !=(string a, StringEnumeration b)
+    public static bool operator !=(string a, Enumeration b)
         => !(a == b);
 }

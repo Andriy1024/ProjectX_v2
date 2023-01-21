@@ -2,6 +2,7 @@
 
 public interface IRealtimeTransactionContext
 {
-    void Add(RealtimeMessageContext message, IEnumerable<long> receivers);
+    void Add(RealtimeMessageContext message, IEnumerable<int> receivers);
+    
     IEnumerable<(RealtimeIntegrationEvent, PublishProperties)> ExtractMessages();
 }

@@ -32,8 +32,12 @@ public class UnitOfWork<T> : IUnitOfWork
     {
         if (HasActiveTransaction)
         {
-            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
-            if (transaction != _currentTransaction) throw new InvalidOperationException($"Transaction {transaction.TransactionId} is not current.");
+            transaction.ThrowIfNull();
+            
+            if (transaction != _currentTransaction)
+            {
+                throw new InvalidOperationException($"Transaction {transaction.TransactionId} is not current.");
+            }
 
             try
             {

@@ -13,7 +13,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
             if (failures.Any())
             {
-                var error = Error.InvalidData(message: failures.BuildErrorMessage());
+                var error = ApplicationError.InvalidData(message: failures.BuildErrorMessage());
 
                 return Task.FromResult(ResultActivator.From<TResponse>(error));
             }

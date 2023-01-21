@@ -2,13 +2,13 @@
 
 namespace ProjectX.Core;
 
-public class StringEnumerationConverter<T> : System.Text.Json.Serialization.JsonConverter<T>
-    where T : StringEnumeration
+public class EnumerationConverter<T> : System.Text.Json.Serialization.JsonConverter<T>
+    where T : Enumeration
 {
     public override T Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
     {
         var value = reader.GetString();
-        return StringEnumeration.FindValue<T>(value);
+        return Enumeration.FindValue<T>(value);
     }
 
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
@@ -17,8 +17,8 @@ public class StringEnumerationConverter<T> : System.Text.Json.Serialization.Json
     }
 }
 
-public class StringEnumerationNullableConverter<T> : System.Text.Json.Serialization.JsonConverter<T>
-       where T : StringEnumeration
+public class EnumerationNullableConverter<T> : System.Text.Json.Serialization.JsonConverter<T>
+       where T : Enumeration
 {
     public override T Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
     {
@@ -26,7 +26,7 @@ public class StringEnumerationNullableConverter<T> : System.Text.Json.Serializat
         if (value == null)
             return null;
 
-        return StringEnumeration.FindValue<T>(value);
+        return Enumeration.FindValue<T>(value);
     }
 
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)

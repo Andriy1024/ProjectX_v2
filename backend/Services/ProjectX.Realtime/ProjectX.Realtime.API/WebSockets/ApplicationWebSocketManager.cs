@@ -11,7 +11,7 @@ public sealed class ApplicationWebSocketManager
     private readonly ILoggerFactory _loggerFactory;
     private readonly IApplicationJsonSerializer _serializer;
 
-    private readonly Dictionary<long, HashSet<WebSocketContext>> _userIdToConnections = new Dictionary<long, HashSet<WebSocketContext>>();
+    private readonly Dictionary<int, HashSet<WebSocketContext>> _userIdToConnections = new Dictionary<int, HashSet<WebSocketContext>>();
     private readonly ReaderWriterLockSlim _connectionsSync = new ReaderWriterLockSlim();
 
     public ApplicationWebSocketManager(
@@ -27,7 +27,7 @@ public sealed class ApplicationWebSocketManager
     /// <summary>
     /// The action adds the WebSocket to the collection and begins receiving messages from the WebSocket.
     /// </summary>
-    public async Task HandleAsync(ConnectionId connectionId, long userId, WebSocket webSocket, CancellationToken cancellationToken)
+    public async Task HandleAsync(ConnectionId connectionId, int userId, WebSocket webSocket, CancellationToken cancellationToken)
     {
         var webSocketContext = new WebSocketContext(connectionId, userId, webSocket, cancellationToken, _loggerFactory, HandleMessageAsync);
 
@@ -102,7 +102,7 @@ public sealed class ApplicationWebSocketManager
     /// <summary>
     /// Send the message to the users.
     /// </summary>
-    public Task SendAsync<T>(T message, IEnumerable<long> users)
+    public Task SendAsync<T>(T message, IEnumerable<int> users)
     {
         WebSocketContext[] receivers = null;
 

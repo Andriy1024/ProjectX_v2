@@ -29,14 +29,14 @@ public class AuthorizeController : ProjectXController
 
         if (userExist == null)
         {
-            return MapResponse(new ResultOf<Unit>(Error.NotFound(message: "User not found")));
+            return MapResponse(new ResultOf<Unit>(ApplicationError.NotFound(message: "User not found")));
         }
 
         var isPasswordCorrect = await _userManager.CheckPasswordAsync(userExist, request.Password);
 
         if (isPasswordCorrect == false)
         {
-            return MapResponse(new ResultOf<Unit>(Error.InvalidData(message: "Invalid password")));
+            return MapResponse(new ResultOf<Unit>(ApplicationError.InvalidData(message: "Invalid password")));
         }
 
         var authResult = await _jwtService.GenerateTokenAsync(userExist);
@@ -50,13 +50,13 @@ public class AuthorizeController : ProjectXController
     {
         if (!ModelState.IsValid)
         {
-            return MapResponse(new ResultOf<Unit>(Error.InvalidData(message: "Invalid payload")));
+            return MapResponse(new ResultOf<Unit>(ApplicationError.InvalidData(message: "Invalid payload")));
         }
 
         var userExist = await _userManager.FindByEmailAsync(request.Email);
         if (userExist != null)
         {
-            return MapResponse(new ResultOf<Unit>(Error.NotFound(message: "Email already in use.")));
+            return MapResponse(new ResultOf<Unit>(ApplicationError.NotFound(message: "Email already in use.")));
         }
 
         var newUser = new AccountEntity()
@@ -73,7 +73,7 @@ public class AuthorizeController : ProjectXController
         {
             var error = string.Join(", ", isCreated.Errors.Select(e => e.Code));
 
-            return MapResponse(new ResultOf<Unit>(Error.InvalidData(message: error)));
+            return MapResponse(new ResultOf<Unit>(ApplicationError.InvalidData(message: error)));
         }
 
         var authResult = await _jwtService.GenerateTokenAsync(newUser);
@@ -87,7 +87,7 @@ public class AuthorizeController : ProjectXController
     {
         if (!ModelState.IsValid)
         {
-            return MapResponse(new ResultOf<Unit>(Error.InvalidData(message: "Invalid payload")));
+            return MapResponse(new ResultOf<Unit>(ApplicationError.InvalidData(message: "Invalid payload")));
         }
 
         var authResult = await _jwtService.RefreshTokenAsync(request);

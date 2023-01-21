@@ -1,5 +1,14 @@
 # PrjectX solution
 
+### Run
+```
+dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Identity\ProjectX.Identity.API" --configuration release
+
+dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Dashboard\ProjectX.Dashboard.API" --configuration release
+
+dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Realtime\ProjectX.Realtime.API" --configuration release
+```
+
 ### Docker Compose
 ```
 docker compose ps
@@ -62,3 +71,8 @@ seq:
   ports:
     - "5341:80"
 ``` 
+
+### RabbitMq
+```
+docker run -d -p 15672:15672 -p 5672:5672 --name my-rabbit -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest rabbitmq:3-management
+```

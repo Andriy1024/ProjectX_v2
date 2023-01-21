@@ -17,77 +17,40 @@ using ProjectX.Persistence.Abstractions;
 using ProjectX.Core.StartupTasks;
 using ProjectX.Dashboard.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using ProjectX.RabbitMq.Configuration;
+using ProjectX.Realtime;
+using ProjectX.AspNetCore.Extensions;
 
 namespace ProjectX.Dashboard.API;
 
 public static class Startup
 {
-    public static void ConfigureServices(WebApplicationBuilder app) 
-    {
-        var services = app.Services;
-        
-        var configuration = app.Configuration;
-
-        app.AddProjectXSwagger();
-
-        app.AddObservabilityServices();
-
-        services.AddContexts();
-
-        services.AddControllers(o => 
-        {
-            o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-        })
-        .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = c =>
-        {
-            var errors = string.Join(' ', c.ModelState.Values.Where(v => v.Errors.Count > 0)
-                .SelectMany(v => v.Errors)
-                .Select(v => v.ErrorMessage));
-
-            return new BadRequestObjectResult(new ResultOf<Unit>(Error.InvalidData(message: errors)));
-        });
-
-        services.AddProjectXAuthentication(configuration);
-        
-        services.AddTransient<IEventDispatcher, EventDispatcher>();
-        
-        services.AddDbServices<DashboardDbContext>((p, o) =>    
+    public static void ConfigureServices(WebApplicationBuilder app) => app
+        .AddCoreServices(Assembly.GetAssembly(typeof(DashboardProfile))!)
+        .AddObservabilityServices()
+        .AddRabbitMqMessageBus()
+        .AddRealtimeServices()
+        .AddAppAuthentication()
+        .AddCurrentUser()
+        .ConfigureAspNetCore()
+        .AddProjectXSwagger()
+        .Services
+        .AddDbServices<DashboardDbContext>((p, o) =>
         {
             o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString(),
                 x => x.MigrationsHistoryTable("MigrationsHistory", DashboardDbContext.SchemaName));
-        });
-
-        services.AddScoped<IStartupTask, DashboardDatabaseStartup>();
-
-        services.AddMediatR(Assembly.GetAssembly(typeof(TasksHandlers))!);
-        
-        services.AddAutoMapper(Assembly.GetAssembly(typeof(DashboardProfile))!);
-
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
-        services.AddCors(options =>
-        {
-            options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-        });
-    }
-
+        })
+        .AddTransactinBehaviour()
+        .AddScoped<IStartupTask, DashboardDatabaseStartup>();
+    
     public static void Configure(WebApplication app) 
     {
-        app.UseCors("Open");
-
+        app.UseProjectXCors();
         app.UseProjectXSwagger();
-
-        app.UseMiddleware<ErrorHandlerMiddleware>();
-
-        app.UseSerilogRequestLogging(o => 
-        {
-            // o.EnrichDiagnosticContext = TODO: enrich with IContext
-        });
-
-        app.UseProjectXAuthentication();
-
-        app.UseContexts();
-
+        app.UseErrorHandler();
+        app.UseProjectXLogging();
+        app.UseAppAuthentication();
+        app.UseCorrelationContext();
         app.MapControllers();
     }
 }

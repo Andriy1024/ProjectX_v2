@@ -2,6 +2,6 @@
 
 public interface ICurrentUser
 {
-    long IdentityId { get; }
+    int IdentityId { get; }
     string IdentityRole { get; }
 }

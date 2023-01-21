@@ -5,7 +5,7 @@ public sealed class RealtimeTransactionContext : IRealtimeTransactionContext
     private readonly Queue<(RealtimeIntegrationEvent, PublishProperties)> _messages =
                  new Queue<(RealtimeIntegrationEvent, PublishProperties)>();
 
-    public void Add(RealtimeMessageContext message, IEnumerable<long> receivers)
+    public void Add(RealtimeMessageContext message, IEnumerable<int> receivers)
     {
         message.ThrowIfNull();
         receivers.ThrowIfNull();

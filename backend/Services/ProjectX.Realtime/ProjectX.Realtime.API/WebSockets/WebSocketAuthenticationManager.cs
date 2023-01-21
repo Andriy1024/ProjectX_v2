@@ -30,7 +30,7 @@ public sealed class WebSocketAuthenticationManager
     /// Second step of authentication. 
     /// The action is triggered from <see cref="WebSocketMiddleware">.
     /// </summary>
-    public bool Validate(ConnectionId connectionId, out long userId)
+    public bool Validate(ConnectionId connectionId, out int userId)
     {
         var exist = _pendingConnectionIds.TryGetValue(connectionId, out userId);
 

@@ -2,7 +2,7 @@
 
 public interface IResult
 {
-    Error? Error { get; }
+    ApplicationError? Error { get; }
 
     bool IsFailed { get; }
 }

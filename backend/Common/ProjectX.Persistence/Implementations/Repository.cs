@@ -248,7 +248,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     protected ResultOf<TOut> GetResultOf<TOut>(TOut? entity) where TOut : class
     {
         return entity == null
-            ? Error.NotFound(NotFound, $"{typeof(TOut).Name} not found.")
+            ? ApplicationError.NotFound(NotFound, $"{typeof(TOut).Name} not found.")
             : entity;
     }
 
