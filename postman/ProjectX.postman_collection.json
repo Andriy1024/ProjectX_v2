@@ -7,35 +7,69 @@
 	},
 	"item": [
 		{
-			"name": "Tasks",
+			"name": "Dashboard",
 			"item": [
 				{
-					"name": "Get Tasks",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{ProjectX_Token}}",
-									"type": "string"
+					"name": "Tasks",
+					"item": [
+						{
+							"name": "Get Tasks",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ProjectX_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{ProjectX_Dashboard_URL}}/api/tasks",
+									"host": [
+										"{{ProjectX_Dashboard_URL}}"
+									],
+									"path": [
+										"api",
+										"tasks"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{ProjectX_Tasks_URL}}/api/tasks",
-							"host": [
-								"{{ProjectX_Tasks_URL}}"
-							],
-							"path": [
-								"api",
-								"tasks"
-							]
+						{
+							"name": "New Request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ProjectX_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{ProjectX_Dashboard_URL}}/api/tasks/17",
+									"host": [
+										"{{ProjectX_Dashboard_URL}}"
+									],
+									"path": [
+										"api",
+										"tasks",
+										"17"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			]
 		},
@@ -209,13 +243,48 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{ProjectX_Identity_URL}}/api/accounts",
+							"raw": "{{ProjectX_Identity_URL}}/api/accounts/",
 							"host": [
 								"{{ProjectX_Identity_URL}}"
 							],
 							"path": [
 								"api",
-								"accounts"
+								"accounts",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Realtime",
+			"item": [
+				{
+					"name": "realtime-auth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ProjectX_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{ProjectX_Realtime_URL}}/api/realtime/connect",
+							"host": [
+								"{{ProjectX_Realtime_URL}}"
+							],
+							"path": [
+								"api",
+								"realtime",
+								"connect"
 							]
 						}
 					},
