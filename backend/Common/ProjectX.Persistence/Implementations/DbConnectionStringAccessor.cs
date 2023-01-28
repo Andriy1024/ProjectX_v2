@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
+using ProjectX.Core.Setup;
 using ProjectX.Persistence.Abstractions;
 
 namespace ProjectX.Persistence.Implementations;
@@ -7,9 +8,9 @@ internal class DbConnectionStringAccessor : IDbConnectionStringAccessor
 {
     private readonly string _connectionString;
 
-    public DbConnectionStringAccessor(IConfiguration configuration)
+    public DbConnectionStringAccessor(IOptions<ConnectionStrings> options)
     {
-        _connectionString = configuration.GetConnectionString("DbConnection").ThrowIfNullOrEmpty("Empty db connection string.");
+        _connectionString = options.Value.DbConnection;
     }
 
     public string GetConnectionString() => _connectionString;

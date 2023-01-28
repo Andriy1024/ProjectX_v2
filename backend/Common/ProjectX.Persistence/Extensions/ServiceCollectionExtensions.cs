@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ProjectX.Core.Setup;
 using ProjectX.Persistence.Abstractions;
 using ProjectX.Persistence.Implementations;
 using ProjectX.Persistence.Transaction;
@@ -12,10 +13,16 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDbServices<T>(this IServiceCollection services, Action<IServiceProvider, DbContextOptionsBuilder> optionsAction)
         where T : DbContext
     {
-        return services.AddDbContext<T>(optionsAction)
-                       .AddScoped<IUnitOfWork, UnitOfWork<T>>()
-                       .AddScoped(typeof(IRepository<>), typeof(Repository<>))
-                       .AddScoped<IDbConnectionStringAccessor, DbConnectionStringAccessor>();
+        return services
+            .AddOptions<ConnectionStrings>()
+            .BindConfiguration(nameof(ConnectionStrings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart()
+            .Services
+            .AddDbContext<T>(optionsAction)
+            .AddScoped<IUnitOfWork, UnitOfWork<T>>()
+            .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+            .AddScoped<IDbConnectionStringAccessor, DbConnectionStringAccessor>();
     }
 
     public static IServiceCollection AddTransactinBehaviour(this IServiceCollection services)

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +9,6 @@ using ProjectX.Identity.API.Database;
 using ProjectX.Identity.API.Database.Models;
 using ProjectX.Identity.API.Requests;
 using ProjectX.Identity.API.Results;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -66,6 +64,7 @@ public sealed class AuthorizationService
                 new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Identity),
                 new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Dashboard),
                 new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Realtime),
+                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.FileStorage),
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, user.Email),
                 new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),

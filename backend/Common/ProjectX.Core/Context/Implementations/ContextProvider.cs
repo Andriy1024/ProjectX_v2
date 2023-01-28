@@ -28,13 +28,21 @@ internal sealed class ContextProvider : IContextProvider
             var traceId = httpContext.TraceIdentifier;
             var correlationId = httpContext.GetCorrelationId() ?? Guid.NewGuid().ToString("N");
             var userId = httpContext.User.Identity?.Name;
-            context = new Context(Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString(),
-                traceId, correlationId, string.Empty, string.Empty, userId);
+            
+            context = new Context(
+                activityId: Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString(),
+                traceId: traceId,
+                correlationId: correlationId,
+                messageId: string.Empty, 
+                causationId: string.Empty, 
+                userId: userId);
         }
         else
         {
-            context = new Context(Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString(),
-                string.Empty, Guid.NewGuid().ToString("N"));
+            context = new Context(
+                activityId: Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString(),
+                traceId: string.Empty,
+                correlationId: Guid.NewGuid().ToString("N"));
         }
 
         _contextAccessor.Context = context;

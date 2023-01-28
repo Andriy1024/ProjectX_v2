@@ -15,7 +15,6 @@ public static class ServiceCollectionExtensions
     public static WebApplicationBuilder AddCurrentUser(this WebApplicationBuilder app)
     {
         app.Services.AddScoped<IUserContext, UserContext>();
-
         return app;
     }
 
@@ -27,41 +26,47 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<AuthenticationConfig>(configuration.GetSection(nameof(AuthenticationConfig)));
+        services
+           .AddOptions<AuthenticationConfig>()
+           .BindConfiguration(nameof(AuthenticationConfig))
+           .ValidateDataAnnotations()
+           .ValidateOnStart();
 
-        var secret = Encoding.UTF8.GetBytes(configuration["AuthenticationConfig:Secret"]);
+        var options = configuration.GetSection(nameof(AuthenticationConfig)).Get<AuthenticationConfig>()
+            ?? throw new ArgumentNullException(nameof(AuthenticationConfig));
+
+        var secret = Encoding.UTF8.GetBytes(options.Secret);
 
         var validationParametersFactory = () => new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(secret),
             ValidateIssuer = true,
-            ValidIssuer = configuration["AuthenticationConfig:Issuer"],
+            ValidIssuer = options.Issuer,
             ValidateAudience = true,
-            ValidAudience = configuration["AuthenticationConfig:Audience"],
+            ValidAudience = options.Audience,
             RequireExpirationTime = false, //TODO later true
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
         };
 
-        services.AddTransient((provider) => validationParametersFactory());
-
-        services.AddAuthentication(o =>
-        {
-            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(
+        return services
+            .AddTransient((provider) => validationParametersFactory())
+            .AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(
             //JwtBearerDefaults.AuthenticationScheme, TODO: need to test
             jwt =>
             {
                 jwt.SaveToken = true;
                 jwt.RequireHttpsMetadata = false;
                 jwt.TokenValidationParameters = validationParametersFactory();
-            });
-
-        return services;
+            })
+            .Services;
     }
 
     public static IApplicationBuilder UseAppAuthentication(this IApplicationBuilder app)

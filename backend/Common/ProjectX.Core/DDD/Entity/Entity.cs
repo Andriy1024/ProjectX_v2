@@ -6,7 +6,7 @@ public abstract class Entity<TKey> : IEntity<TKey>
 
     private List<IDomainEvent> _domainEvents;
 
-    public abstract TKey Id { get; protected set; }
+    public virtual TKey Id { get; protected set; }
 
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
 

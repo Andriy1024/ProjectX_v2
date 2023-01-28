@@ -1,23 +1,26 @@
 ﻿namespace ProjectX.Core.Context;
 
+/// <summary>
+/// Implemented based on: <see cref="Microsoft.AspNetCore.Http.HttpContextAccessor">.
+/// </summary>
 public sealed class ContextAccessor : IContextAccessor
 {
-    private static readonly AsyncLocal<ContextHolder> Holder = new();
+    private static readonly AsyncLocal<ContextHolder> _holder = new();
 
     public IContext? Context
     {
-        get => Holder.Value?.Context;
+        get => _holder.Value?.Context;
         set
         {
-            var holder = Holder.Value;
+            var holder = _holder.Value;
             if (holder != null)
             {
                 holder.Context = null;
             }
 
-            if (value is not null)
+            if (value != null)
             {
-                Holder.Value = new ContextHolder { Context = value };
+                _holder.Value = new ContextHolder { Context = value };
             }
         }
     }
