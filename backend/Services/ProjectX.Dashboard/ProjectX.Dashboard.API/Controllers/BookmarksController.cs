@@ -16,7 +16,7 @@ public class BookmarksController : ProjectXController
 
     [HttpGet("{id:long:min(1)}")]
     public Task<IActionResult> FindBookmark([FromRoute] int id, CancellationToken cancellationToken)
-      => Send(new FindBookmarkQuery { Id = id }, cancellationToken);
+        => Send(new FindBookmarkQuery { Id = id }, cancellationToken);
 
     [HttpPost]
     public Task<IActionResult> CreateBookmark([FromBody] CreateBookmarkCommand command)

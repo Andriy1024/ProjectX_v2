@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.CircuitBreaker;
+using ProjectX.Core.Context;
 using ProjectX.RabbitMq.Configuration;
+using ProjectX.RabbitMq.Tracing;
 using RabbitMQ.Client.Exceptions;
 using System.Net.Sockets;
 
@@ -24,16 +26,24 @@ public sealed class RabbitMqPublisher : IRabbitMqPublisher, IDisposable
     
     private readonly CircuitBreakerPolicy _circuitBreaker;
 
+    private readonly IContextProvider _contextProvider;
+ 
     public RabbitMqPublisher(IRabbitMqConnectionService connectionService,
         ILogger<RabbitMqPublisher> logger,
         IMessageSerializer serializer,
-        IOptions<RabbitMqConfiguration> options)
+        IOptions<RabbitMqConfiguration> options,
+        IContextProvider contextProvider)
     {
         _connectionService = connectionService;
         _logger = logger;
         _serializer = serializer;
         _options = RabbitMqConfiguration.Validate(options.Value);
-        _circuitBreaker = Policy.Handle<Exception>().CircuitBreaker(_options.Resilience.ExceptionsAllowedBeforeBreaking, TimeSpan.FromSeconds(_options.Resilience.DurationOfBreak));
+        _contextProvider = contextProvider;
+        _circuitBreaker = Policy
+            .Handle<Exception>()
+            .CircuitBreaker(
+                _options.Resilience.ExceptionsAllowedBeforeBreaking,
+                TimeSpan.FromSeconds(_options.Resilience.DurationOfBreak));
     }
 
     public void AddPublisher(PublishProperties eventBusProperties)
@@ -97,23 +107,28 @@ public sealed class RabbitMqPublisher : IRabbitMqPublisher, IDisposable
 
         var publisher = InitPublisher(properties);
 
+        var props = publisher.Channel.CreateBasicProperties();
+
+        props.Enrich(publisher, _contextProvider.Current());
+
         if (eventBusProperties.EnableRetryPolicy) 
         {
-            var retryPolicy = Policy.Handle<SocketException>()
-                                    .Or<BrokerUnreachableException>()
-                                    .WaitAndRetry(_options.Resilience.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
-                                    {
-                                        _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
-                                    });
+            var retryPolicy = Policy
+                .Handle<SocketException>()
+                .Or<BrokerUnreachableException>()
+                .WaitAndRetry(_options.Resilience.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                {
+                    _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
+                });
 
             _circuitBreaker.Wrap(retryPolicy).Execute(() =>
             {
-                publisher.Publish(properties: null, message: body);
+                publisher.Publish(properties: props, message: body);
             });
         }
         else 
         {
-            publisher.Publish(properties: null, message: body);
+            publisher.Publish(properties: props, message: body);
         }
     }
 

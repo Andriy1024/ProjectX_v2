@@ -12,7 +12,6 @@ using ProjectX.Realtime.API.WebSockets;
 using ProjectX.Realtime.IntegrationEvent;
 using ProjectX.Realtime.PublicContract;
 using Serilog;
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

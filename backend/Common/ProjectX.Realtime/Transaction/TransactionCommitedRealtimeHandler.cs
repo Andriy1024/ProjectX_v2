@@ -1,15 +1,16 @@
 ﻿using ProjectX.Core.Events;
+using ProjectX.RabbitMq.Publisher;
 
 namespace ProjectX.Core.Realtime.Transaction;
 
 public sealed class TransactionCommitedRealtimeHandler : IApplicationEventHandler<TransactionCommitedEvent>
 {
-    private readonly IRabbitMqPublisher _publisher;
+    private readonly IMessageBroker _messageBroker;
     private readonly IRealtimeTransactionContext _transactionContext;
 
-    public TransactionCommitedRealtimeHandler(IRabbitMqPublisher publisher, IRealtimeTransactionContext transactionContext)
+    public TransactionCommitedRealtimeHandler(IMessageBroker messageBroker, IRealtimeTransactionContext transactionContext)
     {
-        _publisher = publisher;
+        _messageBroker = messageBroker;
         _transactionContext = transactionContext;
     }
 
@@ -17,7 +18,7 @@ public sealed class TransactionCommitedRealtimeHandler : IApplicationEventHandle
     {
         foreach (var message in _transactionContext.ExtractMessages())
         {
-            _publisher.Publish(message.Item1, message.Item2);
+            _messageBroker.Publish(message.Item1, message.Item2);
         }
 
         return Task.CompletedTask;

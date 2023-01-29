@@ -24,6 +24,7 @@ public static class MessageBusServiceCollectionExtensions
     {
         return services
             .Configure<RabbitMqConfiguration>(configuration.GetSection("RabbitMq"))
+            .AddSingleton<IMessageBroker, MessageBroker>()
             .AddSingleton<IRabbitMqSubscriber, RabbitMqSubscriber>()
             .AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>()
             .AddSingleton<IMessageSerializer, DefaultMessageSerializer>()

@@ -8,7 +8,7 @@ public sealed class Context : IContext
     public string TraceId { get; }
     public string CorrelationId { get; }
     public string? MessageId { get; }
-    public string? CausationId { get; }
+    //public string? CausationId { get; }
     public string? UserId { get; }
 
     public Context()
@@ -18,14 +18,19 @@ public sealed class Context : IContext
         CorrelationId = Guid.NewGuid().ToString("N");
     }
 
-    public Context(string activityId, string traceId, string correlationId,
-        string? messageId = null, string? causationId = null, string? userId = null)
+    public Context(
+        string activityId, 
+        string traceId, 
+        string correlationId,
+        string? messageId = null, 
+        //string? causationId = null, 
+        string? userId = null)
     {
         ActivityId = activityId;
         TraceId = traceId;
         CorrelationId = correlationId;
         MessageId = messageId;
-        CausationId = causationId;
+        //CausationId = causationId;
         UserId = userId;
     }
 }

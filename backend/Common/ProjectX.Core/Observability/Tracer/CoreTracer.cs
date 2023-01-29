@@ -51,7 +51,7 @@ internal class CoreTracer : ITracer
             try
             {
                 activity?.SetTag("correlation_id", context.CorrelationId);
-                activity?.SetTag("causation_id", context.CausationId);
+                //activity?.SetTag("causation_id", context.CausationId);
 
                 var result = await func();
 

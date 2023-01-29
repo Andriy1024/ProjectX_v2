@@ -198,7 +198,7 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
             pipeBuilder.Add(new RetryPipe(_logger));
         }
 
-        Pipe.Handler<SubscriberRequest> handler = pipeBuilder.Build(lastPipe: (r) => _dispatcher.HandleAsync(r.IntegrationEvent));
+        Pipe.Handler<SubscriberRequest> handler = pipeBuilder.Build(lastPipe: (r) => _dispatcher.HandleAsync(r));
 
         var consumer = new AsyncEventingBasicConsumer(channel);
 

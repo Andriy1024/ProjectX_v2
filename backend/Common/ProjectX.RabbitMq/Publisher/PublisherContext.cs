@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.RabbitMq.Publisher;
 
-internal sealed class PublisherContext
+public sealed class PublisherContext
 {
     public PublisherContext(ExchangeProperties exchange, string routingKey, IModel channel)
     {

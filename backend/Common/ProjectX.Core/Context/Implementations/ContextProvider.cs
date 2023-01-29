@@ -34,7 +34,7 @@ internal sealed class ContextProvider : IContextProvider
                 traceId: traceId,
                 correlationId: correlationId,
                 messageId: string.Empty, 
-                causationId: string.Empty, 
+                //causationId: string.Empty, 
                 userId: userId);
         }
         else
