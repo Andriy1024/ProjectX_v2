@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace ProjectX.Core.Extensions;
+namespace ProjectX.Core.Validation;
 
 public static class ValidationUtility
 {

@@ -2,7 +2,7 @@
 
 namespace ProjectX.Core.Validation;
 
-public static class ValidationExtensions
+public static class FluentValidationExtensions
 {
     public static IEnumerable<ValidationFailure> Validate<TObject>(this TObject obj, IEnumerable<IValidator<TObject>> validators) 
     {
