@@ -29,7 +29,7 @@ public static class ObservabilitySetup
     }
 
     public static IServiceCollection AddTracer(this IServiceCollection services)
-        => services.AddSingleton<ITracer, ProjectXTracer>();
+        => services.AddSingleton<ITracer, CoreTracer>();
 
     public static IServiceCollection AddTracerBehaviour(this IServiceCollection services)
         => services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracerBehaviour<,>));
@@ -76,7 +76,7 @@ public static class ObservabilitySetup
 
         app.Services
             .AddOpenTelemetryTracing((builder) => builder
-            .AddSource(ProjectXTracer.Name)
+            .AddSource(CoreTracer.Name)
             .AddJaegerExporter(o => 
             {
                 //ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
@@ -89,6 +89,11 @@ public static class ObservabilitySetup
             })
             .AddAspNetCoreInstrumentation(options =>
             {
+                // Exclude swagger
+                options.Filter = c => 
+                    !c.Request.Path.Value.Contains("swagger") && 
+                    !c.Request.Path.Value.Contains("_vs/browserLink") &&
+                    !c.Request.Path.Value.Contains("_framework/aspnetcore-browser-refresh.js");
                 options.RecordException = true;
                 options.Enrich = (activity, @event, @object) =>
                 {
@@ -103,7 +108,7 @@ public static class ObservabilitySetup
                 options.Filter = message =>
                     message != null &&
                     message.RequestUri != null &&
-                    !message.RequestUri.Host.Contains("visualstudio");
+                   !message.RequestUri.Host.Contains("visualstudio");
             })
             .AddSqlClientInstrumentation(options =>
             {

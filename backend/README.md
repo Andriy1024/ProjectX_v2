@@ -30,7 +30,7 @@ UI at http://localhost:16686
 <br>
 Export endpoint http://localhost:6831 //env: OTEL_EXPORTER_JAEGER_ENDPOINT
 ```
-docker run --name jaeger -p 5775:5775/udp -p 5778:5778 -p 6831:6831/udp -p 6832:6832/udp -p 9411:9411 -p 14268:14268 -p 16686:16686 -d --restart=unless-stopped jaegertracing/opentelemetry-all-in-one
+docker run --name my-jaeger -p 5775:5775/udp -p 5778:5778 -p 6831:6831/udp -p 6832:6832/udp -p 9411:9411 -p 14268:14268 -p 16686:16686 -d --restart=unless-stopped jaegertracing/opentelemetry-all-in-one
 
 jaeger:
   image: jaegertracing/opentelemetry-all-in-one
@@ -51,7 +51,7 @@ http://localhost:5341/
 <br>
 https://hub.docker.com/r/datalust/seq
 ```
-docker run --rm -it -e ACCEPT_EULA=y -p 5341:80 datalust/seq
+docker run --name my-seq -e ACCEPT_EULA=y -p 5341:80 -d --restart=unless-stopped datalust/seq
 
 docker run \
   --name seq \

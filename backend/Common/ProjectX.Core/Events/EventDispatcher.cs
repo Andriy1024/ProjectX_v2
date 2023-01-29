@@ -5,7 +5,7 @@ namespace ProjectX.Core;
 
 public interface IEventDispatcher
 {
-    Task DispatchAsync(IApplicationEvent domainEvent);
+    Task DispatchAsync<TEvent>(TEvent domainEvent) where TEvent : IApplicationEvent;
 
     Task DispatchAsync(IEnumerable<IApplicationEvent> domainEvents);
 }
@@ -29,7 +29,7 @@ public sealed class EventDispatcher : IEventDispatcher
         }
     }
 
-    public Task DispatchAsync(IApplicationEvent domainEvent)
+    public Task DispatchAsync<TEvent>(TEvent domainEvent) where TEvent : IApplicationEvent
     {
         return _tracer.Trace(domainEvent.GetType().Name, () => _mediator.Publish(domainEvent));
     }

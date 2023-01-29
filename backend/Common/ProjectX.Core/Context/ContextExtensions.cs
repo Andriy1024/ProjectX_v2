@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using ProjectX.Core.Context.HTTP;
+using System.Diagnostics;
 
 namespace ProjectX.Core.Context;
 
@@ -30,8 +32,10 @@ public static class ContextExtensions
                 correlationId = Guid.NewGuid().ToString("N");
             }
 
-            //ctx.Response.Headers.Add(CorrelationIdKey, correlationId);
+            Activity.Current?.SetTag("correlation_id", correlationId);
+            ctx.Response.Headers.Add(CorrelationIdKey, correlationId);
             ctx.Items.Add(CorrelationIdKey, correlationId);
+            
             return next();
         });
 

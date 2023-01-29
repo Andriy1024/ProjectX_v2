@@ -4,15 +4,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ProjectX.Core.Observability;
 
-internal class ProjectXTracer : ITracer
+internal class CoreTracer : ITracer
 {
-    public static readonly string Name = "ProjectX";
+    public static readonly string Name = "ProjectX.Core";
 
     private static readonly ActivitySource Source = new ActivitySource(Name);
 
     private readonly IContextProvider _contextProvider;
 
-    public ProjectXTracer(IContextProvider contextProvider)
+    public CoreTracer(IContextProvider contextProvider)
     {
         _contextProvider = contextProvider;
     }
@@ -44,7 +44,9 @@ internal class ProjectXTracer : ITracer
     {
         var context = _contextProvider.Current();
 
-        using (Activity? activity = Source.StartActivity(actionName, ActivityKind.Producer, parentId: context.ActivityId))
+        var parentId = Activity.Current?.Id ?? context.ActivityId;
+
+        using (Activity? activity = Source.StartActivity(actionName, ActivityKind.Producer, parentId: parentId))
         {
             try
             {
