@@ -1,6 +1,7 @@
 import { trigger, transition, animate, style, query, group } from '@angular/animations';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './auth/services/auth-service.service';
 
 @Component({
   selector: 'app-root',
@@ -25,20 +26,20 @@ import { RouterOutlet } from '@angular/router';
         ], { optional: true }),
 
         group([
-          query(':leave', [ 
-            animate('200ms ease-in', style({ 
+          query(':leave', [
+            animate('200ms ease-in', style({
               opacity: 0,
-              transform: 'translateX(-100px)' 
-            })) 
+              transform: 'translateX(-100px)'
+            }))
           ], { optional: true }),
-  
+
           query(':enter', [
-            style({ 
-              transform: 'translateX(100px)', 
+            style({
+              transform: 'translateX(100px)',
               opacity: 0 }),
-            animate('250ms 120ms ease-out', style({ 
+            animate('250ms 120ms ease-out', style({
               opacity: 1,
-              transform: 'translateX(0px)' 
+              transform: 'translateX(0px)'
             }))
           ], { optional: true })
         ])
@@ -61,20 +62,20 @@ import { RouterOutlet } from '@angular/router';
         ], { optional: true }),
 
         group([
-          query(':leave', [ 
-            animate('200ms ease-in', style({ 
+          query(':leave', [
+            animate('200ms ease-in', style({
               opacity: 0,
-              transform: 'translateX(100px)' 
-            })) 
+              transform: 'translateX(100px)'
+            }))
           ], { optional: true }),
-  
+
           query(':enter', [
-            style({ 
-              transform: 'translateX(-100px)', 
+            style({
+              transform: 'translateX(-100px)',
               opacity: 0 }),
-            animate('250ms 120ms ease-out', style({ 
+            animate('250ms 120ms ease-out', style({
               opacity: 1,
-              transform: 'translateX(0px)' 
+              transform: 'translateX(0px)'
             }))
           ], { optional: true })
         ])
@@ -83,7 +84,23 @@ import { RouterOutlet } from '@angular/router';
   ]
 })
 export class AppComponent {
-  
+
+  public isAuthenticated = false;
+
+  constructor(private readonly _authService: AuthService) {
+
+  }
+
+  ngOnInit() {
+    this._authService.isAuthenticated().subscribe(r => {
+      this.isAuthenticated = r;
+    });
+  }
+
+  public logOut() {
+    this._authService.logOut();
+  }
+
   prepareRoute(outlet: RouterOutlet) {
     if (outlet.isActivated) {
       return outlet.activatedRouteData['tab'];

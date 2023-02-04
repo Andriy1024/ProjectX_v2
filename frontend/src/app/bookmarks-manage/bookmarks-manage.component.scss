@@ -3,8 +3,12 @@
   height: 100%;
 }
 
+.manage-bookmarks-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .sidebar {
-  height: 100%;
   width: 220px;
   background-color: rgba(black, 0.7);
   border-top-left-radius: 5px;

@@ -32,6 +32,8 @@ https://fonts.google.com/specimen/Inter?query=Inter
 https://fonts.google.com/icons
 
 ## Background image
+https://pixabay.com/
+https://www.pexels.com/
 ...
 
 ## Packages

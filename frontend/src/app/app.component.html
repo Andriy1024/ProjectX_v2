@@ -1,17 +1,29 @@
 <div class="app-wrapper">
 
-  <div class="top-section">
-    <h1>18:00</h1>
-    <h2>1 January 2022</h2>
-  </div>
+  <header>
+    <div class="header-content">
 
-  <div class="content-section" [@routeAmin]="prepareRoute(outlet)">
+      <div class="left">
+        ProjectX
+      </div>
+
+      <div class="right">
+        <ul *ngIf="isAuthenticated">
+          <!-- <li><i class="material-icons">person</i></li> -->
+          <li (click)="logOut()"><i class="material-icons">logout</i></li>
+        </ul>
+      </div>
+
+    </div>
+  </header>
+
+  <main [@routeAmin]="prepareRoute(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>
-  </div>
+  </main>
 
-  <div class="bottom-section">
+  <footer>
     <app-tabs></app-tabs>
-  </div>
+  </footer>
 
   <app-notification></app-notification>
 
