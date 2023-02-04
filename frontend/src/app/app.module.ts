@@ -18,7 +18,7 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
 
 import { DASHBOARD_API_URL, IDENTITY_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
-import { ApplicationHttpInterceptor } from './http/http-error.interceptor';
+import { ApplicationHttpInterceptor } from './http/application-http.interceptor';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { JwtModule } from '@auth0/angular-jwt';

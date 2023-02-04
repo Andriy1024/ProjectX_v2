@@ -34,12 +34,12 @@ export class AuthService {
       .pipe(
         //shareReplay(), //Avoiding duplicate HTTP requests
         map(mapResponseOf),
-        tap(response =>
+        tap(response => {
           this.saveSession({
             token: response.token,
             refreshToken: response.refreshToken
           })
-        )
+        })
       );
   }
 
@@ -65,11 +65,11 @@ export class AuthService {
 
       const isTokenExpired = this._jwtHelper.isTokenExpired(token.token);
 
-      if (!isTokenExpired) {
+      if (isTokenExpired) {
         return this.tryRefreshToken(token);
       }
 
-      return of(isTokenExpired);
+      return of(!isTokenExpired);
   }
 
   private tryRefreshToken(token: Token): Observable<boolean> {

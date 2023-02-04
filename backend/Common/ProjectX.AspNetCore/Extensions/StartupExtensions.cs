@@ -37,7 +37,7 @@ public static class StartupExtensions
 
     public static WebApplication UseProjectXCors(this WebApplication app)
     {
-        app.UseMiddleware<ErrorHandlerMiddleware>();
+        app.UseCors("Open");
 
         return app;
     }

@@ -18,7 +18,7 @@ export class ApplicationHttpInterceptor implements HttpInterceptor {
       .pipe(
         catchError(err => {
           return err.status == 401
-            ?  this.refreshToken(request, next, err)
+            ? this.refreshToken(request, next, err)
             : this.handleHttpError(err)
         })
       )
