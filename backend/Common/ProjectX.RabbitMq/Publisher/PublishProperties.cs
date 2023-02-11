@@ -9,13 +9,13 @@ public record PublishProperties
     public bool EnableRetryPolicy { get; set; }
 
     public PublishProperties()
+        : this(new ExchangeProperties())
     {
-        Exchange = new ExchangeProperties();
     }
 
     public PublishProperties(Exchange.Name exchangeName)
+        : this(new ExchangeProperties(exchangeName))
     {
-        Exchange = new ExchangeProperties(exchangeName);
     }
 
     public PublishProperties(ExchangeProperties exchange)

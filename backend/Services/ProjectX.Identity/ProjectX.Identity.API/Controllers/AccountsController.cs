@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectX.AspNetCore.Http;
-using ProjectX.Identity.API.Database.Models;
+using ProjectX.Identity.Domain;
 
 namespace ProjectX.Identity.API.Controllers;
 

@@ -63,11 +63,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileStorage", "FileStorage"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.FileStorage.API", "Services\ProjectX.FileStorage\ProjectX.FileStorage.API\ProjectX.FileStorage.API.csproj", "{3D58D041-C438-45FC-8F68-2CC2690A6398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.FileStorage.Application", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Application\ProjectX.FileStorage.Application.csproj", "{55138D6C-D2C0-4656-99BB-7F07A285689E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.FileStorage.Application", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Application\ProjectX.FileStorage.Application.csproj", "{55138D6C-D2C0-4656-99BB-7F07A285689E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.FileStorage.Database", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Database\ProjectX.FileStorage.Database.csproj", "{84E6B9CD-0E3A-4EC2-A88C-902E40DD833A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.FileStorage.Database", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Database\ProjectX.FileStorage.Database.csproj", "{84E6B9CD-0E3A-4EC2-A88C-902E40DD833A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.FileStorage.Files", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Files\ProjectX.FileStorage.Files.csproj", "{FCB27907-DBCA-44A2-A8EC-195C030DECE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.FileStorage.Files", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Files\ProjectX.FileStorage.Files.csproj", "{FCB27907-DBCA-44A2-A8EC-195C030DECE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Identity.Persistence", "Services\ProjectX.Identity\ProjectX.Identity.Persistence\ProjectX.Identity.Persistence.csproj", "{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Identity.Domain", "Services\ProjectX.Identity\ProjectX.Identity.Domain\ProjectX.Identity.Domain.csproj", "{DEFFA12C-127A-4165-A376-DB4691DCB8E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Identity.Application", "Services\ProjectX.Identity\ProjectX.Identity.Application\ProjectX.Identity.Application.csproj", "{23AA698E-5BE6-4971-95D1-1029657463F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +165,18 @@ Global
 		{FCB27907-DBCA-44A2-A8EC-195C030DECE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCB27907-DBCA-44A2-A8EC-195C030DECE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCB27907-DBCA-44A2-A8EC-195C030DECE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEFFA12C-127A-4165-A376-DB4691DCB8E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEFFA12C-127A-4165-A376-DB4691DCB8E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEFFA12C-127A-4165-A376-DB4691DCB8E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEFFA12C-127A-4165-A376-DB4691DCB8E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23AA698E-5BE6-4971-95D1-1029657463F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23AA698E-5BE6-4971-95D1-1029657463F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23AA698E-5BE6-4971-95D1-1029657463F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23AA698E-5BE6-4971-95D1-1029657463F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +209,9 @@ Global
 		{55138D6C-D2C0-4656-99BB-7F07A285689E} = {38E51C6A-0099-46B8-B558-4762D6A2F4A4}
 		{84E6B9CD-0E3A-4EC2-A88C-902E40DD833A} = {38E51C6A-0099-46B8-B558-4762D6A2F4A4}
 		{FCB27907-DBCA-44A2-A8EC-195C030DECE6} = {38E51C6A-0099-46B8-B558-4762D6A2F4A4}
+		{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7} = {C261DB7A-DA41-41D6-8B44-65BCB43395B2}
+		{DEFFA12C-127A-4165-A376-DB4691DCB8E3} = {C261DB7A-DA41-41D6-8B44-65BCB43395B2}
+		{23AA698E-5BE6-4971-95D1-1029657463F5} = {C261DB7A-DA41-41D6-8B44-65BCB43395B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C6E7CD24-B1DF-4643-8D18-884E9669D929}

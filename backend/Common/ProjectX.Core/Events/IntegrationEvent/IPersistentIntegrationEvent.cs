@@ -10,7 +10,7 @@ public interface IIntegrationEvent : IRequest
 }
 
 /// <summary>
-/// Persistent enevts are saved to database.
+/// Persistent events are saved to database before publish to message broker.
 /// </summary>
 public interface IPersistentIntegrationEvent : IIntegrationEvent, IHasTransaction
 {

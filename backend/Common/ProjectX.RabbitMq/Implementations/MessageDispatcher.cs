@@ -10,7 +10,6 @@ internal class MessageDispatcher : IMessageDispatcher
 {
     private readonly IServiceScopeFactory _scopeFactory;
 
-
     public MessageDispatcher(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;

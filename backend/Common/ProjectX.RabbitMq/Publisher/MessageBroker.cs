@@ -2,13 +2,6 @@
 
 namespace ProjectX.RabbitMq.Publisher;
 
-public interface IMessageBroker 
-{
-    void Publish<T>(T integrationEvent, PublishProperties properties) where T : IIntegrationEvent;
-
-    void Publish<T>(T integrationEvent, Action<PublishProperties> action) where T : IIntegrationEvent;
-}
-
 public class MessageBroker : IMessageBroker
 {
     private readonly IRabbitMqPublisher _rabbitMqPublisher;

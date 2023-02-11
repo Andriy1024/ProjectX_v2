@@ -11,8 +11,8 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
 {
     #region Private members
 
-    private readonly ReaderWriterLockSlim _syncRootForSubscribers = new ReaderWriterLockSlim();
-    private readonly Dictionary<SubscriptionKey, SubscriberContext> _subscribers = new Dictionary<SubscriptionKey, SubscriberContext>();
+    private readonly ReaderWriterLockSlim _syncRootForSubscribers = new();
+    private readonly Dictionary<SubscriptionKey, SubscriberContext> _subscribers = new();
 
     private readonly IRabbitMqConnectionService _connectionService;
     private readonly ILogger<RabbitMqSubscriber> _logger;
@@ -21,7 +21,7 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
     private readonly IMessageDispatcher _dispatcher;
 
     private readonly RabbitMqConfiguration _options;
- 
+
     #endregion
 
     #region Constructors
@@ -30,7 +30,7 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
         IMessageDispatcher dispatcher,
         IMessageSerializer serializer,
         ILogger<RabbitMqSubscriber> logger,
-        IOptions<RabbitMqConfiguration > options)
+        IOptions<RabbitMqConfiguration> options)
     {
         _connectionService = connectionService;
         _dispatcher = dispatcher;
@@ -47,9 +47,9 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
         where T : IIntegrationEvent
     {
         var properties = new SubscribeProperties();
-        
+
         action(properties);
-        
+
         Subscribe<T>(properties);
     }
 
@@ -58,40 +58,40 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
     {
         SubscribeProperties.Validate(properties);
 
-        if (string.IsNullOrEmpty(properties.Queue.RoutingKey)) 
+        if (string.IsNullOrEmpty(properties.Queue.RoutingKey))
         {
             properties.Queue.RoutingKey = GetRoutingKey<T>();
         }
 
-        if (string.IsNullOrEmpty(properties.Queue.Name)) 
+        if (string.IsNullOrEmpty(properties.Queue.Name))
         {
             properties.Queue.Name = GetQueueName(properties.Exchange.Name, properties.Queue.RoutingKey);
         }
-            
+
         var key = new SubscriptionKey(properties.Exchange.Name, properties.Queue.RoutingKey);
 
-        using (new ReadLock(_syncRootForSubscribers)) 
+        using (new ReadLock(_syncRootForSubscribers))
         {
-            if (_subscribers.ContainsKey(key)) 
+            if (_subscribers.ContainsKey(key))
             {
                 _logger.LogError($"Integration event of type {typeof(T).Name} already subscribed for '{key}'.");
-                
+
                 return;
             }
         }
 
         var subscriptionInfo = CreateSubscriberChannel<T>(key, properties);
 
-        using (new WriteLock(_syncRootForSubscribers)) 
+        using (new WriteLock(_syncRootForSubscribers))
         {
             if (_subscribers.ContainsKey(key))
             {
-                //TO DO: consider about this.
+                //TODO: consider about this.
                 subscriptionInfo.Channel.Close();
-                
+
                 return;
             }
-            else 
+            else
             {
                 _subscribers.Add(key, subscriptionInfo);
             }
@@ -106,30 +106,30 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
         var properties = SubscribeProperties.Validate(eventBusProperties);
 
         var exchangeName = properties.Exchange.Name;
-        
+
         var routingKey = properties.Queue?.RoutingKey ?? GetRoutingKey<T>();
 
         var key = new SubscriptionKey(exchangeName, routingKey);
 
-        SubscriberContext subscriptionInfo = null;
-        
+        SubscriberContext? subscriptionInfo = null;
+
         bool exists = false;
 
-        using (new ReadLock(_syncRootForSubscribers)) 
+        using (new ReadLock(_syncRootForSubscribers))
         {
             exists = _subscribers.TryGetValue(key, out subscriptionInfo);
         }
-        
-        if (!exists) 
+
+        if (!exists)
         {
             _logger.LogError($"Subscriber: {key} was not found.");
-            
+
             return;
         }
 
-        if (subscriptionInfo.Channel != null)
+        if (subscriptionInfo!.Channel != null)
         {
-            if (!_connectionService.IsConnected) 
+            if (!_connectionService.IsConnected)
             {
                 _connectionService.TryConnect();
             }
@@ -137,12 +137,12 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
             if (!subscriptionInfo.Channel.IsClosed)
             {
                 subscriptionInfo.Channel.QueueUnbind(queue: subscriptionInfo.Queue.Name, exchange: exchangeName, routingKey: routingKey);
-                
+
                 subscriptionInfo.Channel.Close();
             }
         }
 
-        using (new WriteLock(_syncRootForSubscribers)) 
+        using (new WriteLock(_syncRootForSubscribers))
         {
             _subscribers.Remove(key);
         }
@@ -154,7 +154,7 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
 
     public void Dispose()
     {
-        using (new WriteLock(_syncRootForSubscribers)) 
+        using (new WriteLock(_syncRootForSubscribers))
         {
             _subscribers.Clear();
         }
@@ -164,18 +164,18 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
 
     #region Private methods
 
-    private string GetRoutingKey<T>() => typeof(T).Name;
+    private static string GetRoutingKey<T>() => typeof(T).Name;
 
     private string GetQueueName(string exchange, string routingKey) => $"{_options.ConnectionName}/{exchange}.{routingKey}";
 
     private SubscriberContext CreateSubscriberChannel<T>(SubscriptionKey key, SubscribeProperties properties)
         where T : IIntegrationEvent
     {
-        if (!_connectionService.IsConnected && !_connectionService.TryConnect()) 
+        if (!_connectionService.IsConnected && !_connectionService.TryConnect())
         {
             throw new Exception("Can't connect to RabbitMq.");
         }
-             
+
         var channel = _connectionService.CreateChannel();
 
         channel.ExchangeDeclare(exchange: properties.Exchange.Name, type: properties.Exchange.Type, durable: properties.Exchange.Durable, autoDelete: properties.Exchange.AutoDelete);
@@ -202,7 +202,7 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
 
         var consumer = new AsyncEventingBasicConsumer(channel);
 
-        consumer.Received += async (sender, args) => 
+        consumer.Received += async (sender, args) =>
         {
             await OnMessageReceived<T>(sender, args, handler);
         };
@@ -221,20 +221,20 @@ public sealed class RabbitMqSubscriber : IRabbitMqSubscriber, IDisposable
         return new SubscriberContext(key, EventType: typeof(T), channel, properties.Queue, properties.Exchange, properties.Consumer);
     }
 
-    private async Task OnMessageReceived<T>(object sender, BasicDeliverEventArgs ea, Pipe.Handler<SubscriberRequest> handler)
+    private async Task OnMessageReceived<T>(object sender, BasicDeliverEventArgs ea, Pipe.Handler<SubscriberRequest> handlerPipeline)
         where T : IIntegrationEvent
     {
         var message = _serializer.Deserialize<T>(ea.Body.Span);
 
         try
         {
-            await handler(new SubscriberRequest(ea, message));
+            await handlerPipeline(new SubscriberRequest(ea, message));
         }
         catch (Exception e)
         {
             _logger.LogError(e, e.Message);
         }
     }
-   
+
     #endregion
 }

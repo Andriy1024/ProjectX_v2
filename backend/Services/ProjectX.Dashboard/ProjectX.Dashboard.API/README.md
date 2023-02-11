@@ -1,4 +1,4 @@
-﻿# ProjextX Tasks project
+﻿# ProjextX Dashboard
 
 ## WSL
 
@@ -65,7 +65,7 @@ docker run -d -p 5555:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_
 
 ### Migrations
 ```
-dotnet ef migrations add "notes_bookmarks" -c DashboardDbContext -o "migration name"
+dotnet ef migrations add "migration name" -c DashboardDbContext -o "Migrations/Dashboard"
 dotnet ef migrations remove
 dotnet ef database update --connection your_connection
 ```
