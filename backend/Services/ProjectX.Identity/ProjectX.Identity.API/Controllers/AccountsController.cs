@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ProjectX.AspNetCore.Http;
+using ProjectX.Identity.Application.UseCases;
 using ProjectX.Identity.Domain;
 
 namespace ProjectX.Identity.API.Controllers;
@@ -11,27 +11,17 @@ namespace ProjectX.Identity.API.Controllers;
 [Route("api/accounts")]
 public class AccountsController : ProjectXController
 {
-    private readonly UserManager<AccountEntity> _userManager;
-
-    public AccountsController(UserManager<AccountEntity> userManager)
+    [HttpGet("info")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public Task<IActionResult> GetAccountInfo(CancellationToken cancellation)
     {
-        _userManager = userManager;
+        return Send(new GetAccountInfoQuery(), cancellation);
     }
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> GetAccounts() 
+    public Task<IActionResult> GetAccounts(CancellationToken cancellation) 
     {
-        var users = await _userManager.Users.Select(u => new
-            {
-                u.Id,
-                u.Email,
-                u.EmailConfirmed,
-                u.FirstName,
-                u.LastName
-            })
-            .ToListAsync();
-
-        return Ok(users);
+        return Send(new GetAccountsQuery(), cancellation);
     }
 }
