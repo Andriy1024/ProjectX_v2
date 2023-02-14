@@ -6,6 +6,7 @@ using ProjectX.Authentication.Constants;
 using ProjectX.Identity.Persistence;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ProjectX.Identity.Application.Services;
@@ -33,8 +34,6 @@ public sealed class AuthorizationService
 
     public async Task<ResultOf<TokenResult>> GenerateTokenAsync(AccountEntity user)
     {
-        var jwtHandler = new JwtSecurityTokenHandler();
-
         /*
          * At Auth0 we allow signing of tokens using either a symmetric algorithm (HS256), 
          * or an asymmetric algorithm (RS256).RS256: 
@@ -50,11 +49,13 @@ public sealed class AuthorizationService
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Secret)),
             SecurityAlgorithms.HmacSha256);
 
+        var now = DateTime.UtcNow;
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = ProjectXAudience.Identity,
             //Audience = _jwtConfig.Audience,
-            Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame),
+            Expires = now.Add(_jwtConfig.ExpiryTimeFrame),
             SigningCredentials = credentials,
             Subject = new ClaimsIdentity(new Claim[]
             {
@@ -64,12 +65,14 @@ public sealed class AuthorizationService
                 new(JwtRegisteredClaimNames.Aud, ProjectXAudience.FileStorage),
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, user.Email),
-                new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
+                new(JwtRegisteredClaimNames.Iat, now.ToUniversalTime().ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // used by the refresh token
             }
             //,JwtBearerDefaults.AuthenticationScheme //TODO: test it
             )
         };
+
+        var jwtHandler = new JwtSecurityTokenHandler();
 
         var token = jwtHandler.CreateToken(tokenDescriptor);
 
@@ -81,8 +84,8 @@ public sealed class AuthorizationService
             IsUsed = false,
             IsRevorked = false,
             UserId = user.Id,
-            AddedDate = DateTime.UtcNow,
-            ExpiryDate = DateTime.UtcNow.AddMonths(6),
+            AddedDate = now,
+            ExpiryDate = now.AddMonths(6),
             Token = RandomString(35) + Guid.NewGuid()
         };
 
@@ -95,6 +98,8 @@ public sealed class AuthorizationService
     public async Task<ResultOf<TokenResult>> RefreshTokenAsync(RefreshTokenCommand tokenRequest)
     {
         var jwtTokenHandler = new JwtSecurityTokenHandler();
+        
+        var now = DateTime.UtcNow;
 
         try
         {
@@ -122,7 +127,7 @@ public sealed class AuthorizationService
 
             var expiryDate = UnixTimeStampToDateTime(utcExpiryDate);
 
-            if (expiryDate > DateTime.UtcNow)
+            if (expiryDate > now)
             {
                 return ApplicationError.InvalidData(message: "Token has not yet expired");
             }
@@ -156,7 +161,7 @@ public sealed class AuthorizationService
             }
 
             // Validation 8 - validate stored token expiry date
-            if (storedToken.ExpiryDate < DateTime.UtcNow)
+            if (storedToken.ExpiryDate < now)
             {
                 return ApplicationError.InvalidData(message: "Refresh token has expired");
             }

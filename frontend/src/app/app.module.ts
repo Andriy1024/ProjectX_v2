@@ -16,7 +16,7 @@ import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.co
 import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
 import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
 
-import { DASHBOARD_API_URL, IDENTITY_API_URL } from './app-injection-tokens';
+import { DASHBOARD_API_URL, IDENTITY_API_URL, REALTIME_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
 import { ApplicationHttpInterceptor } from './http/application-http.interceptor';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -56,6 +56,7 @@ import { JwtModule } from '@auth0/angular-jwt';
   providers: [
     { provide: IDENTITY_API_URL, useValue: environment.identityApi },
     { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
+    { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
     { provide: HTTP_INTERCEPTORS, useClass: ApplicationHttpInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

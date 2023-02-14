@@ -43,7 +43,12 @@ namespace ProjectX.FileStorage.API.Controllers
         {
             var response = await Mediator.Send(new DownloadFileQuery() { Id = id }, cancellation);
 
-            return File(response.Data.File, response.Data.MimeType);
+            if (response.IsFailed) 
+            {
+                return BadRequest(response);
+            }
+
+            return File(response.Data!.File, response.Data.MimeType);
         }
     }
 }

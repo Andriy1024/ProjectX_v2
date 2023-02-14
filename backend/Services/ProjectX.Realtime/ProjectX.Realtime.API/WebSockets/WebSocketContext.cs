@@ -95,7 +95,7 @@ public sealed class WebSocketContext : IDisposable
 
             byte[] buffer = new byte[_receivePayloadBufferSize];
 
-            WebSocketReceiveResult webSocketReceiveResult = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cancellationToken).ConfigureAwait(false); ;
+            WebSocketReceiveResult webSocketReceiveResult = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cancellationToken).ConfigureAwait(false);
 
             while (webSocketReceiveResult.MessageType != WebSocketMessageType.Close)
             {
@@ -150,9 +150,9 @@ public sealed class WebSocketContext : IDisposable
         {
             var messagePayload = new byte[webSocketReceiveResult.Count];
 
-            Buffer.BlockCopy(receivePayloadBuffer, 0, messagePayload, 0, webSocketReceiveResult.Count);
+           // Buffer.BlockCopy(receivePayloadBuffer, 0, messagePayload, 0, webSocketReceiveResult.Count);
 
-            //Array.Copy(receivePayloadBuffer, messagePayload, webSocketReceiveResult.Count);
+            Array.Copy(receivePayloadBuffer, messagePayload, webSocketReceiveResult.Count);
 
             return messagePayload;
         }

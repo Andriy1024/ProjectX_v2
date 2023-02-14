@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ProjectX.Realtime.API.WebSockets;
 
@@ -44,9 +43,13 @@ public sealed class WebSocketMiddleware
             var webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
             await _connectionManager.HandleAsync(connectionId.Value, userId, webSocket, cancellationToken);
-        }
 
-        await _next(context);
+            return;
+        }
+        else 
+        {
+            await _next(context);
+        }
     }
 
     private static ConnectionId? GetConnectionId(HttpContext context)

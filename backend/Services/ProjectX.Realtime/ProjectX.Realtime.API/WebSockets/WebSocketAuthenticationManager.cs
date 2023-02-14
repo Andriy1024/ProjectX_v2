@@ -6,7 +6,7 @@ namespace ProjectX.Realtime.API.WebSockets;
 public sealed class WebSocketAuthenticationManager
 {
     private readonly IMemoryCache _pendingConnectionIds;
-    private readonly TimeSpan _cacheItemExpirationTime = TimeSpan.FromSeconds(30);
+    private readonly TimeSpan _cacheItemExpirationTime = TimeSpan.FromMinutes(5);
 
     public WebSocketAuthenticationManager(ILoggerFactory loggerFactory)
     {

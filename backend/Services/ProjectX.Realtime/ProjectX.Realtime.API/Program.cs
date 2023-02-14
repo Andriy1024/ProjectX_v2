@@ -29,11 +29,14 @@ builder
     .AddSingleton<ApplicationWebSocketManager>()
     .AddSingleton<WebSocketAuthenticationManager>()
     .AddScoped<IStartupTask, MessageBusStartupTask>()
-    .AddRabbitMqMessageBus<RealtimeMessageDispatcher>(builder.Configuration);
+    .AddRabbitMqMessageBus<RealtimeMessageDispatcher>(builder.Configuration)
+    .AddProjecXCors();
 
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+app.UseProjectXCors();
 
 app.UseProjectXSwagger();
 

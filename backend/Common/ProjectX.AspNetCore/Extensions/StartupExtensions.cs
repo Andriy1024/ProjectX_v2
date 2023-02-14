@@ -27,13 +27,16 @@ public static class StartupExtensions
                 return new BadRequestObjectResult(new ResultOf<Unit>(ApplicationError.InvalidData(message: errors)));
             })
             .Services
-            .AddCors(options =>
-            {
-                options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            });
+            .AddProjecXCors();
 
         return app;
     }
+
+    public static IServiceCollection AddProjecXCors(this IServiceCollection services)
+        => services.AddCors(options =>
+        {
+            options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        });
 
     public static WebApplication UseProjectXCors(this WebApplication app)
     {
