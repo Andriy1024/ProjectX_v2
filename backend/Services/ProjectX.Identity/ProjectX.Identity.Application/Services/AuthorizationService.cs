@@ -5,13 +5,8 @@ using ProjectX.Authentication;
 using ProjectX.Authentication.Constants;
 using ProjectX.Identity.Persistence;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace ProjectX.Identity.Application.Services;
-
-public record TokenResult(string Token, string RefreshToken);
 
 public sealed class AuthorizationService
 {
@@ -32,62 +27,27 @@ public sealed class AuthorizationService
         _userManager = userManager;
     }
 
-    public async Task<ResultOf<TokenResult>> GenerateTokenAsync(AccountEntity user)
+    public async Task<ResultOf<JwtToken>> GenerateTokenAsync(AccountEntity account)
     {
-        /*
-         * At Auth0 we allow signing of tokens using either a symmetric algorithm (HS256), 
-         * or an asymmetric algorithm (RS256).RS256: 
-         * <see href="https://www.jerriepelser.com/blog/manually-validating-rs256-jwt-dotnet/"/>
-         * <see href="https://developer.okta.com/code/dotnet/jwt-validation/"/>
-         * HS256 tokens are signed and verified using a simple secret, 
-         * where as RS256 use a private and public key for signing and verifying the token signatures.
-         * SHA-256 it's Hashing function. This means that if we take our Header and Payload and run it through this function,
-         * no one will be able to get the data back again just by looking at the output.
-         * Hashing is not encryption: encryption by definition is a reversible action - we do need to get back the original input from the encrypted output.
-        */
-        var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Secret)),
-            SecurityAlgorithms.HmacSha256);
+        var tokenEntity = JwtToken.Builder
+            .AddAccount(account)
+            .AddSecret(_jwtConfig.Secret)
+            .AddExpiryTimeFrame(_jwtConfig.ExpiryTimeFrame)
+            .AddIssuer(ProjectXAudience.Identity)
+            .AddAudiance(
+                ProjectXAudience.Identity,
+                ProjectXAudience.Dashboard,
+                ProjectXAudience.Realtime,
+                ProjectXAudience.FileStorage)
+            .Build();
 
-        var issuedAt = DateTime.UtcNow;
-        var jwtId = Guid.NewGuid().ToString();
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Issuer = ProjectXAudience.Identity,
-            //Audience = _jwtConfig.Audience,
-            Expires = issuedAt.Add(_jwtConfig.ExpiryTimeFrame),
-            SigningCredentials = credentials,
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Identity),
-                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Dashboard),
-                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Realtime),
-                new(JwtRegisteredClaimNames.Aud, ProjectXAudience.FileStorage),
-                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new(JwtRegisteredClaimNames.Email, user.Email!),
-                new(JwtRegisteredClaimNames.Iat, issuedAt.ToUniversalTime().ToString()),
-                new(JwtRegisteredClaimNames.Jti, jwtId) // used by the refresh token
-            }
-            //,JwtBearerDefaults.AuthenticationScheme //TODO: test it
-            )
-        };
-
-        var jwtHandler = new JwtSecurityTokenHandler();
-
-        var token = jwtHandler.CreateToken(tokenDescriptor);
-
-        var jwtToken = jwtHandler.WriteToken(token);
-
-        var refreshToken = RefreshToken.Create(user, jwtId, issuedAt);
-
-        await _dbContext.RefreshTokens.AddAsync(refreshToken);
+        await _dbContext.RefreshTokens.AddAsync(tokenEntity.RefreshToken);
         await _dbContext.SaveChangesAsync();
 
-        return new TokenResult(jwtToken, refreshToken.Token);
+        return tokenEntity;
     }
 
-    public async Task<ResultOf<TokenResult>> RefreshTokenAsync(RefreshTokenCommand tokenRequest)
+    public async Task<ResultOf<JwtToken>> RefreshTokenAsync(RefreshTokenCommand tokenRequest)
     {
         var jwtTokenHandler = new JwtSecurityTokenHandler();
         
@@ -173,14 +133,7 @@ public sealed class AuthorizationService
         }
         catch (Exception ex)
         {
-            if (ex.Message.Contains("Lifetime validation failed. The token is expired."))
-            {
-                return ApplicationError.ServerError(message: "Token has expired please re-login");
-            }
-            else
-            {
-                return ApplicationError.ServerError(message: "Something went wrong.");
-            }
+            return ApplicationError.ServerError(message: "Something went wrong.");
         }
     }
 

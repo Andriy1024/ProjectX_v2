@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\ProjectX.Authentication\ProjectX.Authentication.csproj" />
+    <ProjectReference Include="..\..\..\Common\ProjectX.Core\ProjectX.Core.csproj" />
+  </ItemGroup>
+
 </Project>

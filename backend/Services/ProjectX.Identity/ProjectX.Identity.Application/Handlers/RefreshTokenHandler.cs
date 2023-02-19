@@ -18,6 +18,8 @@ public sealed class RefreshTokenHandler : ICommandHandler<RefreshTokenCommand, R
             return authResult.Error!;
         }
 
-        return new RefreshTokenResult(authResult.Data!.Token, authResult.Data!.RefreshToken);
+        var jwtToken = authResult.Data!;
+
+        return new RefreshTokenResult(jwtToken.Token, jwtToken.RefreshToken.Token);
     }
 }

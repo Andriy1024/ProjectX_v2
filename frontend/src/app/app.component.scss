@@ -62,8 +62,8 @@ header {
         transition: 0.3s;
 
         &:hover {
-          background-color: rgba(white, 0.25);
-          backdrop-filter: blur(3px);
+          background-color: rgba(white, 0.40);
+          //backdrop-filter: blur(3px);
         }
       }
     }

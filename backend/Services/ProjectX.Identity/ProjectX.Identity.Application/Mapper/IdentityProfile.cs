@@ -7,6 +7,5 @@ public class IdentityProfile : Profile
 	public IdentityProfile()
 	{
 		CreateMap<AccountEntity, AccountContact>();
-        CreateMap<TokenResult, TokenContact>();
     }
 }

@@ -13,7 +13,6 @@ app-todo-item,
     margin-bottom: 15px;
 }
 
-
 .todo-item {
     position: relative;
     display: flex;
@@ -34,12 +33,12 @@ app-todo-item,
     margin-right: 15px;
     padding: 4px;
 
-    border: 2px solid rgba(white, 0.6);
+    border: 2px solid rgba(white, 0.8);
     border-radius: 50%;
 
     i {
         font-size: 17px;
-        color: rgba(white, 0.6);
+        color: rgba(white, 0.8);
     }
 }
 
@@ -76,7 +75,6 @@ app-todo-item,
 .check-box {
     transition: 0.1s;
 }
-
 
 .todo-item-actions {
     position: absolute;

@@ -34,6 +34,8 @@ public sealed class SignInHandler : ICommandHandler<SignInCommand, SignInResult>
             return authResult.Error!;
         }
 
-        return new SignInResult(authResult.Data!.Token, authResult.Data!.RefreshToken);
+        var jwtToken = authResult.Data!;
+
+        return new SignInResult(jwtToken.Token, jwtToken.RefreshToken.Token);
     }
 }
