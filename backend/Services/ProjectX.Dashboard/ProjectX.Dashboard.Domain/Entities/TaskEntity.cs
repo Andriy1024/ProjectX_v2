@@ -41,7 +41,7 @@ public sealed class TaskEntity : Entity<int>
         Completed = completed;
         UpdatedAt = DateTimeOffset.UtcNow;
 
-        AddDomainEvent(new EntityDeleted<TaskEntity>(this));
+        AddDomainEvent(new EntityUpdated<TaskEntity>(this));
     }
 
     public void Remove() 

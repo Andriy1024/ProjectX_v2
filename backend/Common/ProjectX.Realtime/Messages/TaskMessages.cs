@@ -15,8 +15,8 @@ public abstract class TaskRealtimeMessage : IRealtimeMessage
     public DateTimeOffset UpdatedAt { get; set; }
 }
 
-public class TaskCreatedMessage : TaskRealtimeMessage {}
+public class TaskCreated : TaskRealtimeMessage {}
 
-public class TaskUpdatedMessage : TaskRealtimeMessage {}
+public class TaskUpdated : TaskRealtimeMessage {}
 
-public class TaskDeletedMessage : TaskRealtimeMessage {}
+public class TaskDeleted : TaskRealtimeMessage {}

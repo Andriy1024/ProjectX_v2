@@ -11,9 +11,9 @@ public static class ServiceCollectionExtensions
     {
         return services
             // Task handlers
-            .AddDomainEventsHandlers<TaskEntity, EntityCreated<TaskEntity>, TaskCreatedMessage>()
-            .AddDomainEventsHandlers<TaskEntity, EntityUpdated<TaskEntity>, TaskUpdatedMessage>()
-            .AddDomainEventsHandlers<TaskEntity, EntityDeleted<TaskEntity>, TaskDeletedMessage>()
+            .AddDomainEventsHandlers<TaskEntity, EntityCreated<TaskEntity>, TaskCreated>()
+            .AddDomainEventsHandlers<TaskEntity, EntityUpdated<TaskEntity>, TaskUpdated>()
+            .AddDomainEventsHandlers<TaskEntity, EntityDeleted<TaskEntity>, TaskDeleted>()
             // Notes handlers
             .AddDomainEventsHandlers<NoteEntity, EntityCreated<NoteEntity>, NoteCreated>()
             .AddDomainEventsHandlers<NoteEntity, EntityUpdated<NoteEntity>, NoteUpdated>()

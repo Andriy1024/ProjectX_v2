@@ -5,7 +5,7 @@ import { ButtonType, ControlType, IDynamicFormConfig, FieldType, IButton, IFormC
 @Injectable({ providedIn: 'root' })
 export class DynamicFormStateService {
 
-    private $configSubject = new BehaviorSubject<IDynamicFormConfig | null>(this.getDefaultConfig());
+    private $configSubject = new BehaviorSubject<IDynamicFormConfig | null>(null);
 
     public config$ = this.$configSubject.asObservable();
 

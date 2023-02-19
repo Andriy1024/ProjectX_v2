@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { ButtonType, ControlType, FieldType, IDynamicFormConfig, IFormControl } from 'src/app/models/dynamic-form.model';
 import { DynamicFormStateService } from 'src/app/services/dynamic-form/DynamicFormStateService';
 
@@ -22,32 +22,33 @@ export class DynamicFormComponent implements OnInit {
     return this.config?.controls.filter(x => x.visible);
   }
 
-  private configSubsription: Subscription;
+  private configSubsription$: Subscription;
 
   constructor(
     private readonly _stateService: DynamicFormStateService,
     private readonly _router: Router) {
+      this.configSubsription$ = this._stateService.config$
+        .subscribe(config => {
+            if (config == null) {
+              console.log('config empty');
+              this._router.navigate(['/']);
+            }
 
-      this.configSubsription = this._stateService.config$.subscribe(config => {
-        if (config == null) {
-          console.log('config empty');
-          this._router.navigate(['/']);
-        }
-
-        this.config = config!;
-        this.form = new FormGroup({});
-        this.config.controls.forEach(x => {
-          const control = new FormControl(this.config!.data?.[x.key] ?? null, this.getValidators(x));
-          this.form!.addControl(x.key, control);
-        });
-      });
+            this.config = config!;
+            this.form = new FormGroup({});
+            this.config.controls.forEach(x => {
+              const control = new FormControl(this.config!.data?.[x.key] ?? null, this.getValidators(x));
+              this.form!.addControl(x.key, control);
+            });
+          }
+        );
     }
 
   ngOnInit(): void {
   }
 
   ngOnDestroy(): void {
-    this.configSubsription.unsubscribe();
+    this.configSubsription$.unsubscribe();
   }
 
   private getValidators(control: IFormControl): ValidatorFn[] {

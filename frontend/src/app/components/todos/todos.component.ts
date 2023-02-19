@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
+import { from, Observable} from 'rxjs';
 import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
 import { Todo } from '../../models/todo.model';
 import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
@@ -25,7 +25,7 @@ import { TodoService } from '../../services/todo/todo.service';
 })
 export class TodosComponent implements OnInit {
 
-  public todos: Observable<Todo[]> = from([]);
+  public todos$: Observable<Todo[]> = from([]);
 
   constructor(
     private readonly _todoService: TodoService,
@@ -33,26 +33,16 @@ export class TodosComponent implements OnInit {
     private readonly _stateService: DynamicFormStateService) { }
 
   ngOnInit(): void {
-    this.loadTodos();
-  }
-
-  public loadTodos(): void {
-    this.todos = this._todoService.getTodos();
+    this.todos$ = this._todoService.getTodos();
   }
 
   public toggleCompleted(todo: Todo): void {
     todo.completed = !todo.completed;
-    this._todoService.updateTodo(todo)
-        .subscribe(r => {
-          this.loadTodos();
-        });
+    this._todoService.updateTodo(todo).subscribe();
   }
 
   public onDeleteClick(todo: Todo): void {
-    this._todoService.deleteTodo(todo.id)
-      .subscribe(r => {
-        this.loadTodos();
-      });
+    this._todoService.deleteTodo(todo.id).subscribe();
   }
 
   public onEditClick(todo: Todo): void {

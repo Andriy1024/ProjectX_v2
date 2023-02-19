@@ -11,9 +11,9 @@ public class DashboardProfile : Profile
         CreateMap<NoteEntity, NoteContarct>();
         CreateMap<BookmarkEntity, BookmarkContarct>();
 
-        CreateMap<TaskEntity, TaskCreatedMessage>();
-        CreateMap<TaskEntity, TaskUpdatedMessage>();
-        CreateMap<TaskEntity, TaskDeletedMessage>();
+        CreateMap<TaskEntity, TaskCreated>();
+        CreateMap<TaskEntity, TaskUpdated>();
+        CreateMap<TaskEntity, TaskDeleted>();
 
         CreateMap<NoteEntity, NoteCreated>();
         CreateMap<NoteEntity, NoteUpdated>();

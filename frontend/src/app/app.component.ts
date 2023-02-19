@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './auth/services/auth-service.service';
-import { WebsocketService } from './services/websockets/websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -90,21 +89,12 @@ export class AppComponent implements OnInit, OnDestroy {
   public isAuthenticated = false;
   private wsSubscription: Subscription | null = null;
 
-  constructor(
-    private readonly _authService: AuthService,
-    private readonly _ws: WebsocketService)
-    {
-    }
+  constructor(private readonly _authService: AuthService) {}
 
   public ngOnInit(): void {
     this._authService.isAuthenticated().subscribe(r => {
       this.isAuthenticated = r;
     });
-
-    this.wsSubscription = this._ws.connect().subscribe(x => {
-      console.log('ws')
-      console.log(x)
-    })
   }
 
   public ngOnDestroy(): void {

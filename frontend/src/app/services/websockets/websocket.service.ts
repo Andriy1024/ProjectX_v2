@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import * as Rx from 'rxjs';
-import { map, switchMap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { REALTIME_API_URL } from 'src/app/app-injection-tokens';
+import { IRealtimeMessage } from 'src/app/models/realtime.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +15,15 @@ export class WebsocketService {
     private readonly _http: HttpClient,
     @Inject(REALTIME_API_URL)
     private readonly realtimeUrl: string,
-  )
-  {
-  }
+  ){}
 
   private subject: Rx.Subject<MessageEvent> | null = null;
 
-  public connect(): Rx.Observable<IRealtimeMessage> {
-    if (this.subject) {
+  public subscribe(): Rx.Observable<IRealtimeMessage<any>> {
+    if (this.subject && !this.subject.closed) {
       return this.subject.pipe(
-        map(r => r.data)
+        tap(console.log),
+        map(r => JSON.parse(r.data) as IRealtimeMessage<any>)
       );
     }
 
@@ -33,7 +33,7 @@ export class WebsocketService {
           switchMap((response: { connectionId: string }) => {
             this.subject = this.createWS(response.connectionId);
             return this.subject.pipe(
-              map(r => r.data)
+              map(r => JSON.parse(r.data) as IRealtimeMessage<any>)
             );
           })
         );
@@ -70,9 +70,4 @@ export class WebsocketService {
 
     return new AnonymousSubject<MessageEvent>(observer, observable);
   }
-}
-
-export interface IRealtimeMessage {
-  type: string;
-  message: object
 }

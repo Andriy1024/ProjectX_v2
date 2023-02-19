@@ -2,7 +2,7 @@
     <div class="container">
 
         <div @todoItemAnimation
-            *ngFor="let todo of todos | async"
+            *ngFor="let todo of todos$ | async"
             class="todo-item-container"
             (click)="toggleCompleted(todo)"
         >

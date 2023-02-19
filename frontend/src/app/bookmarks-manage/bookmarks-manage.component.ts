@@ -20,15 +20,17 @@ export class BookmarksManageComponent implements OnInit {
   ngOnInit(): void {
     this.bookmarks$ = this.route.paramMap.pipe(
       switchMap((paramMap) => {
-        const bookmarkId = paramMap.get('id');
+        let bookmarkId = paramMap.get('id');
         return this.bookmarkService.getBookmarks().pipe(
           tap(bookmarks => {
-            if (!bookmarkId) {
-              const bookmark = bookmarks[0];
-              if (bookmark) {
-                this.router.navigate([bookmark.id], {relativeTo: this.route});
-              }
-            }
+            let bookmark = !bookmarkId
+              ? bookmarks[0]
+              : bookmarks.find(x => x.id == Number(bookmarkId)) ?? bookmarks[0];
+
+            if (bookmark)
+              this.router.navigate([bookmark.id], {relativeTo: this.route});
+            else
+              this.router.navigateByUrl('/bookmarks');
           })
         );
       })

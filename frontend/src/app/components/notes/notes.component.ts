@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
@@ -13,15 +13,15 @@ import { NoteService } from '../../services/notes/note.service';
 })
 export class NotesComponent implements OnInit {
 
-  public notes: Observable<Note[]> = from([]);
+  public notes$: Observable<Note[]> = from([]);
 
   constructor(
     private readonly _noteService: NoteService,
     private readonly _router: Router,
     private readonly _stateService: DynamicFormStateService) { }
 
-  ngOnInit(): void {
-    this.notes = this._noteService.getNotes();
+  public ngOnInit(): void {
+    this.notes$ = this._noteService.getNotes();
   }
 
   public onEdit(note: Note) {
@@ -76,7 +76,7 @@ export class NotesComponent implements OnInit {
     });
   }
 
-  public onAdd():void {
+  public onAdd(): void {
     this._router.navigate(['/form']);
     this._stateService.push({
       title: 'New Note',
