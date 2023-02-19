@@ -3,7 +3,7 @@
   flex-direction: row;
   gap: 13px;
   background-color: rgba(white, 0.25);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(1.5px);
   border-radius: 12px;
   padding: 10px;
   margin: 12px;
@@ -47,7 +47,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background: linear-gradient(45deg, #d2cdff, #5fffbc);
+  background: linear-gradient(45deg, #aba2fa , #4bf1ac );
   border-radius: 10px;
   transition: all 0.1s;
   opacity: 0.9;
