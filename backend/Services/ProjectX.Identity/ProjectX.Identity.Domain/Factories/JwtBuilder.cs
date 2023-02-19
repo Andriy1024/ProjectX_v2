@@ -12,7 +12,7 @@ public partial class JwtToken
     public sealed class JwtBuilder
     {
         #region Private Fields
-        
+
         private Guid? _jwtId;
 
         private string? _secret;
@@ -97,7 +97,7 @@ public partial class JwtToken
             };
 
             claims.AddRange(_audience.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
-            
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _issuer!,
@@ -113,10 +113,10 @@ public partial class JwtToken
             var token = jwtHandler.CreateToken(tokenDescriptor);
             var jwtToken = jwtHandler.WriteToken(token);
             var refreshToken = RefreshToken.Create(_account!, jwtId, issuedAt);
-            
+
             Clear();
-            
-            return new JwtToken(jwtId, jwtToken, issuedAt, refreshToken); ;
+
+            return new JwtToken(jwtId, jwtToken, issuedAt, refreshToken);
         }
 
         private SigningCredentials GetCredentials()
