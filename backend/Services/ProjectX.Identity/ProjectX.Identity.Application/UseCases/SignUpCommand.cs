@@ -22,4 +22,4 @@ public sealed class SignUpCommand : ICommand<SignUpResult>, IValidatable
     }
 }
 
-public record SignUpResult(string Token, string RefreshToken);
+public record SignUpResult(int AccountId);

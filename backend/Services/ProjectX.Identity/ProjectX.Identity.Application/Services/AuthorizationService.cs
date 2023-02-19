@@ -49,13 +49,14 @@ public sealed class AuthorizationService
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Secret)),
             SecurityAlgorithms.HmacSha256);
 
-        var now = DateTime.UtcNow;
+        var issuedAt = DateTime.UtcNow;
+        var jwtId = Guid.NewGuid().ToString();
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = ProjectXAudience.Identity,
             //Audience = _jwtConfig.Audience,
-            Expires = now.Add(_jwtConfig.ExpiryTimeFrame),
+            Expires = issuedAt.Add(_jwtConfig.ExpiryTimeFrame),
             SigningCredentials = credentials,
             Subject = new ClaimsIdentity(new Claim[]
             {
@@ -64,9 +65,9 @@ public sealed class AuthorizationService
                 new(JwtRegisteredClaimNames.Aud, ProjectXAudience.Realtime),
                 new(JwtRegisteredClaimNames.Aud, ProjectXAudience.FileStorage),
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new(JwtRegisteredClaimNames.Email, user.Email),
-                new(JwtRegisteredClaimNames.Iat, now.ToUniversalTime().ToString()),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // used by the refresh token
+                new(JwtRegisteredClaimNames.Email, user.Email!),
+                new(JwtRegisteredClaimNames.Iat, issuedAt.ToUniversalTime().ToString()),
+                new(JwtRegisteredClaimNames.Jti, jwtId) // used by the refresh token
             }
             //,JwtBearerDefaults.AuthenticationScheme //TODO: test it
             )
@@ -78,16 +79,7 @@ public sealed class AuthorizationService
 
         var jwtToken = jwtHandler.WriteToken(token);
 
-        var refreshToken = new RefreshToken()
-        {
-            JwtId = token.Id,
-            IsUsed = false,
-            IsRevorked = false,
-            UserId = user.Id,
-            AddedDate = now,
-            ExpiryDate = now.AddMonths(6),
-            Token = RandomString(35) + Guid.NewGuid()
-        };
+        var refreshToken = RefreshToken.Create(user, jwtId, issuedAt);
 
         await _dbContext.RefreshTokens.AddAsync(refreshToken);
         await _dbContext.SaveChangesAsync();
@@ -177,7 +169,7 @@ public sealed class AuthorizationService
             // Generate a new token
             var dbUser = await _userManager.FindByIdAsync(storedToken.UserId.ToString());
 
-            return await GenerateTokenAsync(dbUser);
+            return await GenerateTokenAsync(dbUser!);
         }
         catch (Exception ex)
         {
@@ -198,14 +190,5 @@ public sealed class AuthorizationService
         dateTimeVal = dateTimeVal.AddSeconds(unixTimeStamp).ToUniversalTime();
 
         return dateTimeVal;
-    }
-
-    private static string RandomString(int length)
-    {
-        var random = new Random();
-        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-        return new string(Enumerable.Repeat(chars, length)
-            .Select(x => x[random.Next(x.Length)]).ToArray());
     }
 }

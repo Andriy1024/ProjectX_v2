@@ -1,14 +1,18 @@
-﻿namespace ProjectX.Identity.Application.Handlers;
+﻿using ProjectX.Identity.Persistence;
+
+namespace ProjectX.Identity.Application.Handlers;
 
 public sealed class SignUpHandler : ICommandHandler<SignUpCommand, SignUpResult>
 {
     private readonly UserManager<AccountEntity> _userManager;
-    private readonly AuthorizationService _jwtService;
+    private readonly IdentityDatabase _dbContext;
 
-    public SignUpHandler(UserManager<AccountEntity> userManager, AuthorizationService jwtService)
+    public SignUpHandler(
+        UserManager<AccountEntity> userManager, 
+        IdentityDatabase dbContext)
     {
         _userManager = userManager;
-        _jwtService = jwtService;
+        _dbContext = dbContext;
     }
 
     public async Task<ResultOf<SignUpResult>> Handle(SignUpCommand request, CancellationToken cancellationToken)
@@ -36,12 +40,8 @@ public sealed class SignUpHandler : ICommandHandler<SignUpCommand, SignUpResult>
             return ApplicationError.InvalidData(message: error);
         }
 
-        var authResult = await _jwtService.GenerateTokenAsync(newUser);
-        if (authResult.IsFailed)
-        {
-            return authResult.Error!;
-        }
-
-        return new SignUpResult(authResult.Data!.Token, authResult.Data!.RefreshToken);
+        await _dbContext.SaveChangesAsync();
+        
+        return new SignUpResult(newUser.Id);
     }
 }
