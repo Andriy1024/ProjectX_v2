@@ -14,7 +14,7 @@ public class BookmarksController : ProjectXController
     public Task<IActionResult> GetBookmarks([FromQuery] BookmarksQuery query, CancellationToken cancellationToken)
         => Send(query, cancellationToken);
 
-    [HttpGet("{id:long:min(1)}")]
+    [HttpGet("{id:int:min(1)}")]
     public Task<IActionResult> FindBookmark([FromRoute] int id, CancellationToken cancellationToken)
         => Send(new FindBookmarkQuery { Id = id }, cancellationToken);
 

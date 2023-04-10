@@ -16,7 +16,7 @@ public class TasksController : ProjectXController
     public Task<IActionResult> GetTasks([FromQuery] TasksQuery query, CancellationToken cancellationToken)
         => Send(query, cancellationToken);
 
-    [HttpGet("{id:long:min(1)}")]
+    [HttpGet("{id:int:min(1)}")]
     public Task<IActionResult> FindTask([FromRoute] int id, CancellationToken cancellationToken)
        => Send(new FindTaskQuery { Id = id }, cancellationToken);
 
@@ -28,7 +28,7 @@ public class TasksController : ProjectXController
     public Task<IActionResult> UpdateTask([FromBody] UpdateTaskCommand command)
         => Send(command);
 
-    [HttpDelete("{id:long:min(1)}")]
+    [HttpDelete("{id:int:min(1)}")]
     public Task<IActionResult> DeleteTask([FromRoute] int id)
         => Send(new DeleteTaskCommand(id));
 }

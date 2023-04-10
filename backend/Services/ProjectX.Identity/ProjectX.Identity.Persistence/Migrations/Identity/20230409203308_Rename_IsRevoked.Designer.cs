@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProjectX.Identity.Persistence;
@@ -11,9 +12,11 @@ using ProjectX.Identity.Persistence;
 namespace ProjectX.Identity.Persistence.Migrations.Identity
 {
     [DbContext(typeof(IdentityDatabase))]
-    partial class IdentityDatabaseModelSnapshot : ModelSnapshot
+    [Migration("20230409203308_Rename_IsRevoked")]
+    partial class RenameIsRevoked
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

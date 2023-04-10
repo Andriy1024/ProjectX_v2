@@ -14,7 +14,7 @@ public class NotesController : ProjectXController
     public Task<IActionResult> GetNotes([FromQuery] NotesQuery query, CancellationToken cancellationToken)
         => Send(query, cancellationToken);
 
-    [HttpGet("{id:long:min(1)}")]
+    [HttpGet("{id:int:min(1)}")]
     public Task<IActionResult> FindNote([FromRoute] int id, CancellationToken cancellationToken)
         => Send(new FindNoteQuery { Id = id }, cancellationToken);
 
@@ -26,7 +26,7 @@ public class NotesController : ProjectXController
     public Task<IActionResult> UpdateNote([FromBody] UpdateNoteCommand command)
         => Send(command);
 
-    [HttpDelete("{id:long:min(1)}")]
+    [HttpDelete("{id:int:min(1)}")]
     public Task<IActionResult> DeleteNote([FromRoute] int id)
         => Send(new DeleteNoteCommand(id));
 }

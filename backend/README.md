@@ -7,6 +7,8 @@ dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Identity\Project
 dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Dashboard\ProjectX.Dashboard.API" --configuration release
 
 dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Realtime\ProjectX.Realtime.API" --configuration release
+
+dotnet run --project "D:\ProjectX 2.0\backend\Services\ProjectX.Messenger\ProjectX.Messenger.API" --configuration release
 ```
 
 ### Docker Compose

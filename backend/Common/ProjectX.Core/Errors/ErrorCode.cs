@@ -10,4 +10,8 @@ public enum ErrorCode
 
     NoIdentityIdInAccessToken = 6,
     NoIdentityRoleInAccessToken =7,
+
+    //Messenger
+    ConversationMessageNotFound = 8,
+    ConversationNotFound = 9,
 }

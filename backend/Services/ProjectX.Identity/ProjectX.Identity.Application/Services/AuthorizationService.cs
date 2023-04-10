@@ -38,7 +38,8 @@ public sealed class AuthorizationService
                 ProjectXAudience.Identity,
                 ProjectXAudience.Dashboard,
                 ProjectXAudience.Realtime,
-                ProjectXAudience.FileStorage)
+                ProjectXAudience.FileStorage,
+                ProjectXAudience.Messenger)
             .Build();
 
         await _dbContext.RefreshTokens.AddAsync(token.RefreshToken);

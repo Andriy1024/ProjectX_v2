@@ -69,11 +69,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.FileStorage.Databa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.FileStorage.Files", "Services\ProjectX.FileStorage\ProjectX.FileStorage.Files\ProjectX.FileStorage.Files.csproj", "{FCB27907-DBCA-44A2-A8EC-195C030DECE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Identity.Persistence", "Services\ProjectX.Identity\ProjectX.Identity.Persistence\ProjectX.Identity.Persistence.csproj", "{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Identity.Persistence", "Services\ProjectX.Identity\ProjectX.Identity.Persistence\ProjectX.Identity.Persistence.csproj", "{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Identity.Domain", "Services\ProjectX.Identity\ProjectX.Identity.Domain\ProjectX.Identity.Domain.csproj", "{DEFFA12C-127A-4165-A376-DB4691DCB8E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Identity.Domain", "Services\ProjectX.Identity\ProjectX.Identity.Domain\ProjectX.Identity.Domain.csproj", "{DEFFA12C-127A-4165-A376-DB4691DCB8E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Identity.Application", "Services\ProjectX.Identity\ProjectX.Identity.Application\ProjectX.Identity.Application.csproj", "{23AA698E-5BE6-4971-95D1-1029657463F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Identity.Application", "Services\ProjectX.Identity\ProjectX.Identity.Application\ProjectX.Identity.Application.csproj", "{23AA698E-5BE6-4971-95D1-1029657463F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messenger", "Messenger", "{309D5A3D-F605-45F3-BE50-8B088D97DD54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.Domain", "Services\ProjectX.Messenger\ProjectX.Messenger.Domain\ProjectX.Messenger.Domain.csproj", "{9783931D-009C-49AB-96B1-C987BE87B2C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.Persistence", "Services\ProjectX.Messenger\ProjectX.Messenger.Persistence\ProjectX.Messenger.Persistence.csproj", "{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.API", "Services\ProjectX.Messenger\ProjectX.Messenger.API\ProjectX.Messenger.API.csproj", "{0EFDBCAF-214F-4D95-83A1-F78568380A2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.Application", "Services\ProjectX.Messenger\ProjectX.Messenger.Application\ProjectX.Messenger.Application.csproj", "{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -177,6 +187,22 @@ Global
 		{23AA698E-5BE6-4971-95D1-1029657463F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23AA698E-5BE6-4971-95D1-1029657463F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23AA698E-5BE6-4971-95D1-1029657463F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9783931D-009C-49AB-96B1-C987BE87B2C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9783931D-009C-49AB-96B1-C987BE87B2C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9783931D-009C-49AB-96B1-C987BE87B2C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9783931D-009C-49AB-96B1-C987BE87B2C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EFDBCAF-214F-4D95-83A1-F78568380A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFDBCAF-214F-4D95-83A1-F78568380A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFDBCAF-214F-4D95-83A1-F78568380A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFDBCAF-214F-4D95-83A1-F78568380A2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,6 +238,11 @@ Global
 		{22E0DCBA-C1AE-47A3-B5B9-6549C0A4ABA7} = {C261DB7A-DA41-41D6-8B44-65BCB43395B2}
 		{DEFFA12C-127A-4165-A376-DB4691DCB8E3} = {C261DB7A-DA41-41D6-8B44-65BCB43395B2}
 		{23AA698E-5BE6-4971-95D1-1029657463F5} = {C261DB7A-DA41-41D6-8B44-65BCB43395B2}
+		{309D5A3D-F605-45F3-BE50-8B088D97DD54} = {C5401EA4-FF08-4682-AA70-D119357AE238}
+		{9783931D-009C-49AB-96B1-C987BE87B2C4} = {309D5A3D-F605-45F3-BE50-8B088D97DD54}
+		{80DF1F1F-D5E3-4D27-BCE9-923065894CC7} = {309D5A3D-F605-45F3-BE50-8B088D97DD54}
+		{0EFDBCAF-214F-4D95-83A1-F78568380A2E} = {309D5A3D-F605-45F3-BE50-8B088D97DD54}
+		{1F6F4EF4-625B-4F86-893F-BCAB3E648E96} = {309D5A3D-F605-45F3-BE50-8B088D97DD54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C6E7CD24-B1DF-4643-8D18-884E9669D929}

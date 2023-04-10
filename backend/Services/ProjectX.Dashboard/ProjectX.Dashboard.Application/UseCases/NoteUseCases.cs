@@ -6,7 +6,7 @@ public class NotesQuery : IQuery<IEnumerable<NoteContarct>>
 {
 }
 
-public class FindNoteQuery : IQuery<NoteContarct>
+public class FindNoteQuery : IQuery<NoteContarct>, IValidatable
 {
     public int Id { get; init; }
 
