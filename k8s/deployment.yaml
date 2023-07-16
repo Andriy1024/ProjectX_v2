@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projectx-dashboard-deployment
+  # labels:
+  #   app: projectx-dashboard-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: projectx-dashboard-app
+  template:
+    metadata:
+      labels:
+        app: projectx-dashboard-app
+    spec:
+      containers:
+      - name: projectx-dashboard-app
+        image: andriy1024/projectx-dashboard
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://+:80
+        # resources:
+        #   requests:
+        #     cpu: 100m,
+        #     memory: 100Mi
+        #   limits:
+        #     memory: 200Mi
+        #     cpu: 500m
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: projectx-dashboard-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: projectx-dashboard-app
+  ports:
+    - port: 8080
+      targetPort: 80
