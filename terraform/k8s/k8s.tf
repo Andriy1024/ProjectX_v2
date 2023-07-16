@@ -8,18 +8,8 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = random_pet.azurerm_kubernetes_cluster_dns_prefix.id
 
-#   addon_profile {
-#     http_application_routing {
-#         enabled = true
-#     }
-#   }
-
-   http_application_routing_enabled = true
-#   ingress_application_gateway {
-#     subnet_id = azurerm_subnet.appgwsubnet.id
-#     subnet_cidr = "10.0.0.0/24"
-#     gateway_name = "agic-appgw"
-#   }
+  #Addon http_application_routing
+  http_application_routing_enabled = true
 
   identity {
     type = "SystemAssigned"

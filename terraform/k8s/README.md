@@ -27,6 +27,8 @@ kubectl get pods --all-namespaces
 kubectl get service --all-namespaces
 
 kubectl apply -f hello-world-ingress.yaml
+
+kubectl get ingress
 ```
 
 Delete AKS resources
