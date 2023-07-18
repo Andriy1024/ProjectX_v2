@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        app: eshop
+        app: project-x
         service: sqldata
     spec:
       containers:

@@ -26,8 +26,7 @@ public static class Startup
         .ConfigureAspNetCore()
         .AddProjectXSwagger()
         .Services
-        .AddHealthChecks()
-        .AddCheck("self", () => HealthCheckResult.Healthy())
+        .AddCoreHealthChecks()
         .AddMongoDb(mongodbConnectionString: 
             app.Configuration
             .GetSection(nameof(MongoConfig))
@@ -47,19 +46,8 @@ public static class Startup
         app.UseProjectXCors();
         app.UseProjectXSwagger();
         app.UseErrorHandler();
-
-        app.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
-        {
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        });
-
-        app.MapHealthChecks("/liveness", new HealthCheckOptions
-        {
-            Predicate = r => r.Name.Contains("self")
-        });
-
+        app.UseCoreHeathChecks();
         app.MapHealthChecksUI();
-
         app.UseProjectXLogging();
         app.UseAppAuthentication();
         app.UseCorrelationContext();

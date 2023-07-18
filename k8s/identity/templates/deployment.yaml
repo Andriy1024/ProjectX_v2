@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: identity
+  labels:
+    app: project-x
+    service: identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: identity
+  template:
+    metadata:
+      labels:
+        app: project-x
+        service: identity
+    spec:
+      containers:
+        - name: identity-api
+          image: andriy1024/projectx-identity:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: 80
+              path: /liveness
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              port: 80
+              path: /hc
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          envFrom:
+            - configMapRef:
+                name: identity-cm

@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: identity-api
+  labels:
+    app: project-x
+    service: identity
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+      nodePort: 30035 #30000-32767
+  selector:
+    service: identity

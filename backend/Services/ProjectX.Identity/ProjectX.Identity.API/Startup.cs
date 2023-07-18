@@ -21,6 +21,8 @@ public static class Startup
         .AddAppAuthentication()
         .AddCurrentUser()
         .Services
+        .AddCoreHealthChecks()
+        .Services
         .AddTransient<AuthorizationService>()
         .AddPersistence();
 
@@ -29,6 +31,7 @@ public static class Startup
         app.UseProjectXCors();
         app.UseProjectXSwagger();
         app.UseErrorHandler();
+        app.UseCoreHeathChecks();
         app.UseProjectXLogging();
         app.UseHttpsRedirection(); //TODO: Consider to remove this
         app.UseAppAuthentication();

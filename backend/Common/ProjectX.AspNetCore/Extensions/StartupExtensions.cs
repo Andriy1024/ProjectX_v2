@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using HealthChecks.UI.Client;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectX.AspNetCore.Http;
@@ -57,6 +59,21 @@ public static class StartupExtensions
         app.UseSerilogRequestLogging(o =>
         {
             // o.EnrichDiagnosticContext = TODO: enrich with IContext
+        });
+
+        return app;
+    }
+
+    public static WebApplication UseCoreHeathChecks(this WebApplication app)
+    {
+        app.MapHealthChecks("/hc", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.MapHealthChecks("/liveness", new HealthCheckOptions
+        {
+            Predicate = r => r.Name.Contains("self")
         });
 
         return app;

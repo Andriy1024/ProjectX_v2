@@ -8,7 +8,6 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: Development
   ASPNETCORE_URLS: http://0.0.0.0:80
-  #ASPNETCORE_URLS: http://+:80
   MongoConfig__ConnectionString: mongodb://nosqldata
   HealthChecksUI__HealthChecks__0__Name: File Storage HTTP Check k8s
   HealthChecksUI__HealthChecks__0__Uri: http://localhost/hc

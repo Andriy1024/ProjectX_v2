@@ -15,6 +15,7 @@ using ProjectX.RabbitMq.Configuration;
 using ProjectX.Realtime;
 using ProjectX.AspNetCore.Extensions;
 using ProjectX.Dashboard.Application;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ProjectX.Dashboard.API;
 
@@ -30,6 +31,8 @@ public static class Startup
         .ConfigureAspNetCore()
         .AddProjectXSwagger()
         .Services
+        .AddCoreHealthChecks()
+        .Services
         .AddDbServices<DashboardDbContext>((p, o) =>
         {
             o.UseNpgsql(p.GetRequiredService<IDbConnectionStringAccessor>().GetConnectionString(),
@@ -44,6 +47,7 @@ public static class Startup
         app.UseProjectXCors();
         app.UseProjectXSwagger();
         app.UseErrorHandler();
+        app.UseCoreHeathChecks();
         app.UseProjectXLogging();
         app.UseAppAuthentication();
         app.UseCorrelationContext();

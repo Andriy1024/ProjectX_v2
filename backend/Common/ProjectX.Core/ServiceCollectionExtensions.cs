@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ProjectX.Core.Context;
 using ProjectX.Core.Json.Implementations;
 using ProjectX.Core.Json.Interfaces;
@@ -29,6 +30,13 @@ public static class ServiceCollectionExtensions
             .AddContexts();
 
         return services;
+    }
+
+    public static IHealthChecksBuilder AddCoreHealthChecks(this IServiceCollection services)
+    {
+        return services
+            .AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy());
     }
 
     public static IServiceCollection AddCoreSerialization(this IServiceCollection services)
