@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqldata
+  labels:
+    app: project-x
+    service: sqldata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: sqldata
+  template:
+    metadata:
+      labels:
+        app: eshop
+        service: sqldata
+    spec:
+      containers:
+        - name: sqldata
+          image: postgres:12.4
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: root

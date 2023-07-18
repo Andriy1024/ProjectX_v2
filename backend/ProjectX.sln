@@ -40,9 +40,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35C2978F-0478-4122-8D64-DC6C190AB448}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
+		..\doc\database.md = ..\doc\database.md
+		..\doc\docker.md = ..\doc\docker.md
+		..\doc\helm.md = ..\doc\helm.md
+		..\doc\idntity.md = ..\doc\idntity.md
 		docker-compose\infrastructure.yml = docker-compose\infrastructure.yml
 		README.md = README.md
 		docker-compose\services.yml = docker-compose\services.yml
+		..\doc\wsl.md = ..\doc\wsl.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.BackgroundWork", "Common\ProjectX.BackgroundWork\ProjectX.BackgroundWork.csproj", "{FE41FB68-AAB7-489C-84BD-684BD9DD96D0}"
@@ -77,13 +82,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Identity.Applicati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messenger", "Messenger", "{309D5A3D-F605-45F3-BE50-8B088D97DD54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.Domain", "Services\ProjectX.Messenger\ProjectX.Messenger.Domain\ProjectX.Messenger.Domain.csproj", "{9783931D-009C-49AB-96B1-C987BE87B2C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Messenger.Domain", "Services\ProjectX.Messenger\ProjectX.Messenger.Domain\ProjectX.Messenger.Domain.csproj", "{9783931D-009C-49AB-96B1-C987BE87B2C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.Persistence", "Services\ProjectX.Messenger\ProjectX.Messenger.Persistence\ProjectX.Messenger.Persistence.csproj", "{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Messenger.Persistence", "Services\ProjectX.Messenger\ProjectX.Messenger.Persistence\ProjectX.Messenger.Persistence.csproj", "{80DF1F1F-D5E3-4D27-BCE9-923065894CC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.API", "Services\ProjectX.Messenger\ProjectX.Messenger.API\ProjectX.Messenger.API.csproj", "{0EFDBCAF-214F-4D95-83A1-F78568380A2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Messenger.API", "Services\ProjectX.Messenger\ProjectX.Messenger.API\ProjectX.Messenger.API.csproj", "{0EFDBCAF-214F-4D95-83A1-F78568380A2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Messenger.Application", "Services\ProjectX.Messenger\ProjectX.Messenger.Application\ProjectX.Messenger.Application.csproj", "{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Messenger.Application", "Services\ProjectX.Messenger\ProjectX.Messenger.Application\ProjectX.Messenger.Application.csproj", "{1F6F4EF4-625B-4F86-893F-BCAB3E648E96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{B7516A2B-964D-433B-AABE-2DFB6ACEB892}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose\infrastructure.yml = docker-compose\infrastructure.yml
+		docker-compose\services.yml = docker-compose\services.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

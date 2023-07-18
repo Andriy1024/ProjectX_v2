@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: filestorage-api
+  labels:
+    app: project-x
+    service: filestorage
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+      nodePort: 30036 #30000-32767
+  selector:
+    service: filestorage
