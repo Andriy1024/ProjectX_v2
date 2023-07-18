@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="6.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.5" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ProjectX.AspNetCore\ProjectX.AspNetCore.csproj" />
     <ProjectReference Include="..\..\..\Common\ProjectX.Authentication\ProjectX.Authentication.csproj" />
     <ProjectReference Include="..\ProjectX.FileStorage.Application\ProjectX.FileStorage.Application.csproj" />

@@ -1,4 +1,5 @@
 ﻿using ProjectX.Core;
+using ProjectX.Core.Errors.Exceptions;
 using ProjectX.FileStorage.Files.Models;
 using System.Reflection;
 
@@ -48,7 +49,7 @@ public sealed class LocalFileStorage : IFileStorage
 
         if (!File.Exists(physicalLocation))
         {
-            throw new Exception($"File '{physicalLocation}' was not found.");
+            throw new NotFoundException(ErrorCode.NotFound, $"File '{physicalLocation}' was not found.");
         }
 
         return new FileStream(physicalLocation, FileMode.Open, FileAccess.Read, FileShare.Read);

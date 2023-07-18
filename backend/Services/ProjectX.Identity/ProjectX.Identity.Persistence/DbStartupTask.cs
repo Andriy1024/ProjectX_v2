@@ -22,7 +22,7 @@ public sealed class DbStartupTask : IStartupTask
             var newUser = new AccountEntity()
             {
                 Email = "root@root.com",
-                UserName = "root@rooe.com",
+                UserName = "root",
                 EmailConfirmed = false,
                 FirstName = "root",
                 LastName = "root"
