@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dashboard-cm
+  labels:
+    app: project-x
+    service: dashboard
+data:
+  ASPNETCORE_ENVIRONMENT: Development
+  ASPNETCORE_URLS: http://0.0.0.0:80
+  ConnectionStrings__DbConnection: Host=sqldata;Database=ProjectX.Dashboard;Username=postgres;Password=root
+  RabbitMq__Connection__HostName: rabbitmq

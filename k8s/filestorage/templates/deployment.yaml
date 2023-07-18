@@ -36,7 +36,7 @@ spec:
               port: 80
               path: /hc
             initialDelaySeconds: 10
-            periodSeconds: 30
+            periodSeconds: 10
             timeoutSeconds: 5
           envFrom:
             - configMapRef:
