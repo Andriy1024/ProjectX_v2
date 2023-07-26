@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
 using Serilog.Events;
 using ProjectX.Core.Observability.Logging;
+using OpenTelemetry.Logs;
 
 namespace ProjectX.Core.Observability;
 
@@ -60,6 +61,12 @@ public static class ObservabilitySetup
             Log.Logger = loggerConfig.CreateLogger();
 
             builder.ClearProviders()
+                   // NOTE: AddOpenTelemetry Logging need to be more investigated
+                   //.AddOpenTelemetry(options =>
+                   //{
+                   //    //options.SetResourceBuilder(appResourceBuilder);
+                   //    //options.AddConsoleExporter();
+                   //})
                    .AddSerilog();
         });
 
@@ -79,7 +86,8 @@ public static class ObservabilitySetup
             .AddSource(CoreTracer.Name)
             .AddJaegerExporter(o => 
             {
-                //ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
+                // ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
+                // https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Jaeger/README.md
                 o.AgentHost = EnvironmentVariables.JAEGER_HOST;
                 o.AgentPort = EnvironmentVariables.JAEGER_PORT;
             })
