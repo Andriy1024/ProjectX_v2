@@ -50,6 +50,7 @@ public static class ObservabilitySetup
                  .Enrich.WithSpan()
                  .WriteTo.Console()
                  .WriteTo.Seq(EnvironmentVariables.SEQ_URI)
+                 //.WriteTo.Elasticsearch()
                  .WriteTo.File(
                     path: "logs/log.txt", 
                     rollingInterval: RollingInterval.Day,
