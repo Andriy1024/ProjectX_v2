@@ -9,6 +9,7 @@ public interface IMongoRepository<TEntity, TIdentifiable>
     public IMongoCollection<TEntity> Collection { get; }
     Task<TEntity> GetAsync(TIdentifiable id, CancellationToken cancellationToken = default);
     Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default) where TQuery : IPagedQuery;
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);

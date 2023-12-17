@@ -22,7 +22,10 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
 		=> Collection.Find(predicate).SingleOrDefaultAsync(cancellationToken);
 
-	public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        => await Collection.AsQueryable().ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
 		=> await Collection.Find(predicate).ToListAsync(cancellationToken);
 
 	public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default) 
