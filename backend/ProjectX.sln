@@ -42,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.dockerignore = .dockerignore
 		..\doc\database.md = ..\doc\database.md
 		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		..\doc\docker.md = ..\doc\docker.md
 		..\doc\helm.md = ..\doc\helm.md
 		..\doc\idntity.md = ..\doc\idntity.md
