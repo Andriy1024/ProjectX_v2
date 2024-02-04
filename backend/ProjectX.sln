@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		..\doc\database.md = ..\doc\database.md
+		Directory.Build.props = Directory.Build.props
 		..\doc\docker.md = ..\doc\docker.md
 		..\doc\helm.md = ..\doc\helm.md
 		..\doc\idntity.md = ..\doc\idntity.md
@@ -102,7 +103,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Search.API", "Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Realtime.PubSub", "Services\ProjectX.Realtime\ProjectX.Realtime.PubSub\ProjectX.Realtime.PubSub.csproj", "{CA0BFAAE-8DC9-48D7-874F-AF771F2A56B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Realtime.Websocket", "Services\ProjectX.Realtime\ProjectX.Realtime.Websocket\ProjectX.Realtime.Websocket.csproj", "{B5C982B2-A362-496A-A380-890A57375136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Realtime.Websocket", "Services\ProjectX.Realtime\ProjectX.Realtime.Websocket\ProjectX.Realtime.Websocket.csproj", "{B5C982B2-A362-496A-A380-890A57375136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
