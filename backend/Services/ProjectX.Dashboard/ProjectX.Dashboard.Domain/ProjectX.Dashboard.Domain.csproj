@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ProjectX.Core\ProjectX.Core.csproj" />
   </ItemGroup>
-
 </Project>

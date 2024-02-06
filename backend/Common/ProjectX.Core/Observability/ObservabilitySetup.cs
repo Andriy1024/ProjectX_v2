@@ -82,55 +82,55 @@ public static class ObservabilitySetup
 
         var serviceName = $"{app.Environment.ApplicationName}.{app.Environment.EnvironmentName}";
 
-        app.Services
-            .AddOpenTelemetryTracing((builder) => builder
-            .AddSource(CoreTracer.Name)
-            .AddJaegerExporter(o => 
-            {
-                // ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
-                // https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Jaeger/README.md
-                o.AgentHost = EnvironmentVariables.JAEGER_HOST;
-                o.AgentPort = EnvironmentVariables.JAEGER_PORT;
-            })
-            .AddConsoleExporter(options => 
-            {
-                options.Targets = ConsoleExporterOutputTargets.Console;
-            })
-            .AddAspNetCoreInstrumentation(options =>
-            {
-                // Exclude swagger
-                options.Filter = c => 
-                    !c.Request.Path.Value.Contains("swagger") && 
-                    !c.Request.Path.Value.Contains("_vs/browserLink") &&
-                    !c.Request.Path.Value.Contains("_framework/aspnetcore-browser-refresh.js");
-                options.RecordException = true;
-                options.Enrich = (activity, @event, @object) =>
-                {
-                    if (@event == "OnStopActivity")
-                    {
-                        ExtractContextFromResponse(activity, @object);
-                    }
-                };
-            })
-            .AddHttpClientInstrumentation(options =>
-            {
-                options.Filter = message =>
-                    message != null &&
-                    message.RequestUri != null &&
-                   !message.RequestUri.Host.Contains("visualstudio");
-            })
-            .AddSqlClientInstrumentation(options =>
-            {
-                options.EnableConnectionLevelAttributes = true;
-                options.SetDbStatementForStoredProcedure = true;
-                options.SetDbStatementForText = true;
-                options.RecordException = true;
-            })
-            .SetSampler(new AlwaysOnSampler())
-            .SetResourceBuilder(ResourceBuilder
-                .CreateDefault()
-                .AddTelemetrySdk()
-                .AddService(serviceName, serviceVersion: serviceVersion, serviceInstanceId: Environment.MachineName)));
+        //app.Services
+        //    .AddOpenTelemetryTracing((builder) => builder
+        //    .AddSource(CoreTracer.Name)
+        //    .AddJaegerExporter(o => 
+        //    {
+        //        // ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
+        //        // https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Jaeger/README.md
+        //        o.AgentHost = EnvironmentVariables.JAEGER_HOST;
+        //        o.AgentPort = EnvironmentVariables.JAEGER_PORT;
+        //    })
+        //    .AddConsoleExporter(options => 
+        //    {
+        //        options.Targets = ConsoleExporterOutputTargets.Console;
+        //    })
+        //    .AddAspNetCoreInstrumentation(options =>
+        //    {
+        //        // Exclude swagger
+        //        options.Filter = c => 
+        //            !c.Request.Path.Value.Contains("swagger") && 
+        //            !c.Request.Path.Value.Contains("_vs/browserLink") &&
+        //            !c.Request.Path.Value.Contains("_framework/aspnetcore-browser-refresh.js");
+        //        options.RecordException = true;
+        //        options.Enrich = (activity, @event, @object) =>
+        //        {
+        //            if (@event == "OnStopActivity")
+        //            {
+        //                ExtractContextFromResponse(activity, @object);
+        //            }
+        //        };
+        //    })
+        //    .AddHttpClientInstrumentation(options =>
+        //    {
+        //        options.Filter = message =>
+        //            message != null &&
+        //            message.RequestUri != null &&
+        //           !message.RequestUri.Host.Contains("visualstudio");
+        //    })
+        //    .AddSqlClientInstrumentation(options =>
+        //    {
+        //        options.EnableConnectionLevelAttributes = true;
+        //        options.SetDbStatementForStoredProcedure = true;
+        //        options.SetDbStatementForText = true;
+        //        options.RecordException = true;
+        //    })
+        //    .SetSampler(new AlwaysOnSampler())
+        //    .SetResourceBuilder(ResourceBuilder
+        //        .CreateDefault()
+        //        .AddTelemetrySdk()
+        //        .AddService(serviceName, serviceVersion: serviceVersion, serviceInstanceId: Environment.MachineName)));
 
         return app;
 

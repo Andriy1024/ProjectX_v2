@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\ProjectX.RabbitMq\ProjectX.RabbitMq.csproj" />
   </ItemGroup>
-
 </Project>
