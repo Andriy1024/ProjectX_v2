@@ -82,83 +82,90 @@ public static class ObservabilitySetup
 
         var serviceName = $"{app.Environment.ApplicationName}.{app.Environment.EnvironmentName}";
 
-        //app.Services
-        //    .AddOpenTelemetryTracing((builder) => builder
-        //    .AddSource(CoreTracer.Name)
-        //    .AddJaegerExporter(o => 
-        //    {
-        //        // ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
-        //        // https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Jaeger/README.md
-        //        o.AgentHost = EnvironmentVariables.JAEGER_HOST;
-        //        o.AgentPort = EnvironmentVariables.JAEGER_PORT;
-        //    })
-        //    .AddConsoleExporter(options => 
-        //    {
-        //        options.Targets = ConsoleExporterOutputTargets.Console;
-        //    })
-        //    .AddAspNetCoreInstrumentation(options =>
-        //    {
-        //        // Exclude swagger
-        //        options.Filter = c => 
-        //            !c.Request.Path.Value.Contains("swagger") && 
-        //            !c.Request.Path.Value.Contains("_vs/browserLink") &&
-        //            !c.Request.Path.Value.Contains("_framework/aspnetcore-browser-refresh.js");
-        //        options.RecordException = true;
-        //        options.Enrich = (activity, @event, @object) =>
-        //        {
-        //            if (@event == "OnStopActivity")
-        //            {
-        //                ExtractContextFromResponse(activity, @object);
-        //            }
-        //        };
-        //    })
-        //    .AddHttpClientInstrumentation(options =>
-        //    {
-        //        options.Filter = message =>
-        //            message != null &&
-        //            message.RequestUri != null &&
-        //           !message.RequestUri.Host.Contains("visualstudio");
-        //    })
-        //    .AddSqlClientInstrumentation(options =>
-        //    {
-        //        options.EnableConnectionLevelAttributes = true;
-        //        options.SetDbStatementForStoredProcedure = true;
-        //        options.SetDbStatementForText = true;
-        //        options.RecordException = true;
-        //    })
-        //    .SetSampler(new AlwaysOnSampler())
-        //    .SetResourceBuilder(ResourceBuilder
-        //        .CreateDefault()
-        //        .AddTelemetrySdk()
-        //        .AddService(serviceName, serviceVersion: serviceVersion, serviceInstanceId: Environment.MachineName)));
+        app.Services
+            .AddOpenTelemetry()
+            .WithTracing(tracing =>
+            {
+                tracing
+                    .AddSource(CoreTracer.Name)
+                    .AddConsoleExporter(o =>
+                    {
+                        o.Targets = ConsoleExporterOutputTargets.Console;
+                    })
+                    .AddJaegerExporter(o =>
+                    {
+                        // ENV: OTEL_EXPORTER_JAEGER_ENDPOINT
+                        // https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Jaeger/README.md
+                        o.AgentHost = EnvironmentVariables.JAEGER_HOST;
+                        o.AgentPort = EnvironmentVariables.JAEGER_PORT;
+                    })
+                    .AddAspNetCoreInstrumentation(options =>
+                    {
+                        // Exclude swagger
+                        options.Filter = c =>
+                             c.Request.Path.Value != null &&
+                            !c.Request.Path.Value.Contains("swagger") &&
+                            !c.Request.Path.Value.Contains("_vs/browserLink") &&
+                            !c.Request.Path.Value.Contains("_framework/aspnetcore-browser-refresh.js");
+                        
+                        options.RecordException = true;
+                        
+                        options.EnrichWithHttpResponse = (act, respo) => 
+                        {
+                            ExtractContextFromResponse(act, respo);
+                        };
+                    })
+                    .AddHttpClientInstrumentation(options =>
+                    {
+                        options.FilterHttpRequestMessage = message =>
+                            message?.RequestUri != null &&
+                            !message.RequestUri.Host.Contains("visualstudio");
+                    })
+                    .AddSqlClientInstrumentation(options =>
+                    {
+                        options.EnableConnectionLevelAttributes = true;
+                        options.SetDbStatementForStoredProcedure = true;
+                        options.SetDbStatementForText = true;
+                        options.RecordException = true;
+                    })
+                    .AddRedisInstrumentation()
+                    .SetSampler(new AlwaysOnSampler());
+            })
+            .ConfigureResource(builder =>
+            {
+                builder
+                    .AddTelemetrySdk()
+                    .AddService(serviceName, 
+                        serviceVersion: serviceVersion,
+                        serviceInstanceId: Environment.MachineName);
+            });
 
         return app;
+    }
 
-        static void ExtractContextFromResponse(Activity activity, object @object)
+    private static void ExtractContextFromResponse(Activity activity, HttpResponse response)
+    {
+        var httpContext = response?.HttpContext;
+        var user = httpContext?.User;
+
+        if (activity == null || user == null) return;
+
+        var identityId = user.Claims.FirstOrDefault(c => c.Type == ApplicationClaimTypes.IdentityId)?.Value;
+
+        if (!string.IsNullOrWhiteSpace(identityId))
         {
-            if (activity == null) return;
-
-            var httpContext = (@object as HttpResponse)?.HttpContext;
-
-            if (httpContext?.User == null) return;
-
-            var identityId = httpContext.User.Claims.FirstOrDefault(c => c.Type == ApplicationClaimTypes.IdentityId)?.Value;
-
-            if (!string.IsNullOrWhiteSpace(identityId))
-            {
-                activity.SetTag("identity.id", identityId);
-            }
-
-            var identityRole = httpContext.User.Claims.FirstOrDefault(c => c.Type == ApplicationClaimTypes.IdentityRole)?.Value;
-
-            if (!string.IsNullOrWhiteSpace(identityRole))
-            {
-                activity.SetTag("identity.role", identityRole);
-            }
-
-            //httpContext.Response.Headers.Add("trace-id", activity.TraceId.ToString() ?? string.Empty);
-            
-            //httpContext.Response.Headers.Add("span-id", activity.SpanId.ToString() ?? string.Empty);
+            activity.SetTag("identity.id", identityId);
         }
+
+        var identityRole = user.Claims.FirstOrDefault(c => c.Type == ApplicationClaimTypes.IdentityRole)?.Value;
+
+        if (!string.IsNullOrWhiteSpace(identityRole))
+        {
+            activity.SetTag("identity.role", identityRole);
+        }
+
+        //httpContext.Response.Headers.Add("trace-id", activity.TraceId.ToString() ?? string.Empty);
+
+        //httpContext.Response.Headers.Add("span-id", activity.SpanId.ToString() ?? string.Empty);
     }
 }
