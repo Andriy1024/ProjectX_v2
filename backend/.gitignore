@@ -1,0 +1,12 @@
+# Environment files with secrets
+docker-compose/.env
+
+# Docker volumes
+**/volumes/
+
+# Common .NET ignores
+bin/
+obj/
+*.user
+*.suo
+.vs/

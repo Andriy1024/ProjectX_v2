@@ -2,95 +2,130 @@ version: '3.7'
 
 services:
   projectx-postgres:
-    image: postgres:12.4
-    container_name: projectx-postgres
-    restart: unless-stopped
+    image: docker.io/postgres:15-alpine
+    restart: always
+    env_file:
+      - .env
     networks:
-      - projectx 
+      - projectx
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-    # volumes:
-    #   - /data/postgresql_data:/var/lib/postgresql/data/
-    
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - projectx-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   projectx-rabbitmq:
-    image: rabbitmq:3-management
-    container_name: projectx-rabbitmq
-    restart: unless-stopped
+    image: docker.io/rabbitmq:3.13-management-alpine
+    restart: always
+    env_file:
+      - .env
     networks:
-      - projectx 
+      - projectx
     ports:
       - 15672:15672
       - 5672:5672
     environment:
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
-      RABBITMQ_DEFAULT_VHOST: "/"
-    # volumes:
-    #   - /data/rabbitmq/data/:/var/lib/rabbitmq/
-    #   - /data/rabbitmq/logs/:/var/log/rabbitmq/
-      
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+    volumes:
+      - projectx-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   projectx-redis:
-    container_name: projectx-redis
-    image: 'bitnami/redis:5.0.5'
-    environment:
-      #- ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_PASSWORD=RedisPassword
+    image: docker.io/redis:7-alpine
+    restart: always
+    env_file:
+      - .env
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     networks:
       - projectx
     ports:
       - "6379:6379"
-    # volumes:
-    #   - /data/redis:/bitnami/redis/data
-    
-  # Reverse Proxy
-  projectx-nginx:
-    image: projectx-nginx
-    build: 
-      context: .
-      dockerfile: nginx/Dockerfile
-    container_name: projectx-nginx
-    # depends_on:
-      # - projectx-identity   # http://localhost/identity/swagger
-      # - projectx-blog       # http://localhost/blog/swagger
-      # - projectx-messenger  # http://localhost/messenger/swagger
-      # - projectx-realtime   # http://localhost/realtime/swagger WebSocket has not configured for Nginx yet.
-    networks:
-      - projectx
-    ports:
-      - 80:80
-      - 443:443
+    volumes:
+      - projectx-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a \"$$REDIS_PASSWORD\" ping | grep PONG || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
-  #Seq
   projectx-seq:
-    image: datalust/seq:latest
-    container_name: projectx-seq
-    restart: unless-stopped
+    image: docker.io/datalust/seq:2024.1
+    restart: always
+    env_file:
+      - .env
     environment:
-    - ACCEPT_EULA=Y
+      - ACCEPT_EULA=${SEQ_ACCEPT_EULA}
     networks:
       - projectx
     ports:
       - "5341:80"
-  
-  #Jaeger
+    volumes:
+      - projectx-seq-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/api || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
   projectx-jaeger:
-    image: jaegertracing/opentelemetry-all-in-one
-    container_name: projectx-jaeger
-    restart: unless-stopped
+    image: docker.io/jaegertracing/all-in-one:1.48
+    restart: always
     networks:
       - projectx
     ports:
-      - 5775:5775/udp
       - 5778:5778
       - 6831:6831/udp
       - 6832:6832/udp
-      - 9411:9411
       - 14268:14268
       - 16686:16686
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:16686/ || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   projectx:
     name: projectx-network
+
+volumes:
+  projectx-postgres-data:
+  projectx-rabbitmq-data:
+  projectx-redis-data:
+  projectx-seq-data:
+  projectx-jaeger-data:
+
+# Start services
+# podman compose -f infrastructure.yml up -d
+
+# Check status
+# podman compose -f infrastructure.yml ps
+
+# View logs
+# podman compose -f infrastructure.yml logs
+
+# Stop services
+# podman compose -f infrastructure.yml down
+
+# Stop services
+# podman compose -f infrastructure.yml down -v
