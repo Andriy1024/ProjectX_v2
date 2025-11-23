@@ -3,7 +3,7 @@
 
     <!-- Modern Angular: Using signals - no async pipe needed! -->
     @for (todo of todos(); track todo.id) {
-      <div @todoItemAnimation
+      <div
         class="todo-item-container"
         (click)="toggleCompleted(todo)"
         >

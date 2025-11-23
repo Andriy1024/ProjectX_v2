@@ -1,4 +1,3 @@
-import { animate, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -15,18 +14,7 @@ import { LoggerService } from '../../services/logging/logger.service';
     styleUrls: ['./todos.component.scss'],
     standalone: true,
     imports: [CommonModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        trigger('todoItemAnimation', [
-            transition(':leave', [
-                animate(200, style({
-                    opacity: 0,
-                    height: 0,
-                    marginBottom: 0
-                }))
-            ])
-        ])
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodosComponent {
   // Modern Angular: Using signals instead of Observables
