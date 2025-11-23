@@ -45,6 +45,7 @@ public static class Startup
     public static void Configure(WebApplication app) 
     {
         app.UseProjectXCors();
+        
         app.UseProjectXSwagger();
         app.UseErrorHandler();
         app.UseCoreHeathChecks();
