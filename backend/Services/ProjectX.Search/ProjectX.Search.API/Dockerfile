@@ -12,12 +12,12 @@ COPY Directory.Build.props .
 COPY Directory.Packages.props .
 #Build context must be backend folder
 COPY ./Common ./Common/
-COPY ./Services/ProjectX.Dashboard ./Services/ProjectX.Dashboard/
-WORKDIR "/src/Services/ProjectX.Dashboard/ProjectX.Dashboard.API"
-RUN dotnet restore "ProjectX.Dashboard.API.csproj"
-RUN dotnet publish "ProjectX.Dashboard.API.csproj" -c Release -o /app/publish --no-restore
+COPY ./Services/ProjectX.Search ./Services/ProjectX.Search/
+WORKDIR "/src/Services/ProjectX.Search/ProjectX.Search.API"
+RUN dotnet restore "ProjectX.Search.API.csproj"
+RUN dotnet publish "ProjectX.Search.API.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "ProjectX.Dashboard.API.dll"]
+ENTRYPOINT ["dotnet", "ProjectX.Search.API.dll"]
