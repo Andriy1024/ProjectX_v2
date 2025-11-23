@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Bookmark } from '../models/bookmark.model';
 import { ButtonType, ControlType, FieldType } from '../models/dynamic-form.model';
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
 import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormStateService';
+import { BookmarkTileComponent } from '../bookmark-tile/bookmark-tile.component';
 
 @Component({
     selector: 'app-bookmarks',
     templateUrl: './bookmarks.component.html',
     styleUrls: ['./bookmarks.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule, BookmarkTileComponent]
 })
 export class BookmarksComponent implements OnInit {
 

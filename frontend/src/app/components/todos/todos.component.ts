@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { from, Observable} from 'rxjs';
 import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
@@ -11,6 +12,8 @@ import { TodoService } from '../../services/todo/todo.service';
     selector: 'app-todos',
     templateUrl: './todos.component.html',
     styleUrls: ['./todos.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
     animations: [
         trigger('todoItemAnimation', [
             transition(':leave', [
@@ -21,8 +24,7 @@ import { TodoService } from '../../services/todo/todo.service';
                 }))
             ])
         ])
-    ],
-    standalone: false
+    ]
 })
 export class TodosComponent implements OnInit {
 

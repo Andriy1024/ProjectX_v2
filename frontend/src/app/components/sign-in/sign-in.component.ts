@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthRequest } from 'src/app/auth/auth.models';
 import { AuthService } from 'src/app/auth/services/auth-service.service';
 import { ButtonType, ControlType, FieldType } from 'src/app/models/dynamic-form.model';
 import { DynamicFormStateService } from 'src/app/services/dynamic-form/DynamicFormStateService';
+import { DynamicFormModule } from '../dynamic-form/dynamic-form.module';
 
 @Component({
     selector: 'app-sign-in',
     templateUrl: './sign-in.component.html',
     styleUrls: ['./sign-in.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, DynamicFormModule]
 })
 export class SignInComponent implements OnInit {
 

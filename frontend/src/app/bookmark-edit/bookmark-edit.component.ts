@@ -1,15 +1,18 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Bookmark } from '../models/bookmark.model';
 import { ButtonType, ControlType, FieldType } from '../models/dynamic-form.model';
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
 import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormStateService';
+import { DynamicFormModule } from '../components/dynamic-form/dynamic-form.module';
 
 @Component({
     selector: 'app-bookmark-edit',
     templateUrl: './bookmark-edit.component.html',
     styleUrls: ['./bookmark-edit.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, DynamicFormModule]
 })
 export class BookmarkEditComponent implements OnInit {
 

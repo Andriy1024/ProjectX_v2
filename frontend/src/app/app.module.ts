@@ -8,34 +8,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { NotificationComponent } from './notification/notification.component';
-import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
-import { NotesComponent } from './components/notes/notes.component';
-import { TodosComponent } from './components/todos/todos.component';
-
-import { BookmarksComponent } from './bookmarks/bookmarks.component';
-import { BookmarksManageComponent } from './bookmarks-manage/bookmarks-manage.component';
-import { BookmarkEditComponent } from './bookmark-edit/bookmark-edit.component';
-import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
+import { DynamicFormModule } from './components/dynamic-form/dynamic-form.module';
 
 import { DASHBOARD_API_URL, IDENTITY_API_URL, REALTIME_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
 import { applicationHttpInterceptor } from './http/application-http.interceptor.fn';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { SignInComponent } from './components/sign-in/sign-in.component';
 import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({ declarations: [
         AppComponent,
         TabsComponent,
-        NotificationComponent,
-        DynamicFormComponent,
-        TodosComponent,
-        NotesComponent,
-        BookmarksComponent,
-        BookmarksManageComponent,
-        BookmarkEditComponent,
-        BookmarkTileComponent,
-        SignInComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         CommonModule,
@@ -43,6 +26,8 @@ import { JwtModule } from '@auth0/angular-jwt';
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
+        NotificationComponent,
+        DynamicFormModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter: tokenGetter,

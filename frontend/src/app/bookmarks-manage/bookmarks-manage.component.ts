@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { from, Observable, switchMap, tap } from 'rxjs';
 import { Bookmark } from '../models/bookmark.model';
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
@@ -8,7 +9,8 @@ import { BookmarkService } from '../services/bookmarks/bookmark.service';
     selector: 'app-bookmarks-manage',
     templateUrl: './bookmarks-manage.component.html',
     styleUrls: ['./bookmarks-manage.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule]
 })
 export class BookmarksManageComponent implements OnInit {
   public bookmarks$: Observable<Bookmark[]> = from([]);

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
@@ -10,7 +11,8 @@ import { NoteService } from '../../services/notes/note.service';
     selector: 'app-notes',
     templateUrl: './notes.component.html',
     styleUrls: ['./notes.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule]
 })
 export class NotesComponent implements OnInit {
 

@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { scan } from 'rxjs';
 import { NotificationService } from '../services/notification/notification.service';
 
@@ -7,6 +8,8 @@ import { NotificationService } from '../services/notification/notification.servi
     selector: 'app-notification',
     templateUrl: './notification.component.html',
     styleUrls: ['./notification.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
     animations: [
         trigger('notificationAnim', [
             transition(':enter', [
@@ -23,8 +26,7 @@ import { NotificationService } from '../services/notification/notification.servi
                 }))
             ])
         ])
-    ],
-    standalone: false
+    ]
 })
 export class NotificationComponent implements OnInit {
 
