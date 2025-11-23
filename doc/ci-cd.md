@@ -89,11 +89,24 @@ This script generates a JSON matrix that tells the next jobs what to build.
 ```
 
 **Explanation:**
-*   It starts with a hardcoded JSON array of *all* possible services (`SERVICES`).
-*   It checks if the `common` filter was triggered.
-    *   **If yes**: It sets the final matrix to the full list of services.
-    *   **If no**: It uses `jq` (a JSON processor) to select only the services whose `name` matches the changed filters.
-*   The result is saved to `$GITHUB_OUTPUT` so subsequent jobs can read it.
+
+This step uses a **Bash script** (indicated by `run: |`) to programmatically decide what needs to be built. Here is a breakdown for beginners:
+
+1.  **Defining the "Database" (`SERVICES`)**:
+    *   We create a JSON array variable named `SERVICES`.
+    *   This acts as a lookup table containing the configuration for every microservice (its name, where its Dockerfile is, and what the image should be called).
+
+2.  **Reading Inputs (`CHANGED_FILTERS`)**:
+    *   `steps.filter.outputs.changes` comes from the previous "Check for changes" step.
+    *   It returns a list of filters that matched, e.g., `['dashboard', 'identity']`.
+
+3.  **The Logic (If/Else)**:
+    *   **Scenario A (Common Code)**: The script checks if "common" is in the list of changes. If you changed shared code, we must rebuild *everything* to ensure the changes didn't break anything.
+    *   **Scenario B (Specific Service)**: If only specific services changed, we use a tool called `jq` (a command-line JSON processor). It filters the `SERVICES` list to keep *only* the items where the `name` matches our changed filters.
+
+4.  **Outputting Results (`$GITHUB_OUTPUT`)**:
+    *   In GitHub Actions, you can't just set a variable to pass it to another job. You must write it to a special file path stored in `$GITHUB_OUTPUT`.
+    *   `echo "matrix=..." >> $GITHUB_OUTPUT` saves our calculated JSON so the `docker-build` job can read it later.
 
 ---
 
