@@ -42,7 +42,7 @@ export const applicationHttpInterceptor: HttpInterceptorFn = (request, next) => 
     );
   };
 
-  return next(addAuthHeader(request)).pipe(
+  return next(request).pipe(
     catchError(err => {
       return err.status === 401
         ? refreshToken(request, err)
