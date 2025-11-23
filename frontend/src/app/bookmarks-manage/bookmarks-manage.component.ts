@@ -5,9 +5,10 @@ import { Bookmark } from '../models/bookmark.model';
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
 
 @Component({
-  selector: 'app-bookmarks-manage',
-  templateUrl: './bookmarks-manage.component.html',
-  styleUrls: ['./bookmarks-manage.component.scss']
+    selector: 'app-bookmarks-manage',
+    templateUrl: './bookmarks-manage.component.html',
+    styleUrls: ['./bookmarks-manage.component.scss'],
+    standalone: false
 })
 export class BookmarksManageComponent implements OnInit {
   public bookmarks$: Observable<Bookmark[]> = from([]);

@@ -4,26 +4,27 @@ import { scan } from 'rxjs';
 import { NotificationService } from '../services/notification/notification.service';
 
 @Component({
-  selector: 'app-notification',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss'],
-  animations: [
-    trigger('notificationAnim', [
-      transition(':enter', [
-        style({
-          opacity: 0,
-          transform: 'translateY(5px)'
-        }),
-        animate(250)
-      ]),
-      transition(':leave', [
-        animate(125, style({
-          opacity: 0,
-          transfrom: 'scale(0.85)'
-        }))
-      ])
-    ])
-  ]
+    selector: 'app-notification',
+    templateUrl: './notification.component.html',
+    styleUrls: ['./notification.component.scss'],
+    animations: [
+        trigger('notificationAnim', [
+            transition(':enter', [
+                style({
+                    opacity: 0,
+                    transform: 'translateY(5px)'
+                }),
+                animate(250)
+            ]),
+            transition(':leave', [
+                animate(125, style({
+                    opacity: 0,
+                    transfrom: 'scale(0.85)'
+                }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class NotificationComponent implements OnInit {
 

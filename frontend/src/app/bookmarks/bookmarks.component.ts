@@ -7,9 +7,10 @@ import { BookmarkService } from '../services/bookmarks/bookmark.service';
 import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormStateService';
 
 @Component({
-  selector: 'app-bookmarks',
-  templateUrl: './bookmarks.component.html',
-  styleUrls: ['./bookmarks.component.scss']
+    selector: 'app-bookmarks',
+    templateUrl: './bookmarks.component.html',
+    styleUrls: ['./bookmarks.component.scss'],
+    standalone: false
 })
 export class BookmarksComponent implements OnInit {
 

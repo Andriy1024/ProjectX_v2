@@ -7,9 +7,10 @@ import { DynamicFormStateService } from '../../services/dynamic-form/DynamicForm
 import { NoteService } from '../../services/notes/note.service';
 
 @Component({
-  selector: 'app-notes',
-  templateUrl: './notes.component.html',
-  styleUrls: ['./notes.component.scss']
+    selector: 'app-notes',
+    templateUrl: './notes.component.html',
+    styleUrls: ['./notes.component.scss'],
+    standalone: false
 })
 export class NotesComponent implements OnInit {
 

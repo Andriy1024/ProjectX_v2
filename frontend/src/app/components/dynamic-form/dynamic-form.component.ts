@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { ButtonType, ControlType, FieldType, IDynamicFormConfig, IFormControl } from 'src/app/models/dynamic-form.model';
 import { DynamicFormStateService } from 'src/app/services/dynamic-form/DynamicFormStateService';
 
 @Component({
-  selector: 'app-dynamic-form',
-  templateUrl: './dynamic-form.component.html',
-  styleUrls: ['./dynamic-form.component.scss']
+    selector: 'app-dynamic-form',
+    templateUrl: './dynamic-form.component.html',
+    styleUrls: ['./dynamic-form.component.scss'],
+    standalone: false
 })
 export class DynamicFormComponent implements OnInit {
 
   public config: IDynamicFormConfig | null = null;
-  public form: FormGroup | undefined;
+  public form: UntypedFormGroup | undefined;
   public controlTypes = ControlType;
   public fieldTypes = FieldType;
   public buttonTypes = ButtonType;
@@ -35,9 +36,9 @@ export class DynamicFormComponent implements OnInit {
             }
 
             this.config = config!;
-            this.form = new FormGroup({});
+            this.form = new UntypedFormGroup({});
             this.config.controls.forEach(x => {
-              const control = new FormControl(this.config!.data?.[x.key] ?? null, this.getValidators(x));
+              const control = new UntypedFormControl(this.config!.data?.[x.key] ?? null, this.getValidators(x));
               this.form!.addControl(x.key, control);
             });
           }

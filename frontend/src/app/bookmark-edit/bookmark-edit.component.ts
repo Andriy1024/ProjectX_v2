@@ -6,9 +6,10 @@ import { BookmarkService } from '../services/bookmarks/bookmark.service';
 import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormStateService';
 
 @Component({
-  selector: 'app-bookmark-edit',
-  templateUrl: './bookmark-edit.component.html',
-  styleUrls: ['./bookmark-edit.component.scss']
+    selector: 'app-bookmark-edit',
+    templateUrl: './bookmark-edit.component.html',
+    styleUrls: ['./bookmark-edit.component.scss'],
+    standalone: false
 })
 export class BookmarkEditComponent implements OnInit {
 

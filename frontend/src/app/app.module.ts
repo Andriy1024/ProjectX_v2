@@ -19,48 +19,41 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
 import { DASHBOARD_API_URL, IDENTITY_API_URL, REALTIME_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
 import { ApplicationHttpInterceptor } from './http/application-http.interceptor';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { JwtModule } from '@auth0/angular-jwt';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    TabsComponent,
-    NotificationComponent,
-    DynamicFormComponent,
-    TodosComponent,
-    NotesComponent,
-
-    BookmarksComponent,
-    BookmarksManageComponent,
-    BookmarkEditComponent,
-    BookmarkTileComponent,
-    SignInComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        allowedDomains: environment.tokenWhiteListedDomains,
-        disallowedRoutes: [''],
-      },
-    })
-  ],
-  providers: [
-    { provide: IDENTITY_API_URL, useValue: environment.identityApi },
-    { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
-    { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
-    { provide: HTTP_INTERCEPTORS, useClass: ApplicationHttpInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        TabsComponent,
+        NotificationComponent,
+        DynamicFormComponent,
+        TodosComponent,
+        NotesComponent,
+        BookmarksComponent,
+        BookmarksManageComponent,
+        BookmarkEditComponent,
+        BookmarkTileComponent,
+        SignInComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: tokenGetter,
+                allowedDomains: environment.tokenWhiteListedDomains,
+                disallowedRoutes: [''],
+            },
+        })], providers: [
+        { provide: IDENTITY_API_URL, useValue: environment.identityApi },
+        { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
+        { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
+        { provide: HTTP_INTERCEPTORS, useClass: ApplicationHttpInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
 
 export function tokenGetter()
