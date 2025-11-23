@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { scan } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationService } from '../services/notification/notification.service';
 
 @Component({
@@ -10,6 +10,7 @@ import { NotificationService } from '../services/notification/notification.servi
     styleUrls: ['./notification.component.scss'],
     standalone: true,
     imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('notificationAnim', [
             transition(':enter', [
@@ -28,20 +29,26 @@ import { NotificationService } from '../services/notification/notification.servi
         ])
     ]
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent {
 
-  public notification: string | null = null;
+  public readonly notification = signal<string | null>(null);
 
-  private timeout: any;
+  private timeoutId: ReturnType<typeof setTimeout> | undefined;
+  private readonly _notificationService = inject(NotificationService);
 
-  constructor(private readonly _notificationService: NotificationService) { }
-
-  ngOnInit(): void {
+  constructor() {
     this._notificationService.notifications
+      .pipe(takeUntilDestroyed())
       .subscribe((notification) => {
-        this.notification = notification.text;
-        clearTimeout(this.timeout);
-        setTimeout(() => { this.notification = null; }, notification.duration);
+        this.notification.set(notification.text);
+        
+        if (this.timeoutId) {
+          clearTimeout(this.timeoutId);
+        }
+        
+        this.timeoutId = setTimeout(() => { 
+          this.notification.set(null); 
+        }, notification.duration);
       });
   }
 }

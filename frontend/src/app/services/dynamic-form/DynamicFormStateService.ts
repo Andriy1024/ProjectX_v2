@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ButtonType, ControlType, IDynamicFormConfig, FieldType, IButton, IFormControl } from 'src/app/models/dynamic-form.model';
+import { LoggerService } from '../logging/logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicFormStateService {
 
+    private readonly _logger = inject(LoggerService);
     private $configSubject = new BehaviorSubject<IDynamicFormConfig | null>(null);
 
     public config$ = this.$configSubject.asObservable();
@@ -50,8 +52,7 @@ export class DynamicFormStateService {
             type: ButtonType.submit,
             alignEnd: true,
             onClick: (value) => {
-                console.log('on save:');
-                console.log(value);
+                this._logger.info('on save:', value);
             }
         };
 
@@ -59,8 +60,7 @@ export class DynamicFormStateService {
             label: 'Delete',
             type: ButtonType.button,
             onClick: (value) => {
-                console.log('on delete');
-                console.log(value);
+                this._logger.info('on delete', value);
             }
         };
 

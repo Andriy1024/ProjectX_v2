@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, shareReplay, Subject, tap } from 'rxjs';
 import { IDENTITY_API_URL } from 'src/app/app-injection-tokens';
 import { AuthRequest, AuthResponse } from '../auth.models';
@@ -8,6 +8,7 @@ import { PROJECT_X_SESSION } from '../auth.const';
 import { Token } from '../auth.models';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
+import { LoggerService } from 'src/app/services/logging/logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -15,13 +16,11 @@ export class AuthService {
   private refreshingAccessToken: boolean = false;
   private readonly $accessTokenRefreshed: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private readonly _http: HttpClient,
-    @Inject(IDENTITY_API_URL)
-    private readonly authUrl: string,
-    private readonly _jwtHelper: JwtHelperService,
-    private readonly _router: Router
-  ) {}
+  private readonly _http = inject(HttpClient);
+  private readonly authUrl = inject(IDENTITY_API_URL);
+  private readonly _jwtHelper = inject(JwtHelperService);
+  private readonly _router = inject(Router);
+  private readonly _logger = inject(LoggerService);
 
   public logIn(request: AuthRequest): Observable<AuthResponse> {
     return this._http
@@ -101,12 +100,11 @@ export class AuthService {
             refreshToken: response.refreshToken
           });
 
-          console.log('Token refreshed');
+          this._logger.info('Token refreshed');
           return true;
         }),
         catchError(err => {
-          console.log('Failed to refresh token');
-          console.log(err);
+          this._logger.error('Failed to refresh token', err);
           this.removeSession();
           return of(false);
         }),

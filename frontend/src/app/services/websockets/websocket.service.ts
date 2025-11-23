@@ -1,46 +1,47 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import * as Rx from 'rxjs';
 import { map, switchMap, tap } from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { REALTIME_API_URL } from 'src/app/app-injection-tokens';
 import { IRealtimeMessage } from 'src/app/models/realtime.model';
+import { LoggerService } from '../logging/logger.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
 
-  constructor(
-    private readonly _http: HttpClient,
-    @Inject(REALTIME_API_URL)
-    private readonly realtimeUrl: string,
-  ){}
+  private readonly _http = inject(HttpClient);
+  private readonly realtimeUrl = inject(REALTIME_API_URL);
+  private readonly _logger = inject(LoggerService);
 
   private subject: Rx.Subject<MessageEvent> | null = null;
 
-  public subscribe(): Rx.Observable<IRealtimeMessage<any>> {
+  public subscribe(): Rx.Observable<IRealtimeMessage<unknown>> {
     if (this.subject && !this.subject.closed) {
       return this.subject.pipe(
-        tap(console.log),
-        map(r => JSON.parse(r.data) as IRealtimeMessage<any>)
+        tap(msg => this._logger.debug('WS Message', msg)),
+        map(r => JSON.parse(r.data) as IRealtimeMessage<unknown>)
       );
     }
 
     return this._http
-      .post<{connectionId: string}>(`http://localhost:5211/api/realtime/connect`, {})
+      .post<{connectionId: string}>(`${this.realtimeUrl}/api/realtime/connect`, {})
         .pipe(
           switchMap((response: { connectionId: string }) => {
             this.subject = this.createWS(response.connectionId);
             return this.subject.pipe(
-              map(r => JSON.parse(r.data) as IRealtimeMessage<any>)
+              map(r => JSON.parse(r.data) as IRealtimeMessage<unknown>)
             );
           })
         );
   }
 
   private createWS(connectionId: string): AnonymousSubject<MessageEvent> {
-    const ws = new WebSocket(`ws://localhost:5211/ws?connectionId=${connectionId}`);
+    // Convert http(s) to ws(s)
+    const wsUrl = this.realtimeUrl.replace(/^http/, 'ws');
+    const ws = new WebSocket(`${wsUrl}/ws?connectionId=${connectionId}`);
 
     const observable = new Rx.Observable(
       (obs: Rx.Observer<MessageEvent>) => {
@@ -54,17 +55,15 @@ export class WebsocketService {
     const observer: Rx.Observer<Object> = {
       next: (data: Object) => {
         if (ws.readyState === WebSocket.OPEN) {
-          console.log('ws observer send');
+          this._logger.debug('ws observer send', data);
           ws.send(JSON.stringify(data));
         }
       },
       error: (e) => {
-        console.log('ws observer')
-        console.log(e)
+        this._logger.error('ws observer error', e);
       },
       complete: () => {
-        console.log('ws observer')
-        console.log('complete')
+        this._logger.info('ws observer complete');
       }
     };
 

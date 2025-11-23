@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { filter, map, Observable, startWith, switchMap, tap } from 'rxjs';
 import { DASHBOARD_API_URL } from 'src/app/app-injection-tokens';
 import { RealtimeMessageTypes } from 'src/app/constants/realtime.const';
@@ -13,13 +13,10 @@ import { WebsocketService } from '../websockets/websocket.service';
   providedIn: 'root'
 })
 export class TodoService {
-  constructor(
-    private readonly _todoClient: HttpClient,
-    @Inject(DASHBOARD_API_URL)
-    private readonly _dashboardUrl: string,
-    private readonly _notificationService: NotificationService,
-    private readonly _ws: WebsocketService)
-    { }
+  private readonly _todoClient = inject(HttpClient);
+  private readonly _dashboardUrl = inject(DASHBOARD_API_URL);
+  private readonly _notificationService = inject(NotificationService);
+  private readonly _ws = inject(WebsocketService);
 
   public getTodos(): Observable<Todo[]> {
     return this._todoClient
@@ -29,7 +26,7 @@ export class TodoService {
         switchMap((todos: Todo[]) => this._ws.subscribe()
           .pipe(
             filter(x => RealtimeMessageTypes.isTaskMessage(x.type)),
-            map(x => x as IRealtimeMessage<Todo>),
+            map(x => x as unknown as IRealtimeMessage<Todo>),
             map(update => {
               if (update.type == RealtimeMessageTypes.TaskUpdated) {
                 // Immutable update - create new array with updated item
