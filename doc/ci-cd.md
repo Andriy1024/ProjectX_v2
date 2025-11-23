@@ -86,6 +86,7 @@ This script generates a JSON matrix that tells the next jobs what to build.
     
     # 4. Output results
     echo "matrix={\"include\":$FINAL_MATRIX}" >> $GITHUB_OUTPUT
+    echo "has-changes=$HAS_CHANGES" >> $GITHUB_OUTPUT
 ```
 
 **Explanation:**
@@ -107,6 +108,11 @@ This step uses a **Bash script** (indicated by `run: |`) to programmatically dec
 4.  **Outputting Results (`$GITHUB_OUTPUT`)**:
     *   In GitHub Actions, you can't just set a variable to pass it to another job. You must write it to a special file path stored in `$GITHUB_OUTPUT`.
     *   `echo "matrix=..." >> $GITHUB_OUTPUT` saves our calculated JSON so the `docker-build` job can read it later.
+    *   **How `echo "..." >> $GITHUB_OUTPUT` works:**
+        *   **`echo "key=value"`**: Prints a string in a specific format (e.g., `has-changes=true`).
+        *   **`>>`**: Appends this output to a file.
+        *   **`$GITHUB_OUTPUT`**: A special environment variable provided by GitHub that points to a temporary file.
+        *   When the step finishes, GitHub reads this file and registers the values as **outputs**. These outputs can then be used in other jobs (like `needs.detect-changes.outputs.has-changes`) to decide whether to run them.
 
 ---
 
