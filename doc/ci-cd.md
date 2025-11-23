@@ -1,102 +1,184 @@
 # Backend CI/CD Pipeline Documentation
 
-This document describes the Continuous Integration (CI) pipeline for the ProjectX backend, defined in `.github/workflows/build-backend.yml`.
+This document provides a detailed explanation of the Continuous Integration (CI) pipeline for the ProjectX backend, defined in `.github/workflows/build-backend.yml`.
 
-## Overview
+## 1. Workflow Triggers
 
-The pipeline is designed to be efficient and scalable by using **selective builds**. It only builds Docker images for microservices that have actually changed, or for all services if shared/common code is modified.
+The pipeline is configured to run automatically on specific events.
 
-### Triggers
+```yaml
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/build-backend.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/build-backend.yml'
+  workflow_dispatch:
+```
 
-The pipeline runs automatically on:
-- **Push** to the `master` branch.
-- **Pull Request** targeting the `master` branch.
-- **Manual Dispatch** (via GitHub Actions UI).
-
-It is filtered to only trigger when files in the `backend/` directory or the workflow file itself are changed.
-
----
-
-## Pipeline Stages
-
-The workflow consists of three main jobs:
-
-### 1. Detect Changes & Generate Matrix (`detect-changes`)
-
-This job analyzes the commit to determine which parts of the system need to be rebuilt.
-
-*   **Tools Used**: `dorny/paths-filter` and `jq`.
-*   **Logic**:
-    1.  It checks for changes in specific paths defined in the `filters` section:
-        *   `common`: Changes to `backend/Common/`, `.sln` files, or `Directory.Build.props`.
-        *   `dashboard`, `identity`, `filestorage`, etc.: Changes to specific service directories.
-    2.  **Matrix Generation**:
-        *   If **Common** code changed: The pipeline generates a build matrix containing **ALL** services.
-        *   If only **Service** code changed: The pipeline generates a matrix containing **ONLY** the changed services.
-        *   If **No relevant code** changed: The matrix is empty, and subsequent jobs are skipped.
-*   **Outputs**:
-    *   `matrix`: A JSON string defining the services to build (name, dockerfile path, image name).
-    *   `has-changes`: Boolean flag (`true`/`false`) indicating if any build is required.
-
-### 2. Build .NET Backend (`build`)
-
-This job compiles and tests the entire .NET solution to ensure code quality before attempting Docker builds.
-
-*   **Prerequisite**: Runs only if `has-changes` is `true`.
-*   **Steps**:
-    1.  **Setup .NET**: Installs .NET 7.0 SDK.
-    2.  **Restore**: Runs `dotnet restore ProjectX.sln`.
-    3.  **Build**: Runs `dotnet build` in Release configuration.
-    4.  **Test**: Runs `dotnet test` to execute all unit and integration tests.
-
-### 3. Build Docker Images (`docker-build`)
-
-This job builds the Docker images for the services identified in the `detect-changes` job.
-
-*   **Prerequisite**:
-    *   The `build` job must pass successfully.
-    *   Must be a `push` event to `master` (PRs do not build Docker images by default).
-    *   `has-changes` must be `true`.
-*   **Strategy**: Uses a **Matrix Strategy** to run builds in parallel for each service defined in the generated matrix.
-*   **Steps**:
-    1.  **Setup Docker Buildx**: Sets up the advanced Docker builder.
-    2.  **Build Image**: Builds the Docker image using the specific `Dockerfile` for the service.
-    3.  **Caching**: Uses Docker registry caching (`type=registry`) to speed up future builds.
-    4.  **Pushing**:
-        *   **Current State**: Pushing to Docker Hub is **DISABLED** (`push: false`).
-        *   **To Enable**: Uncomment the "Log in to Docker Hub" step and set `push: true` in the workflow file.
+**Explanation:**
+*   **`push`**: Triggers when code is pushed to the `master` branch, but ONLY if files in `backend/` or the workflow file itself have changed.
+*   **`pull_request`**: Triggers when a PR is opened against `master`, with the same path filters.
+*   **`workflow_dispatch`**: Allows you to manually trigger the pipeline from the GitHub Actions "Run workflow" button.
 
 ---
 
-## How to Enable Docker Push
+## 2. Job: Detect Changes (`detect-changes`)
 
-To enable pushing images to the Docker Hub registry:
+This is the "brain" of the pipeline. It determines which microservices need to be rebuilt based on the files changed in the commit.
 
-1.  Open `.github/workflows/build-backend.yml`.
-2.  Uncomment the login step in the `docker-build` job:
-    ```yaml
-    # - name: Log in to Docker Hub
-    #   uses: docker/login-action@v3
-    #   with:
-    #     username: andriy1024
-    #     password: ${{ secrets.DOCKER_TOKEN }}
-    ```
-3.  Change the `push` parameter in the "Build Docker image" step to `true`:
-    ```yaml
-    - name: Build ${{ matrix.name }} Docker image
-      uses: docker/build-push-action@v5
+### Step: Define Filters
+
+We use `dorny/paths-filter` to map file paths to logical names (filters).
+
+```yaml
+- name: Check for changes
+  uses: dorny/paths-filter@v3
+  id: filter
+  with:
+    filters: |
+      common:
+        - 'backend/Common/**'
+        - 'backend/Directory.*.props'
+        - 'backend/*.sln'
+      dashboard:
+        - 'backend/Services/ProjectX.Dashboard/**'
+      identity:
+        - 'backend/Services/ProjectX.Identity/**'
+      # ... (other services)
+```
+
+**Explanation:**
+*   **`common`**: Represents shared code. If anything here changes, we assume *everything* might be affected.
+*   **`dashboard`, `identity`, etc.**: Specific folders for each microservice.
+
+### Step: Generate Dynamic Matrix
+
+This script generates a JSON matrix that tells the next jobs what to build.
+
+```yaml
+- name: Generate Matrix
+  id: set-matrix
+  run: |
+    # 1. Define all services configuration
+    SERVICES='[
+      {"name": "dashboard", "dockerfile": "./backend/Services/ProjectX.Dashboard/ProjectX.Dashboard.API/Dockerfile", "image": "andriy1024/projectx-dashboard"},
+      {"name": "identity", "dockerfile": "./backend/Services/ProjectX.Identity/ProjectX.Identity.API/Dockerfile", "image": "andriy1024/projectx-identity"},
+      ...
+    ]'
+    
+    # 2. Get list of changed filters from previous step
+    CHANGED_FILTERS='${{ steps.filter.outputs.changes }}'
+    
+    # 3. Logic: Common vs Specific
+    if echo "$CHANGED_FILTERS" | grep -q "common"; then
+      # If common code changed, build EVERYTHING
+      FINAL_MATRIX="$SERVICES"
+    else
+      # Otherwise, filter the SERVICES JSON to keep only changed ones
+      FINAL_MATRIX=$(echo "$SERVICES" | jq --argjson changes "$CHANGED_FILTERS" 'map(select([.name] | inside($changes)))')
+    fi
+    
+    # 4. Output results
+    echo "matrix={\"include\":$FINAL_MATRIX}" >> $GITHUB_OUTPUT
+```
+
+**Explanation:**
+*   It starts with a hardcoded JSON array of *all* possible services (`SERVICES`).
+*   It checks if the `common` filter was triggered.
+    *   **If yes**: It sets the final matrix to the full list of services.
+    *   **If no**: It uses `jq` (a JSON processor) to select only the services whose `name` matches the changed filters.
+*   The result is saved to `$GITHUB_OUTPUT` so subsequent jobs can read it.
+
+---
+
+## 3. Job: Build .NET Backend (`build`)
+
+This job compiles the code and runs tests. It runs *before* Docker builds to ensure code quality.
+
+```yaml
+build:
+  needs: detect-changes
+  if: needs.detect-changes.outputs.has-changes == 'true'
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        # ...
-        push: true  # <--- Change this to true
+        dotnet-version: '7.0.x'
+    
+    - name: Restore dependencies
+      working-directory: ./backend
+      run: dotnet restore ProjectX.sln
+    
+    - name: Build solution
+      working-directory: ./backend
+      run: dotnet build ProjectX.sln --configuration Release --no-restore
+    
+    - name: Run tests
+      working-directory: ./backend
+      run: dotnet test ProjectX.sln --configuration Release --no-build --verbosity normal
+```
+
+**Explanation:**
+*   **`needs: detect-changes`**: Waits for the detection job to finish.
+*   **`if: ...has-changes == 'true'`**: Skips this entire job if no relevant files were changed.
+*   It performs standard .NET operations: `restore` -> `build` -> `test`.
+
+---
+
+## 4. Job: Build Docker Images (`docker-build`)
+
+This job builds the actual Docker images. It uses a **Matrix Strategy** to run in parallel.
+
+### Strategy Configuration
+
+```yaml
+docker-build:
+  needs: [detect-changes, build]
+  strategy:
+    matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    fail-fast: false
+```
+
+**Explanation:**
+*   **`matrix: ${{ fromJson(...) }}`**: This is where the magic happens. GitHub Actions parses the JSON output from Job 1 and creates a separate "sub-job" for each item in the `include` list.
+*   For example, if `dashboard` and `identity` changed, this job will run twice in parallel: once with `matrix.name = dashboard` and once with `matrix.name = identity`.
+
+### Build Step
+
+```yaml
+- name: Build ${{ matrix.name }} Docker image
+  uses: docker/build-push-action@v5
+  with:
+    context: ./backend
+    file: ${{ matrix.dockerfile }}
+    push: false
+    tags: ${{ matrix.image }}:latest,${{ matrix.image }}:${{ github.sha }}
+    cache-from: type=registry,ref=${{ matrix.image }}:buildcache
+    cache-to: type=registry,ref=${{ matrix.image }}:buildcache,mode=max
+```
+
+**Explanation:**
+*   **`file: ${{ matrix.dockerfile }}`**: Uses the specific Dockerfile path for the current service in the matrix.
+*   **`tags`**: Tags the image with `latest` and the git commit SHA.
+*   **`cache-from/to`**: Uses the Docker registry to cache build layers, significantly speeding up builds.
+*   **`push: false`**: Currently configured to build but *not* push to Docker Hub.
+
+---
+
+## How to Add a New Service
+
+1.  **Update Filters**: Add a new entry in the `detect-changes` job under `filters`.
+    ```yaml
+    newservice:
+      - 'backend/Services/ProjectX.NewService/**'
     ```
-4.  Ensure the `DOCKER_TOKEN` secret is set in the GitHub repository settings.
-
-## Service Configuration
-
-The list of services is defined in the `Generate Matrix` step of the `detect-changes` job. To add a new service:
-
-1.  Add a new filter in the `filters` section of `detect-changes`.
-2.  Add the service configuration object to the `SERVICES` JSON array in the `Generate Matrix` script:
+2.  **Update Matrix Script**: Add the service definition to the `SERVICES` JSON array in the `Generate Matrix` step.
     ```json
-    {"name": "new-service", "dockerfile": "./path/to/Dockerfile", "image": "repo/image-name"}
+    {"name": "newservice", "dockerfile": "./path/to/Dockerfile", "image": "user/image"}
     ```
