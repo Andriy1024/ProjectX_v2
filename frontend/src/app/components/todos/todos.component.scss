@@ -1,4 +1,4 @@
-@import '../../../style-variables.scss';
+@use '../../../style-variables' as vars;
 
 .todos-wrapper {
     display: flex;
@@ -54,7 +54,7 @@ app-todo-item,
 }
 
 .todo-item.completed {
-    background-color: $background-black-hover;
+    background-color: vars.$background-black-hover;
 
     .todo-text {
         color: rgba(white, 0.8)
@@ -66,7 +66,7 @@ app-todo-item,
         border-color: transparent;
 
         i {
-            color: $background-black-hover;
+            color: vars.$background-black-hover;
         }
     }
 }

@@ -1,12 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
+@use './style-variables' as vars;
+
 @import url("https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css");
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lato:wght@100&display=swap');
 
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined|Material+Icons');
-
-@import './style-variables.scss';
 
 html, body {
   height: 100%;
@@ -50,24 +50,24 @@ h3.is-bold {
 }
 
 .container::-webkit-scrollbar-track {
-	background: $background-black;
+	background: vars.$background-black;
   backdrop-filter: blur(2px);
   border-radius: 10px;
 }
 
 .container::-webkit-scrollbar-thumb {
-	background-color: $text-color-white;
+	background-color: vars.$text-color-white;
   border-radius: 10px;
 }
 
 .has-blur-white-bg {
-  background: $background-white;
+  background: vars.$background-white;
   backdrop-filter: blur(2px);
 }
 
 .has-black-background {
-  background: $background-black;
-  color: $text-color-white;
+  background: vars.$background-black;
+  color: vars.$text-color-white;
   transition: 0.1s;
 }
 
@@ -75,18 +75,18 @@ h3.is-bold {
   @extend .has-black-background;
 
   &:hover {
-    background-color: $background-black-hover;
-    color: $text-color-white-hover;
+    background-color: vars.$background-black-hover;
+    color: vars.$text-color-white-hover;
   }
 }
 
 .btn {
   display: inline-flex;
   padding: 10px 15px;
-  background: $background-black;
+  background: vars.$background-black;
   align-items: center;
 
-  color: $text-color-white;
+  color: vars.$text-color-white;
   font-size: 18px;
   font-weight: 600;
   text-decoration: none;
@@ -97,7 +97,7 @@ h3.is-bold {
   cursor: pointer;
 
   &:not([disabled]):hover {
-    background: $background-black-hover;
+    background: vars.$background-black-hover;
     backdrop-filter: blur(2px);
   }
 

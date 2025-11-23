@@ -19,8 +19,8 @@ import { BookmarkTileComponent } from './bookmark-tile/bookmark-tile.component';
 
 import { DASHBOARD_API_URL, IDENTITY_API_URL, REALTIME_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
-import { ApplicationHttpInterceptor } from './http/application-http.interceptor';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { applicationHttpInterceptor } from './http/application-http.interceptor.fn';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { JwtModule } from '@auth0/angular-jwt';
 
@@ -53,8 +53,7 @@ import { JwtModule } from '@auth0/angular-jwt';
         { provide: IDENTITY_API_URL, useValue: environment.identityApi },
         { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
         { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
-        { provide: HTTP_INTERCEPTORS, useClass: ApplicationHttpInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptors([applicationHttpInterceptor]))
     ] })
 export class AppModule { }
 
