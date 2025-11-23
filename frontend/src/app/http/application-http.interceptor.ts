@@ -5,13 +5,15 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { NotificationService } from '../services/notification/notification.service';
 import { IResponse } from '../models/http.models';
 import { AuthService } from '../auth/services/auth-service.service';
+import { LoggerService } from '../services/logging/logger.service';
 
 @Injectable()
 export class ApplicationHttpInterceptor implements HttpInterceptor {
 
   constructor(
       private _authenticationService: AuthService,
-      private notificationService: NotificationService) {}
+      private notificationService: NotificationService,
+      private logger: LoggerService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(this.addAuthHeader(request))
@@ -25,7 +27,7 @@ export class ApplicationHttpInterceptor implements HttpInterceptor {
   }
 
   private handleHttpError = (response: HttpErrorResponse) => {
-    console.log(response);
+    this.logger.error('HTTP Error', response);
     const result = response?.error as IResponse;
     const message = result?.error?.message || response?.message || "http error";
     this.notificationService.show(message, 5000);
