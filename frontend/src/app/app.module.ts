@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -37,6 +38,7 @@ import { JwtModule } from '@auth0/angular-jwt';
         SignInComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
+        CommonModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         FormsModule,
