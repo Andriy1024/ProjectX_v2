@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { applicationHttpInterceptor } from './http/application-http.interceptor.fn';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
+import { PROJECT_X_SESSION } from './auth/auth.const';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -44,13 +45,13 @@ export class AppModule { }
 
 export function tokenGetter()
 {
-      // const stringToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+      const stringToken = localStorage.getItem(PROJECT_X_SESSION);
 
-      // if(stringToken != null)
-      // {
-      //     const parsed = JSON.parse(stringToken);
-      //     return parsed?.access_token;
-      // }
+      if(stringToken)
+      {
+          const parsed = JSON.parse(stringToken);
+          return parsed?.token;
+      }
 
       return null;
 }
