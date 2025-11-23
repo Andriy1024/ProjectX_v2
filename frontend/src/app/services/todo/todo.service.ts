@@ -32,15 +32,21 @@ export class TodoService {
             map(x => x as IRealtimeMessage<Todo>),
             map(update => {
               if (update.type == RealtimeMessageTypes.TaskUpdated) {
-                const todoToUpdate = todos.find(x => x.id === update.message.id);
-                if (todoToUpdate) {
-                  Object.assign(todoToUpdate, update.message);
-                }
+                // Immutable update - create new array with updated item
+                return todos.map(todo => 
+                  todo.id === update.message.id 
+                    ? { ...todo, ...update.message } 
+                    : todo
+                );
               }
-              else if (update.type == RealtimeMessageTypes.TaskCreated)
-                todos.push(update.message);
-              else if (update.type == RealtimeMessageTypes.TaskDeleted)
-                todos = todos.filter(x => x.id !== update.message.id);
+              else if (update.type == RealtimeMessageTypes.TaskCreated) {
+                // Immutable add - create new array with new item
+                return [...todos, update.message];
+              }
+              else if (update.type == RealtimeMessageTypes.TaskDeleted) {
+                // Immutable delete - create new array without deleted item
+                return todos.filter(x => x.id !== update.message.id);
+              }
 
               return todos;
             }),

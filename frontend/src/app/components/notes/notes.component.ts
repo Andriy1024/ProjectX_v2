@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { from, Observable } from 'rxjs';
@@ -6,22 +6,28 @@ import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.mo
 import { Note } from '../../models/note.model';
 import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
 import { NoteService } from '../../services/notes/note.service';
+import { LoggerService } from '../../services/logging/logger.service';
 
 @Component({
     selector: 'app-notes',
     templateUrl: './notes.component.html',
     styleUrls: ['./notes.component.scss'],
     standalone: true,
-    imports: [CommonModule]
+    imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotesComponent implements OnInit {
+  // Traditional Observable pattern (kept for comparison with Signals)
+  private readonly _noteService = inject(NoteService);
+  private readonly _router = inject(Router);
+  private readonly _stateService = inject(DynamicFormStateService);
+  private readonly _logger = inject(LoggerService);
 
   public notes$: Observable<Note[]> = from([]);
-
-  constructor(
-    private readonly _noteService: NoteService,
-    private readonly _router: Router,
-    private readonly _stateService: DynamicFormStateService) { }
+  
+  // Loading and error state signals
+  public readonly loading = signal(false);
+  public readonly error = signal<string | null>(null);
 
   public ngOnInit(): void {
     this.notes$ = this._noteService.getNotes();
@@ -117,27 +123,54 @@ export class NotesComponent implements OnInit {
     });
   }
 
-  private onNoteUpdated = (note: Object): void => {
-    this._noteService.updateNote(note as Note).subscribe(
-      r => {
+  private onNoteUpdated = (note: object): void => {
+    this.loading.set(true);
+    this.error.set(null);
+    
+    this._noteService.updateNote(note as Note).subscribe({
+      next: () => {
+        this.loading.set(false);
         this._router.navigate(['/notes']);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._logger.error('Failed to update note', err);
+        this.error.set('Failed to update note. Please try again.');
       }
-    );
+    });
   }
 
-  private onNoteDeleted = (note: Object): void => {
-    const { id } = note as Note;
-    this._noteService.deleteNote(id)
-      .subscribe(r => {
+  private onNoteDeleted = (note: object): void => {
+    this.loading.set(true);
+    this.error.set(null);
+    const typedNote = note as Note;
+    this._noteService.deleteNote(typedNote.id).subscribe({
+      next: () => {
+        this.loading.set(false);
         this._router.navigate(['/notes']);
-      });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._logger.error('Failed to delete note', err);
+        this.error.set('Failed to delete note. Please try again.');
+      }
+    });
   }
 
-  private onNoteAdded = (note: Object): void => {
-    const newNote = note as Note;
-    this._noteService.addNote(newNote)
-    .subscribe(r => {
-      this._router.navigate(['/notes']);
+  private onNoteAdded = (note: object): void => {
+    this.loading.set(true);
+    this.error.set(null);
+    
+    this._noteService.addNote(note as Note).subscribe({
+      next: () => {
+        this.loading.set(false);
+        this._router.navigate(['/notes']);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._logger.error('Failed to add note', err);
+        this.error.set('Failed to add note. Please try again.');
+      }
     });
   }
 }

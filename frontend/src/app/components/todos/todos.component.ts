@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,6 +7,7 @@ import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.mo
 import { Todo } from '../../models/todo.model';
 import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
 import { TodoService } from '../../services/todo/todo.service';
+import { LoggerService } from '../../services/logging/logger.service';
 
 @Component({
     selector: 'app-todos',
@@ -14,6 +15,7 @@ import { TodoService } from '../../services/todo/todo.service';
     styleUrls: ['./todos.component.scss'],
     standalone: true,
     imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('todoItemAnimation', [
             transition(':leave', [
@@ -31,6 +33,7 @@ export class TodosComponent {
   private readonly _todoService = inject(TodoService);
   private readonly _router = inject(Router);
   private readonly _stateService = inject(DynamicFormStateService);
+  private readonly _logger = inject(LoggerService);
 
   // Convert Observable to Signal using toSignal()
   public readonly todos = toSignal(this._todoService.getTodos(), { initialValue: [] });
@@ -44,13 +47,29 @@ export class TodosComponent {
     this.todos().filter(todo => !todo.completed).length
   );
 
+  // Loading and error state signals
+  public readonly loading = signal(false);
+  public readonly error = signal<string | null>(null);
+
   public toggleCompleted(todo: Todo): void {
     todo.completed = !todo.completed;
-    this._todoService.updateTodo(todo).subscribe();
+    this._todoService.updateTodo(todo).subscribe({
+      error: (err) => {
+        this._logger.error('Failed to update todo', err);
+        this.error.set('Failed to update todo. Please try again.');
+        // Revert the change
+        todo.completed = !todo.completed;
+      }
+    });
   }
 
   public onDeleteClick(todo: Todo): void {
-    this._todoService.deleteTodo(todo.id).subscribe();
+    this._todoService.deleteTodo(todo.id).subscribe({
+      error: (err) => {
+        this._logger.error('Failed to delete todo', err);
+        this.error.set('Failed to delete todo. Please try again.');
+      }
+    });
   }
 
   public onEditClick(todo: Todo): void {
@@ -85,7 +104,7 @@ export class TodosComponent {
           label: 'Save',
           type: ButtonType.submit,
           alignEnd: true,
-          onClick: this.onNoteUpdated
+          onClick: this.onTodoUpdated
         }
       ],
       data: todo
@@ -116,24 +135,43 @@ export class TodosComponent {
           label: 'Save',
           type: ButtonType.submit,
           alignEnd: true,
-          onClick: this.onNoteAdded
+          onClick: this.onTodoAdded
         }
       ]
     });
   }
 
-  private onNoteAdded = (value: object): void => {
-    const task = value as Todo;
-    this._todoService.addTodo(task)
-      .subscribe(r => {
+  private onTodoAdded = (value: object): void => {
+    this.loading.set(true);
+    this.error.set(null);
+    
+    this._todoService.addTodo(value as Todo).subscribe({
+      next: () => {
+        this.loading.set(false);
         this._router.navigate(['/todos']);
-      });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._logger.error('Failed to add todo', err);
+        this.error.set('Failed to add todo. Please try again.');
+      }
+    });
   }
 
-  private onNoteUpdated = (value: object): void => {
-    this._todoService.updateTodo(value as Todo)
-      .subscribe(r => {
+  private onTodoUpdated = (value: object): void => {
+    this.loading.set(true);
+    this.error.set(null);
+    
+    this._todoService.updateTodo(value as Todo).subscribe({
+      next: () => {
+        this.loading.set(false);
         this._router.navigate(['/todos']);
-      });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._logger.error('Failed to update todo', err);
+        this.error.set('Failed to update todo. Please try again.');
+      }
+    });
   }
 }

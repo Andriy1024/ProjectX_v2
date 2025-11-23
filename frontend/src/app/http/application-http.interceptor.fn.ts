@@ -4,10 +4,12 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../auth/services/auth-service.service';
 import { IResponse } from '../models/http.models';
 import { NotificationService } from '../services/notification/notification.service';
+import { LoggerService } from '../services/logging/logger.service';
 
 export const applicationHttpInterceptor: HttpInterceptorFn = (request, next) => {
   const authService = inject(AuthService);
   const notificationService = inject(NotificationService);
+  const logger = inject(LoggerService);
 
   const addAuthHeader = (req: typeof request) => {
     const token = authService.getToken();
@@ -20,7 +22,7 @@ export const applicationHttpInterceptor: HttpInterceptorFn = (request, next) => 
   };
 
   const handleHttpError = (response: HttpErrorResponse) => {
-    console.log(response);
+    logger.error('HTTP Error', response);
     const result = response?.error as IResponse;
     const message = result?.error?.message || response?.message || "http error";
     notificationService.show(message, 5000);
