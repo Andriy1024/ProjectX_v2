@@ -166,7 +166,9 @@ docker-build:
 
 **Explanation:**
 *   **`matrix: ${{ fromJson(...) }}`**: This is where the magic happens. GitHub Actions parses the JSON output from Job 1 and creates a separate "sub-job" for each item in the `include` list.
-*   For example, if `dashboard` and `identity` changed, this job will run twice in parallel: once with `matrix.name = dashboard` and once with `matrix.name = identity`.
+*   **Parallel Execution**: You can think of `strategy: matrix` as a **parallel `foreach` loop**. If `dashboard` and `identity` changed, GitHub Actions spins up two separate runners at the same time.
+*   **The `include` Keyword**: The JSON we generated earlier looked like `{"include": [...]}`. When GitHub Actions sees `include`, it switches to "Explicit List" mode. It takes the list of objects and runs a job for each one.
+*   **Unwrapping**: Inside each parallel job, the runner "unwraps" the object. So, for the dashboard job, `matrix.name` becomes "dashboard" and `matrix.dockerfile` becomes the path we defined.
 
 ### Build Step
 
