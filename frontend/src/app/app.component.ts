@@ -1,7 +1,7 @@
 import { trigger, transition, animate, style, query, group } from '@angular/animations';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from './auth/services/auth-service.service';
 
 @Component({
@@ -80,22 +80,12 @@ import { AuthService } from './auth/services/auth-service.service';
     ],
     standalone: false
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
+  // Modern Angular: Using inject() and signals
+  private readonly _authService = inject(AuthService);
 
-  public isAuthenticated = false;
-  private wsSubscription: Subscription | null = null;
-
-  constructor(private readonly _authService: AuthService) {}
-
-  public ngOnInit(): void {
-    this._authService.isAuthenticated().subscribe(r => {
-      this.isAuthenticated = r;
-    });
-  }
-
-  public ngOnDestroy(): void {
-    this.wsSubscription && this.wsSubscription.unsubscribe();
-  }
+  // Convert Observable to Signal - automatically manages subscription
+  public readonly isAuthenticated = toSignal(this._authService.isAuthenticated(), { initialValue: false });
 
   public logOut() {
     this._authService.logOut();

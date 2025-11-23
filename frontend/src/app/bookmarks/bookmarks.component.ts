@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Bookmark } from '../models/bookmark.model';
 import { ButtonType, ControlType, FieldType } from '../models/dynamic-form.model';
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
@@ -15,18 +15,17 @@ import { BookmarkTileComponent } from '../bookmark-tile/bookmark-tile.component'
     standalone: true,
     imports: [CommonModule, RouterModule, BookmarkTileComponent]
 })
-export class BookmarksComponent implements OnInit {
+export class BookmarksComponent {
+  // Modern Angular: Using inject() and signals
+  private readonly _bookmarkService = inject(BookmarkService);
+  private readonly _router = inject(Router);
+  private readonly _stateService = inject(DynamicFormStateService);
 
-  public bookmarks$: Observable<Bookmark[]> = of([]);
-
-  constructor(
-    private readonly _bookmarkService: BookmarkService,
-    private readonly _router: Router,
-    private readonly _stateService: DynamicFormStateService) { }
-
-  ngOnInit(): void {
-    this.bookmarks$ = this._bookmarkService.getBookmarks();
-  }
+  // Convert Observable to Signal
+  public readonly bookmarks = toSignal(this._bookmarkService.getBookmarks(), { initialValue: [] });
+  
+  // Computed signal for bookmark count
+  public readonly bookmarkCount = computed(() => this.bookmarks().length);
 
   public onAdd(): void {
     this._router.navigate(['/form']);

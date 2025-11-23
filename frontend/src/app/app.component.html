@@ -8,7 +8,8 @@
       </div>
 
       <div class="right">
-        @if (isAuthenticated) {
+        <!-- Modern Angular: Calling signal with () -->
+        @if (isAuthenticated()) {
           <ul>
             <!-- <li><i class="material-icons">person</i></li> -->
             <li (click)="logOut()"><i class="material-icons">logout</i></li>

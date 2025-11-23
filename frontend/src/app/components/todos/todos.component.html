@@ -1,7 +1,8 @@
 <div class="todos-wrapper">
   <div class="container">
 
-    @for (todo of todos$ | async; track todo) {
+    <!-- Modern Angular: Using signals - no async pipe needed! -->
+    @for (todo of todos(); track todo.id) {
       <div @todoItemAnimation
         class="todo-item-container"
         (click)="toggleCompleted(todo)"
@@ -32,6 +33,13 @@
         <i class="material-icons-outlined">add</i>
       </button>
     </div>
+
+    <!-- Example: Displaying computed signals -->
+    @if (todos().length > 0) {
+      <div style="text-align: center; margin-top: 15px; color: rgba(255,255,255,0.7); font-size: 14px;">
+        {{ activeCount() }} active • {{ completedCount() }} completed
+      </div>
+    }
 
   </div>
 </div>

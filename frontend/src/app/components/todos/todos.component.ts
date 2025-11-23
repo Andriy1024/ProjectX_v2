@@ -1,8 +1,8 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { from, Observable} from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonType, ControlType, FieldType } from '../../models/dynamic-form.model';
 import { Todo } from '../../models/todo.model';
 import { DynamicFormStateService } from '../../services/dynamic-form/DynamicFormStateService';
@@ -26,18 +26,23 @@ import { TodoService } from '../../services/todo/todo.service';
         ])
     ]
 })
-export class TodosComponent implements OnInit {
+export class TodosComponent {
+  // Modern Angular: Using signals instead of Observables
+  private readonly _todoService = inject(TodoService);
+  private readonly _router = inject(Router);
+  private readonly _stateService = inject(DynamicFormStateService);
 
-  public todos$: Observable<Todo[]> = from([]);
-
-  constructor(
-    private readonly _todoService: TodoService,
-    private readonly _router: Router,
-    private readonly _stateService: DynamicFormStateService) { }
-
-  ngOnInit(): void {
-    this.todos$ = this._todoService.getTodos();
-  }
+  // Convert Observable to Signal using toSignal()
+  public readonly todos = toSignal(this._todoService.getTodos(), { initialValue: [] });
+  
+  // Computed signal - automatically updates when todos changes
+  public readonly completedCount = computed(() => 
+    this.todos().filter(todo => todo.completed).length
+  );
+  
+  public readonly activeCount = computed(() => 
+    this.todos().filter(todo => !todo.completed).length
+  );
 
   public toggleCompleted(todo: Todo): void {
     todo.completed = !todo.completed;
