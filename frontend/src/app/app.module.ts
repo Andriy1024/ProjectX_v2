@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { AppComponent } from './app.component';
 import { TabsComponent } from './tabs/tabs.component';
@@ -38,7 +38,7 @@ import { JwtModule } from '@auth0/angular-jwt';
         { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
         { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
         provideHttpClient(withInterceptors([applicationHttpInterceptor])),
-        provideAnimations()
+        provideAnimationsAsync()
     ] })
 export class AppModule { }
 
