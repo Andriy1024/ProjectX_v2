@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NotificationComponent } from './notification/notification.component';
+import { TabsComponent } from './tabs/tabs.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from './auth/services/auth-service.service';
 
@@ -7,7 +9,8 @@ import { AuthService } from './auth/services/auth-service.service';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterOutlet, NotificationComponent, TabsComponent]
 })
 export class AppComponent {
   // Modern Angular: Using inject() and signals
