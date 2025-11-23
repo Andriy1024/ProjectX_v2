@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
 import { DynamicFormComponent } from './dynamic-form.component';
 
 @NgModule({
-  declarations: [DynamicFormComponent],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, DynamicFormComponent],
   exports: [DynamicFormComponent]
 })
 export class DynamicFormModule { }

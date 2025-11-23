@@ -1,59 +1,75 @@
 <div class="form-wrapper">
-  <div class="container form-container has-blur-white-bg" *ngIf="config">
-    <h3 class="is-bold">{{config.title}}</h3>
+  @if (config) {
+    <div class="container form-container has-blur-white-bg">
+      <h3 class="is-bold">{{config.title}}</h3>
 
-    <div *ngIf="config">
-        <form [formGroup]="form" *ngIf="form">
-           <div *ngFor="let control of visibleControls" [ngSwitch]="control.controlType" class="form-control">
+      @if (form) {
+        <form [formGroup]="form">
+           @for (control of visibleControls; track control.key) {
+             <div class="form-control">
 
-                <label for="control.key">{{ control.label }}</label>
+                  <label [for]="control.key">{{ control.label }}</label>
 
-                <div *ngSwitchCase="controlTypes.input">
-                    <input
-                        class="textbox"
-                        [id]="control.key"
-                        [type]="fieldTypes[control.fieldType]"
-                        [formControlName]="control.key">
-                </div>
+                  @switch (control.controlType) {
+                    @case (controlTypes.input) {
+                      <div>
+                          <input
+                              class="textbox"
+                              [id]="control.key"
+                              [type]="fieldTypes[control.fieldType]"
+                              [formControlName]="control.key">
+                      </div>
+                    }
+                    @case (controlTypes.textarea) {
+                      <div>
+                          <textarea
+                              class="textarea"
+                              [id]="control.key"
+                              [formControlName]="control.key">
+                          </textarea>
+                      </div>
+                    }
+                  }
 
-                <div *ngSwitchCase="controlTypes.textarea">
-                    <textarea
-                        class="textarea"
-                        [id]="control.key"
-                        [formControlName]="control.key">
-                    </textarea>
-                </div>
-
-           </div>
+             </div>
+           }
 
            <div class="buttons-container">
-            <ng-container *ngFor="let button of config.buttons" [ngSwitch]="button.type" >
-                <button *ngSwitchCase="buttonTypes.submit"
-                    type="submit"
-                    class="btn"
-                    [class.align-end]="button.alignEnd"
-                    [disabled]="form.invalid"
-                    (click)="button.onClick?.(form.value)"
-                >{{button.label}}</button>
-
-                <button *ngSwitchCase="buttonTypes.button"
-                    type="button"
-                    class="btn"
-                    [class.align-end]="button.alignEnd"
-                    (click)="button.onClick?.(form.value)"
-                >{{button.label}}</button>
-
-                <a *ngSwitchCase="buttonTypes.link"
-                    class="btn"
-                    [class.align-end]="button.alignEnd"
-                    routerLink="{{button.linkUrl}}"
-                >{{button.label}}</a>
-
-            </ng-container>
+            @for (button of config.buttons; track button.label) {
+              <ng-container>
+                  @switch (button.type) {
+                    @case (buttonTypes.submit) {
+                      <button
+                          type="submit"
+                          class="btn"
+                          [class.align-end]="button.alignEnd"
+                          [disabled]="form.invalid"
+                          (click)="button.onClick?.(form.value)"
+                      >{{button.label}}</button>
+                    }
+                    @case (buttonTypes.button) {
+                      <button
+                          type="button"
+                          class="btn"
+                          [class.align-end]="button.alignEnd"
+                          (click)="button.onClick?.(form.value)"
+                      >{{button.label}}</button>
+                    }
+                    @case (buttonTypes.link) {
+                      <a
+                          class="btn"
+                          [class.align-end]="button.alignEnd"
+                          routerLink="{{button.linkUrl}}"
+                      >{{button.label}}</a>
+                    }
+                  }
+              </ng-container>
+            }
            </div>
 
         </form>
+      }
     </div>
-</div>
+  }
 </div>
 

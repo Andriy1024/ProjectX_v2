@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Bookmark } from '../models/bookmark.model';
@@ -6,23 +6,28 @@ import { ButtonType, ControlType, FieldType } from '../models/dynamic-form.model
 import { BookmarkService } from '../services/bookmarks/bookmark.service';
 import { DynamicFormStateService } from '../services/dynamic-form/DynamicFormStateService';
 import { DynamicFormModule } from '../components/dynamic-form/dynamic-form.module';
+import { LoggerService } from '../services/logging/logger.service';
 
 @Component({
     selector: 'app-bookmark-edit',
     templateUrl: './bookmark-edit.component.html',
     styleUrls: ['./bookmark-edit.component.scss'],
     standalone: true,
-    imports: [CommonModule, DynamicFormModule]
+    imports: [CommonModule, DynamicFormModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookmarkEditComponent implements OnInit {
 
   bookmark: Bookmark | undefined;
+  
+  private readonly bookmarkService = inject(BookmarkService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly _stateService = inject(DynamicFormStateService);
+  private readonly _logger = inject(LoggerService);
 
-  constructor(
-    private bookmarkService: BookmarkService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private readonly _stateService: DynamicFormStateService) { }
+  public readonly loading = signal(false);
+  public readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
@@ -32,10 +37,16 @@ export class BookmarkEditComponent implements OnInit {
       }
 
       this.bookmarkService.findBookmark(Number(bookmarkId))
-        .subscribe(b => {
-          this.bookmark = b;
-          if (this.bookmark) {
-            this.pushFormConfig();
+        .subscribe({
+          next: (b) => {
+            this.bookmark = b;
+            if (this.bookmark) {
+              this.pushFormConfig();
+            }
+          },
+          error: (err) => {
+            this._logger.error('Failed to load bookmark', err);
+            this.error.set('Failed to load bookmark.');
           }
         });
     });
@@ -93,13 +104,38 @@ export class BookmarkEditComponent implements OnInit {
   }
 
   public onUpdated = (value: object): void => {
+    this.loading.set(true);
+    this.error.set(null);
+    
     this.bookmarkService.updateBookmark(value as Bookmark)
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.loading.set(false);
+          // Optional: navigate or show success
+        },
+        error: (err) => {
+          this.loading.set(false);
+          this._logger.error('Failed to update bookmark', err);
+          this.error.set('Failed to update bookmark.');
+        }
+      });
   }
 
   public onDeleted = (value: object): void => {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.loading.set(true);
+    this.error.set(null);
+    
     this.bookmarkService.deleteBookmark(this.bookmark!.id)
-    .subscribe();
+    .subscribe({
+      next: () => {
+        this.loading.set(false);
+        this.router.navigate(['../'], { relativeTo: this.route });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._logger.error('Failed to delete bookmark', err);
+        this.error.set('Failed to delete bookmark.');
+      }
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Bookmark } from '../models/bookmark.model';
 
@@ -7,20 +7,14 @@ import { Bookmark } from '../models/bookmark.model';
     templateUrl: './bookmark-tile.component.html',
     styleUrls: ['./bookmark-tile.component.scss'],
     standalone: true,
-    imports: [CommonModule]
+    imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BookmarkTileComponent implements OnInit {
+export class BookmarkTileComponent {
 
-  @Input() public bookmark: Bookmark | undefined;
+  public bookmark = input.required<Bookmark>();
 
-  public tileIconSrc: string | undefined;
+  public tileIconSrc = computed(() => this.bookmark().url + '/favicon.ico');
 
-  public iconError: boolean = false;
-
-  constructor() { }
-
-  ngOnInit(): void {
-    this.tileIconSrc = this.bookmark!.url + '/favicon.ico';
-  }
-
+  public iconError = signal(false);
 }

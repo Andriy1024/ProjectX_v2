@@ -1,13 +1,13 @@
 <div class="bookmark-tile has-hovered-black-background">
-  @if (!iconError) {
+  @if (!iconError()) {
     <div class="tile-icon">
-      <img [src]="tileIconSrc" alt="" (error)="iconError=true">
+      <img [src]="tileIconSrc()" alt="" (error)="iconError.set(true)">
     </div>
   }
-  @if (iconError) {
+  @if (iconError()) {
     <div  class="tile-icon error">
-      {{ bookmark!.name[0].toUpperCase() }}
+      {{ bookmark().name[0].toUpperCase() }}
     </div>
   }
-  <p class="tile-text">{{ bookmark!.name }}</p>
+  <p class="tile-text">{{ bookmark().name }}</p>
 </div>
