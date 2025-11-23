@@ -4,10 +4,12 @@
       <p class="sidebar-heading">Your Bookmarks</p>
 
       <div class="sidebar-items">
-        <a *ngFor="let bookmark of bookmarks$ | async"
-          [routerLink]="bookmark.id.toString()"
-          routerLinkActive="selected"
+        @for (bookmark of bookmarks$ | async; track bookmark) {
+          <a
+            [routerLink]="bookmark.id.toString()"
+            routerLinkActive="selected"
           class="sidebar-item">{{bookmark.name}}</a>
+        }
       </div>
     </div>
 

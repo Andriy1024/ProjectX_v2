@@ -1,39 +1,37 @@
 <div class="todos-wrapper">
-    <div class="container">
+  <div class="container">
 
-        <div @todoItemAnimation
-            *ngFor="let todo of todos$ | async"
-            class="todo-item-container"
-            (click)="toggleCompleted(todo)"
+    @for (todo of todos$ | async; track todo) {
+      <div @todoItemAnimation
+        class="todo-item-container"
+        (click)="toggleCompleted(todo)"
         >
-            <div class="todo-item has-hovered-black-background" [class.completed]="todo.completed">
-                <div class="check-box">
-                    <i class="material-icons-outlined">check</i>
-                </div>
-
-                <p class="todo-text">{{ todo.name }}</p>
-
-                <div class="todo-item-actions" (click)="$event.stopPropagation()">
-                    <div class="btn todo-action-btn" (click)="onEditClick(todo)">
-                        <i class="material-icons">edit</i>
-                    </div>
-                    <div class="btn todo-action-btn" (click)="onDeleteClick(todo)">
-                        <i class="material-icons">delete</i>
-                    </div>
-                </div>
+        <div class="todo-item has-hovered-black-background" [class.completed]="todo.completed">
+          <div class="check-box">
+            <i class="material-icons-outlined">check</i>
+          </div>
+          <p class="todo-text">{{ todo.name }}</p>
+          <div class="todo-item-actions" (click)="$event.stopPropagation()">
+            <div class="btn todo-action-btn" (click)="onEditClick(todo)">
+              <i class="material-icons">edit</i>
             </div>
-
+            <div class="btn todo-action-btn" (click)="onDeleteClick(todo)">
+              <i class="material-icons">delete</i>
+            </div>
+          </div>
         </div>
+      </div>
+    }
 
-        <div class="buttons-container buttons-centered">
-            <button
-                class="btn add-btn"
-                type="button"
-                (click)="onAdd()"
-            >
-                <i class="material-icons-outlined">add</i>
-            </button>
-        </div>
-
+    <div class="buttons-container buttons-centered">
+      <button
+        class="btn add-btn"
+        type="button"
+        (click)="onAdd()"
+        >
+        <i class="material-icons-outlined">add</i>
+      </button>
     </div>
+
+  </div>
 </div>

@@ -1,3 +1,5 @@
-<div class="notification" *ngIf="notification" @notificationAnim>
-  {{ notification }}
-</div>
+@if (notification) {
+  <div class="notification" @notificationAnim>
+    {{ notification }}
+  </div>
+}
