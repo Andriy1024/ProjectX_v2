@@ -66,11 +66,11 @@ jobs:
           # Check if common code changed
           if echo "$CHANGED_FILTERS" | grep -q "common"; then
             echo "Common code changed. Building all services."
-            FINAL_MATRIX="$SERVICES"
+            FINAL_MATRIX=$(echo "$SERVICES" | jq -c .)
           else
             echo "Building only changed services."
             # Filter services where name is in CHANGED_FILTERS
-            FINAL_MATRIX=$(echo "$SERVICES" | jq --argjson changes "$CHANGED_FILTERS" 'map(select([.name] | inside($changes)))')
+            FINAL_MATRIX=$(echo "$SERVICES" | jq -c --argjson changes "$CHANGED_FILTERS" 'map(select([.name] | inside($changes)))')
           fi
           
           # Check if matrix is empty
@@ -96,7 +96,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       
       - name: Restore dependencies
         working-directory: ./backend
