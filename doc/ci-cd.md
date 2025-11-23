@@ -203,3 +203,16 @@ docker-build:
     ```json
     {"name": "newservice", "dockerfile": "./path/to/Dockerfile", "image": "user/image"}
     ```
+
+---
+
+## Official Documentation References
+
+For further reading on the concepts used in this pipeline, refer to the official GitHub Actions documentation:
+
+*   **Workflow Syntax**: [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
+*   **Triggers (`on`)**: [Events that trigger workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)
+*   **Jobs & Needs**: [Using jobs in a workflow](https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow)
+*   **Matrix Strategy (`strategy`, `matrix`, `include`)**: [Using a matrix for your jobs](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs)
+*   **Outputs (`$GITHUB_OUTPUT`)**: [Workflow commands for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter)
+*   **Contexts & Expressions**: [Contexts](https://docs.github.com/en/actions/learn-github-actions/contexts)
