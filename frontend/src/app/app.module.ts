@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { TabsComponent } from './tabs/tabs.component';
@@ -39,7 +39,7 @@ import { PROJECT_X_SESSION } from './auth/auth.const';
         { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
         { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
         provideHttpClient(withInterceptors([applicationHttpInterceptor]), withInterceptorsFromDi()),
-        provideAnimationsAsync()
+        provideAnimations()
     ] })
 export class AppModule { }
 
