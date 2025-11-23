@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { TabsComponent } from './tabs/tabs.component';
@@ -23,7 +23,6 @@ import { JwtModule } from '@auth0/angular-jwt';
     bootstrap: [AppComponent], imports: [BrowserModule,
         CommonModule,
         AppRoutingModule,
-        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         NotificationComponent,
@@ -38,7 +37,8 @@ import { JwtModule } from '@auth0/angular-jwt';
         { provide: IDENTITY_API_URL, useValue: environment.identityApi },
         { provide: DASHBOARD_API_URL, useValue: environment.dashboardApi },
         { provide: REALTIME_API_URL, useValue: environment.realtimeApi },
-        provideHttpClient(withInterceptors([applicationHttpInterceptor]))
+        provideHttpClient(withInterceptors([applicationHttpInterceptor])),
+        provideAnimations()
     ] })
 export class AppModule { }
 
