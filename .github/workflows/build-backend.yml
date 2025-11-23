@@ -14,9 +14,48 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Detect which services were changed
+  detect-changes:
+    name: Detect Changed Services
+    runs-on: ubuntu-latest
+    outputs:
+      dashboard: ${{ steps.filter.outputs.dashboard }}
+      identity: ${{ steps.filter.outputs.identity }}
+      filestorage: ${{ steps.filter.outputs.filestorage }}
+      messenger: ${{ steps.filter.outputs.messenger }}
+      realtime: ${{ steps.filter.outputs.realtime }}
+      search: ${{ steps.filter.outputs.search }}
+      common: ${{ steps.filter.outputs.common }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            common:
+              - 'backend/Common/**'
+              - 'backend/Directory.*.props'
+              - 'backend/*.sln'
+            dashboard:
+              - 'backend/Services/ProjectX.Dashboard/**'
+            identity:
+              - 'backend/Services/ProjectX.Identity/**'
+            filestorage:
+              - 'backend/Services/ProjectX.FileStorage/**'
+            messenger:
+              - 'backend/Services/ProjectX.Messenger/**'
+            realtime:
+              - 'backend/Services/ProjectX.Realtime/**'
+            search:
+              - 'backend/Services/ProjectX.Search/**'
+  
   build:
     name: Build .NET Backend
     runs-on: ubuntu-latest
+    needs: detect-changes
     
     steps:
       - name: Checkout code
@@ -39,24 +78,14 @@ jobs:
         working-directory: ./backend
         run: dotnet test ProjectX.sln --configuration Release --no-build --verbosity normal
   
-  docker-build:
-    name: Build and Push Docker Images
+  docker-dashboard:
+    name: Build Dashboard Docker Image
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    
-    strategy:
-      matrix:
-        service:
-          - name: dashboard
-            dockerfile: ./backend/Services/ProjectX.Dashboard/ProjectX.Dashboard.API/Dockerfile
-            image: andriy1024/projectx-dashboard
-          - name: identity
-            dockerfile: ./backend/Services/ProjectX.Identity/ProjectX.Identity.API/Dockerfile
-            image: andriy1024/projectx-identity
-          - name: filestorage
-            dockerfile: ./backend/Services/ProjectX.FileStorage/ProjectX.FileStorage.API/Dockerfile
-            image: andriy1024/projectx-filestorage
+    needs: [detect-changes, build]
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/master' &&
+      (needs.detect-changes.outputs.dashboard == 'true' || needs.detect-changes.outputs.common == 'true')
     
     steps:
       - name: Checkout code
@@ -71,13 +100,173 @@ jobs:
           username: andriy1024
           password: ${{ secrets.DOCKER_TOKEN }}
       
-      - name: Build and push ${{ matrix.service.name }}
+      - name: Build and push Dashboard
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          file: ${{ matrix.service.dockerfile }}
+          file: ./backend/Services/ProjectX.Dashboard/ProjectX.Dashboard.API/Dockerfile
           push: true
-          tags: ${{ matrix.service.image }}:latest,${{ matrix.service.image }}:${{ github.sha }}
-          cache-from: type=registry,ref=${{ matrix.service.image }}:buildcache
-          cache-to: type=registry,ref=${{ matrix.service.image }}:buildcache,mode=max
+          tags: andriy1024/projectx-dashboard:latest,andriy1024/projectx-dashboard:${{ github.sha }}
+          cache-from: type=registry,ref=andriy1024/projectx-dashboard:buildcache
+          cache-to: type=registry,ref=andriy1024/projectx-dashboard:buildcache,mode=max
+  
+  docker-identity:
+    name: Build Identity Docker Image
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/master' &&
+      (needs.detect-changes.outputs.identity == 'true' || needs.detect-changes.outputs.common == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: andriy1024
+          password: ${{ secrets.DOCKER_TOKEN }}
+      
+      - name: Build and push Identity
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Services/ProjectX.Identity/ProjectX.Identity.API/Dockerfile
+          push: true
+          tags: andriy1024/projectx-identity:latest,andriy1024/projectx-identity:${{ github.sha }}
+          cache-from: type=registry,ref=andriy1024/projectx-identity:buildcache
+          cache-to: type=registry,ref=andriy1024/projectx-identity:buildcache,mode=max
+  
+  docker-filestorage:
+    name: Build FileStorage Docker Image
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/master' &&
+      (needs.detect-changes.outputs.filestorage == 'true' || needs.detect-changes.outputs.common == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: andriy1024
+          password: ${{ secrets.DOCKER_TOKEN }}
+      
+      - name: Build and push FileStorage
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Services/ProjectX.FileStorage/ProjectX.FileStorage.API/Dockerfile
+          push: true
+          tags: andriy1024/projectx-filestorage:latest,andriy1024/projectx-filestorage:${{ github.sha }}
+          cache-from: type=registry,ref=andriy1024/projectx-filestorage:buildcache
+          cache-to: type=registry,ref=andriy1024/projectx-filestorage:buildcache,mode=max
+  
+  docker-messenger:
+    name: Build Messenger Docker Image
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/master' &&
+      (needs.detect-changes.outputs.messenger == 'true' || needs.detect-changes.outputs.common == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: andriy1024
+          password: ${{ secrets.DOCKER_TOKEN }}
+      
+      - name: Build and push Messenger
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Services/ProjectX.Messenger/ProjectX.Messenger.API/Dockerfile
+          push: true
+          tags: andriy1024/projectx-messenger:latest,andriy1024/projectx-messenger:${{ github.sha }}
+          cache-from: type=registry,ref=andriy1024/projectx-messenger:buildcache
+          cache-to: type=registry,ref=andriy1024/projectx-messenger:buildcache,mode=max
+  
+  docker-realtime:
+    name: Build Realtime Docker Image
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/master' &&
+      (needs.detect-changes.outputs.realtime == 'true' || needs.detect-changes.outputs.common == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: andriy1024
+          password: ${{ secrets.DOCKER_TOKEN }}
+      
+      - name: Build and push Realtime
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Services/ProjectX.Realtime/ProjectX.Realtime.API/Dockerfile
+          push: true
+          tags: andriy1024/projectx-realtime:latest,andriy1024/projectx-realtime:${{ github.sha }}
+          cache-from: type=registry,ref=andriy1024/projectx-realtime:buildcache
+          cache-to: type=registry,ref=andriy1024/projectx-realtime:buildcache,mode=max
+  
+  docker-search:
+    name: Build Search Docker Image
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/master' &&
+      (needs.detect-changes.outputs.search == 'true' || needs.detect-changes.outputs.common == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: andriy1024
+          password: ${{ secrets.DOCKER_TOKEN }}
+      
+      - name: Build and push Search
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Services/ProjectX.Search/ProjectX.Search.API/Dockerfile
+          push: true
+          tags: andriy1024/projectx-search:latest,andriy1024/projectx-search:${{ github.sha }}
+          cache-from: type=registry,ref=andriy1024/projectx-search:buildcache
+          cache-to: type=registry,ref=andriy1024/projectx-search:buildcache,mode=max
         
