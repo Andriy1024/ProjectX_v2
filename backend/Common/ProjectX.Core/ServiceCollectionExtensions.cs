@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddCoreServices(this IServiceCollection services, params Assembly[] assemblies)
     {
         services
-            .AddMediatR(assemblies)
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies))
             .AddTransient<IEventDispatcher, EventDispatcher>()
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddAutoMapper(assemblies)

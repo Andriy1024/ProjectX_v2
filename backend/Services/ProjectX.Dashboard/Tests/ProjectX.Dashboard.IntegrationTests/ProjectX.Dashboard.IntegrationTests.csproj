@@ -3,6 +3,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.categories" />
     <PackageReference Include="xunit.runner.visualstudio">
@@ -19,5 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ProjectX.Dashboard.API\ProjectX.Dashboard.API.csproj" />
     <ProjectReference Include="..\ProjectX.Dashboard.Tests.Common\ProjectX.Dashboard.Tests.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Handlers\__snapshots__\__mismatch__\" />
   </ItemGroup>
 </Project>
