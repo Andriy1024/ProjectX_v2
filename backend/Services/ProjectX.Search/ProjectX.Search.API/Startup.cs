@@ -3,7 +3,6 @@
 using ProjectX.Core;
 using ProjectX.Core.Observability;
 using ProjectX.AspNetCore.Extensions;
-using ProjectX.AspNetCore.Swagger;
 using ProjectX.Core.Context;
 using ProjectX.Search.API.Models;
 using Nest;
@@ -20,7 +19,6 @@ public static class Startup
            //.AddAppAuthentication()
            //.AddCurrentUser()
            .ConfigureAspNetCore()
-           .AddProjectXSwagger()
            .Services
            .AddCoreHealthChecks()
            .Services
@@ -32,8 +30,6 @@ public static class Startup
     public static void Configure(WebApplication app)
     {
         app.UseProjectXCors();
-        
-        app.UseProjectXSwagger();
         
         app.UseErrorHandler();
 

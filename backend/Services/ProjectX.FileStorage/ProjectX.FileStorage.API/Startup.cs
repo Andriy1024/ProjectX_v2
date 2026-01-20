@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ProjectX.AspNetCore.Extensions;
-using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
 using ProjectX.Core;
 using ProjectX.Core.Context;
@@ -24,7 +23,6 @@ public static class Startup
         .AddAppAuthentication()
         .AddCurrentUser()
         .ConfigureAspNetCore()
-        .AddProjectXSwagger()
         .Services
         .AddCoreHealthChecks()
         .AddMongoDb(mongodbConnectionString: 
@@ -44,7 +42,6 @@ public static class Startup
     public static void Configure(WebApplication app) 
     {
         app.UseProjectXCors();
-        app.UseProjectXSwagger();
         app.UseErrorHandler();
         app.UseCoreHeathChecks();
         app.MapHealthChecksUI();

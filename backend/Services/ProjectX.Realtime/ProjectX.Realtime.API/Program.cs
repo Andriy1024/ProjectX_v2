@@ -1,6 +1,5 @@
 using ProjectX.AspNetCore.Extensions;
 using ProjectX.AspNetCore.StartupTasks;
-using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
 using ProjectX.Core;
 using ProjectX.Core.Context;
@@ -24,7 +23,6 @@ builder
     .AddAppAuthentication()
     .AddCurrentUser()
     .ConfigureAspNetCore()
-    .AddProjectXSwagger()
     .Services
     .AddSingleton<ApplicationWebSocketManager>()
     .AddSingleton<WebSocketAuthenticationManager>()
@@ -37,8 +35,6 @@ builder.Host.UseSerilog();
 var app = builder.Build();
 
 app.UseProjectXCors();
-
-app.UseProjectXSwagger();
 
 app.UseAppAuthentication();
 

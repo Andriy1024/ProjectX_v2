@@ -1,5 +1,4 @@
 ﻿using ProjectX.AspNetCore.Extensions;
-using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
 using ProjectX.Core;
 using ProjectX.Core.Context;
@@ -17,7 +16,6 @@ public static class Startup
         .AddCoreServices(Assembly.GetAssembly(typeof(SignInCommand))!)
         .AddObservabilityServices()
         .ConfigureAspNetCore()
-        .AddProjectXSwagger()
         .AddAppAuthentication()
         .AddCurrentUser()
         .Services
@@ -29,7 +27,6 @@ public static class Startup
     public static void Configure(WebApplication app)
     {
         app.UseProjectXCors();
-        app.UseProjectXSwagger();
         app.UseErrorHandler();
         app.UseCoreHeathChecks();
         app.UseProjectXLogging();

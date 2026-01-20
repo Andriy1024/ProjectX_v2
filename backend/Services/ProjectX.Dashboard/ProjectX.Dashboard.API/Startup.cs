@@ -6,7 +6,6 @@ using ProjectX.Dashboard.Application.Mapper;
 using ProjectX.Authentication;
 using ProjectX.Core;
 using ProjectX.Core.Observability;
-using ProjectX.AspNetCore.Swagger;
 using ProjectX.Core.Context;
 using ProjectX.Persistence.Abstractions;
 using ProjectX.Core.StartupTasks;
@@ -29,7 +28,6 @@ public static class Startup
         .AddAppAuthentication()
         .AddCurrentUser()
         .ConfigureAspNetCore()
-        .AddProjectXSwagger()
         .Services
         .AddCoreHealthChecks()
         .Services
@@ -46,7 +44,6 @@ public static class Startup
     {
         app.UseProjectXCors();
         
-        app.UseProjectXSwagger();
         app.UseErrorHandler();
         app.UseCoreHeathChecks();
         app.UseProjectXLogging();

@@ -1,5 +1,4 @@
 ﻿using ProjectX.AspNetCore.Extensions;
-using ProjectX.AspNetCore.Swagger;
 using ProjectX.Authentication;
 using ProjectX.Core;
 using ProjectX.Core.Context;
@@ -25,7 +24,6 @@ public static class Startup
         .AddAppAuthentication()
         .AddCurrentUser()
         .ConfigureAspNetCore()
-        .AddProjectXSwagger()
         .AddMarten()
         .Services
         .AddScoped<IStartupTask, MessageBusStartupTask>();
@@ -34,7 +32,6 @@ public static class Startup
     public static void Configure(WebApplication app)
     {
         app.UseProjectXCors();
-        app.UseProjectXSwagger();
         app.UseErrorHandler();
         app.UseProjectXLogging();
         app.UseAppAuthentication();
